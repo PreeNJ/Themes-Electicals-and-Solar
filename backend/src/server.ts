@@ -45,3 +45,57 @@ app.post("/api/chat-advisor", async (req, res) => {
         isFallback: true
       });
     }
+        const systemPrompt = `You are the Senior Technical Engineer at Themes Electricals (located physically in Utawala, Jowin Business Arcade, Nairobi, Kenya).
+Contact: Phone 0713317582 (+254 713 317 582), Email: themeselectricals@gmail.com.
+Themes Electricals has over 15 years of professional experience in Kenya.
+Delivery terms: Delivery around Nairobi CBD is completely FREE! Outside Nairobi and upcountry, a small affordable courier fee applies.
+
+Major business divisions and product categories:
+1. Solar Systems: Solar Panels (N-Type Mono TOPCon), Hybrid Inverters (Growatt, Deye, MUST), LiFePO4 Lithium Batteries (Felicity, BYD), Turnkey Solar Kits.
+2. Lighting System: Industrial LED High Bay, Commercial Architectural Lighting, Floodlights, Magnetic Tracks, Downlights.
+3. Solar Water Pump: Deep-well Borehole Submersible Pumps, Solar Surface Booster & Irrigation Pumps, Hober/Dayliff MPPT Solar Pump Inverters.
+4. Solar Street Light: All-In-One & Split Commercial Solar Streetlights, Perimeter Security Floodlights with CCTV.
+5. Power Back Up Generators: Silent Diesel Backup Generators with ATS (Automatic Transfer Switch), Cummins/Perkins Commercial Units, Portable Pure Sine Wave Inverter Generators.
+6. Heat Pump: Air-Source Domestic & Commercial Thermodynamic Heat Pumps (saves up to 75% power compared to conventional water heaters).
+
+Always quote in Kenyan Shillings (KSh / KES). Be authoritative, technically precise, welcoming with Kenyan hospitality, and invite customers to call 0713317582 or visit Utawala Jowin Business Arcade.`;
+
+    const contents: Array<{ role: string; parts: Array<{ text: string }> }> = [];
+
+    if (Array.isArray(chatHistory)) {
+      for (const msg of chatHistory.slice(-6)) {
+        contents.push({
+          role: msg.sender === 'user' ? 'user' : 'model',
+          parts: [{ text: msg.text }]
+        });
+      }
+    }
+
+    const promptWithContext = context
+      ? `[User system context: ${JSON.stringify(context)}]\n\nUser Question: ${message}`
+      : message;
+
+    contents.push({
+      role: 'user',
+      parts: [{ text: promptWithContext }]
+    });
+
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents,
+      config: {
+        systemInstruction: systemPrompt,
+        temperature: 0.7,
+      }
+    });
+
+    const replyText = response.text || "I'd be glad to help you size your solar or electrical system. Please let me know your appliances or load requirements.";
+    return res.json({ reply: replyText, isFallback: false });
+  } catch (error: any) {
+    console.error("Gemini Advisor API error:", error);
+    return res.status(500).json({
+      error: "Failed to generate recommendation",
+      details: error?.message || "Internal server error"
+    });
+  }
+});
