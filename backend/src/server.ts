@@ -20,3 +20,7 @@ const app = express();
 
 app.use(cors({ origin: FRONTEND_ORIGIN }));
 app.use(express.json());
+
+app.get("/api/health", (_req, res) => {
+  res.json({ status: "ok", timestamp: new Date().toISOString(), store: "Themes Electricals (Utawala Jowin Business Arcade)" });
+});
