@@ -21,9 +21,12 @@ const app = express();
 app.use(cors({ origin: FRONTEND_ORIGIN }));
 app.use(express.json());
 
+// Health check
 app.get("/api/health", (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString(), store: "Themes Electricals (Utawala Jowin Business Arcade)" });
 });
+
+// AI Solar & Electrical Advisor Endpoint
 app.post("/api/chat-advisor", async (req, res) => {
   try {
     const { message, context, chatHistory } = req.body;
@@ -45,7 +48,8 @@ app.post("/api/chat-advisor", async (req, res) => {
         isFallback: true
       });
     }
-        const systemPrompt = `You are the Senior Technical Engineer at Themes Electricals (located physically in Utawala, Jowin Business Arcade, Nairobi, Kenya).
+
+    const systemPrompt = `You are the Senior Technical Engineer at Themes Electricals (located physically in Utawala, Jowin Business Arcade, Nairobi, Kenya).
 Contact: Phone 0713317582 (+254 713 317 582), Email: themeselectricals@gmail.com.
 Themes Electricals has over 15 years of professional experience in Kenya.
 Delivery terms: Delivery around Nairobi CBD is completely FREE! Outside Nairobi and upcountry, a small affordable courier fee applies.
@@ -98,4 +102,27 @@ Always quote in Kenyan Shillings (KSh / KES). Be authoritative, technically prec
       details: error?.message || "Internal server error"
     });
   }
+});
+
+// Quote Generation Reference endpoint
+app.post("/api/quote-request", (req, res) => {
+  const { name, phone, email, location, items, totalKES, systemType } = req.body;
+  const quoteRef = `TEK-${new Date().getFullYear()}-${Math.floor(100000 + Math.random() * 900000)}`;
+
+  res.json({
+    success: true,
+    quoteRef,
+    createdAt: new Date().toISOString(),
+    customer: { name, phone, email, location },
+    summary: {
+      itemCount: items?.length || 0,
+      totalKES: totalKES || 0,
+      systemType: systemType || "Themes Electricals Solution",
+    },
+    message: `Quote ${quoteRef} has been prepared. Our engineering team at Utawala Jowin Business Arcade will contact you on ${phone || '0713317582'}!`
+  });
+});
+
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`SolarShop Kenya backend API running on http://0.0.0.0:${PORT}`);
 });
