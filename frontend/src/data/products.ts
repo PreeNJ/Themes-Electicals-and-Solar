@@ -1,5 +1,14 @@
 import type { Product } from "../types";
 
 export const products: Product[] = [
-  // All 9 product objects go here
+  
 ];
+
+import type { Product } from "../types";
+import { products } from "./products";
+
+export function getProductsByCategory(
+  category: Product["category"]
+): Product[] {
+  return products.filter((p) => p.category === category);
+}
