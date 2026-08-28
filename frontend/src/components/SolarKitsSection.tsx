@@ -48,9 +48,9 @@ export const SolarKitsSection: React.FC<SolarKitsSectionProps> = ({
   };
 
   return (
-    <section className="py-12 bg-slate-950 text-white" id="turnkey-solar-kits-section">
+    <section className="py-12 bg-sky-950 text-white" id="turnkey-solar-kits-section">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
           <div>
@@ -82,11 +82,11 @@ export const SolarKitsSection: React.FC<SolarKitsSectionProps> = ({
           {SOLAR_KITS.map((kit) => (
             <div
               key={kit.id}
-              className="bg-slate-900 rounded-2xl border border-slate-800 flex flex-col justify-between overflow-hidden hover:border-red-500/50 transition-all hover:shadow-xl group"
+              className="bg-[#0a4260] rounded-2xl border border-sky-800 flex flex-col justify-between overflow-hidden hover:border-red-500/50 transition-all hover:shadow-xl group"
             >
               <div>
                 {/* Header image & badge */}
-                <div className="relative h-44 w-full bg-slate-950 overflow-hidden">
+                <div className="relative h-44 w-full bg-sky-950 overflow-hidden">
                   <img
                     src={kit.image}
                     alt={kit.title}
@@ -125,7 +125,7 @@ export const SolarKitsSection: React.FC<SolarKitsSectionProps> = ({
                   </div>
 
                   {/* Bill of Materials list */}
-                  <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2 text-xs">
+                  <div className="bg-[#062f48] p-3 rounded-xl border border-sky-800 space-y-2 text-xs">
                     <div className="flex items-start gap-2">
                       <Zap className="w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5" />
                       <span className="text-slate-300 line-clamp-1">{kit.components.inverter}</span>

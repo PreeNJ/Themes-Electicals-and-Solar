@@ -111,7 +111,7 @@ export const Header: React.FC<HeaderProps> = ({
               className="flex items-center gap-3 text-left focus:outline-hidden group"
               id="brand-logo-btn"
             >
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-sky-400 via-sky-600 to-sky-800 flex items-center justify-center text-white shadow-md ring-2 ring-sky-100 group-hover:scale-105 transition-transform">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-sky-400 via-sky-600 to-red-500 flex items-center justify-center text-white shadow-md ring-2 ring-sky-100 group-hover:scale-105 transition-transform">
                 <Zap className="w-6 h-6 text-white fill-amber-300 stroke-[2.2]" />
               </div>
               <div>
