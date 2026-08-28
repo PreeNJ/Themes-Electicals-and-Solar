@@ -1,114 +1,144 @@
-import { useState } from "react";
-import { products } from "../data/products";
-import type { Product } from "../types";
-import { formatKES } from "../utils/formatters";
+import React from 'react';
+import { X, Sliders, ShoppingCart, Trash2 } from 'lucide-react';
+import { Product } from '../types';
+import { formatKES } from '../utils/formatters';
 
-const MAX_COMPARE = 3;
+interface ProductComparisonProps {
+  isOpen: boolean;
+  onClose: () => void;
+  products: Product[];
+  onRemove: (productId: string) => void;
+  onAddToCart: (product: Product) => void;
+}
 
-function ProductComparison() {
-  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+export const ProductComparison: React.FC<ProductComparisonProps> = ({
+  isOpen,
+  onClose,
+  products,
+  onRemove,
+  onAddToCart
+}) => {
+  if (!isOpen) return null;
 
-  const toggleProduct = (id: string) => {
-    setSelectedIds((prev) => {
-      if (prev.includes(id)) return prev.filter((p) => p !== id);
-      if (prev.length >= MAX_COMPARE) return prev;
-      return [...prev, id];
-    });
-  };
-
-  const selectedProducts: Product[] = selectedIds
-    .map((id) => products.find((p) => p.id === id))
-    .filter((p): p is Product => Boolean(p));
-
-  const allSpecKeys = Array.from(
-    new Set(selectedProducts.flatMap((p) => Object.keys(p.specs ?? {})))
+  // Gather unique spec keys across compared products
+  const allSpecKeys: string[] = Array.from(
+    new Set(products.flatMap((p) => Object.keys(p.specs)))
   );
 
   return (
-    <section className="section">
-      <div className="container">
-        <h2 style={{ fontSize: "1.5rem", fontWeight: 800, marginBottom: "0.5rem" }}>
-          Compare Products
-        </h2>
-        <p style={{ color: "var(--color-text-muted)", marginBottom: "1.5rem" }}>
-          Select up to {MAX_COMPARE} products to compare side by side.
-        </p>
-
-        <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap", marginBottom: "1.5rem" }}>
-          {products.map((product) => (
-            <button
-              key={product.id}
-              onClick={() => toggleProduct(product.id)}
-              className={selectedIds.includes(product.id) ? "btn-primary" : "btn-outline"}
-              style={{ fontSize: "0.8rem", padding: "0.5rem 0.9rem" }}
-            >
-              {product.name}
-            </button>
-          ))}
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs cursor-pointer animate-in fade-in duration-200"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
+    >
+      <div 
+        className="bg-white rounded-2xl max-w-4xl w-full max-h-[85vh] shadow-2xl border border-slate-200 overflow-hidden flex flex-col cursor-default"
+        onClick={(e) => e.stopPropagation()}
+      >
+        
+        {/* Header */}
+        <div className="p-4 bg-blue-950 text-white flex items-center justify-between border-b border-blue-900 shrink-0">
+          <div className="flex items-center gap-2">
+            <Sliders className="w-5 h-5 text-red-400" />
+            <h2 className="font-extrabold text-sm">Product Specifications Comparison</h2>
+            <span className="bg-red-600 text-white text-xs font-black px-2 py-0.5 rounded-full">
+              {products.length} Items
+            </span>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-lg text-slate-400 hover:text-white"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
-        {selectedProducts.length === 0 ? (
-          <p style={{ color: "var(--color-text-muted)" }}>No products selected yet.</p>
-        ) : (
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        {/* Comparison Table */}
+        <div className="flex-1 overflow-auto p-6 text-xs text-slate-800">
+          {products.length === 0 ? (
+            <div className="text-center py-12 text-slate-500">
+              No products selected for comparison. Add products using the compare icon on product cards.
+            </div>
+          ) : (
+            <table className="w-full border-collapse">
               <thead>
                 <tr>
-                  <th style={{ textAlign: "left", padding: "0.75rem", borderBottom: "1px solid var(--color-border)" }}>
-                    Spec
+                  <th className="p-3 text-left font-bold text-slate-400 uppercase text-[10px] w-1/4">
+                    Specification
                   </th>
-                  {selectedProducts.map((p) => (
-                    <th
-                      key={p.id}
-                      style={{ textAlign: "left", padding: "0.75rem", borderBottom: "1px solid var(--color-border)" }}
-                    >
-                      {p.name}
+                  {products.map((p) => (
+                    <th key={p.id} className="p-3 text-left border-l border-slate-200 w-1/3">
+                      <div className="space-y-2">
+                        <img
+                          src={p.image}
+                          alt={p.name}
+                          className="w-20 h-20 object-cover rounded-lg border border-slate-200"
+                          referrerPolicy="no-referrer"
+                        />
+                        <div>
+                          <span className="text-[10px] text-red-600 font-bold uppercase">{p.brand}</span>
+                          <h4 className="font-bold text-slate-900 text-xs line-clamp-2">{p.name}</h4>
+                          <span className="text-sm font-black text-red-600 font-mono block mt-1">
+                            {formatKES(p.priceKES)}
+                          </span>
+                        </div>
+                        <div className="flex gap-1.5 pt-1">
+                          <button
+                            onClick={() => onAddToCart(p)}
+                            className="px-2.5 py-1 bg-red-600 hover:bg-red-700 text-white font-bold rounded-lg text-[11px] flex items-center gap-1 shadow-sm"
+                          >
+                            <ShoppingCart className="w-3 h-3" />
+                            <span>Add</span>
+                          </button>
+                          <button
+                            onClick={() => onRemove(p.id)}
+                            className="p-1 text-slate-400 hover:text-red-600 rounded"
+                            title="Remove from comparison"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-slate-200 border-t border-slate-200">
                 <tr>
-                  <td style={{ padding: "0.75rem", color: "var(--color-text-muted)" }}>Price</td>
-                  {selectedProducts.map((p) => (
-                    <td key={p.id} style={{ padding: "0.75rem", fontWeight: 700 }}>
-                      {formatKES(p.priceKES)}
+                  <td className="p-3 font-bold text-slate-600 bg-slate-50">Category</td>
+                  {products.map((p) => (
+                    <td key={p.id} className="p-3 border-l border-slate-200 capitalize font-medium">
+                      {p.category.replace('_', ' ')}
                     </td>
                   ))}
                 </tr>
                 <tr>
-                  <td style={{ padding: "0.75rem", color: "var(--color-text-muted)" }}>Brand</td>
-                  {selectedProducts.map((p) => (
-                    <td key={p.id} style={{ padding: "0.75rem" }}>
-                      {p.brand}
-                    </td>
-                  ))}
-                </tr>
-                <tr>
-                  <td style={{ padding: "0.75rem", color: "var(--color-text-muted)" }}>Availability</td>
-                  {selectedProducts.map((p) => (
-                    <td key={p.id} style={{ padding: "0.75rem", color: p.inStock ? "#4ade80" : "#f87171" }}>
-                      {p.inStock ? "In Stock" : "Out of Stock"}
+                  <td className="p-3 font-bold text-slate-600 bg-slate-50">Warranty</td>
+                  {products.map((p) => (
+                    <td key={p.id} className="p-3 border-l border-slate-200 font-semibold text-emerald-800">
+                      {p.warranty}
                     </td>
                   ))}
                 </tr>
                 {allSpecKeys.map((key) => (
                   <tr key={key}>
-                    <td style={{ padding: "0.75rem", color: "var(--color-text-muted)" }}>{key}</td>
-                    {selectedProducts.map((p) => (
-                      <td key={p.id} style={{ padding: "0.75rem" }}>
-                        {p.specs?.[key] ?? "—"}
+                    <td className="p-3 font-medium text-slate-600 bg-slate-50">{key}</td>
+                    {products.map((p) => (
+                      <td key={p.id} className="p-3 border-l border-slate-200 font-mono text-slate-900">
+                        {p.specs[key] || '—'}
                       </td>
                     ))}
                   </tr>
                 ))}
               </tbody>
             </table>
-          </div>
-        )}
-      </div>
-    </section>
-  );
-}
+          )}
+        </div>
 
-export default ProductComparison;
+      </div>
+    </div>
+  );
+};
