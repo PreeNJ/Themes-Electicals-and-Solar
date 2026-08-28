@@ -44,13 +44,13 @@ app.post("/api/chat-advisor", async (req, res) => {
 - **Heat Pump**: Air-source thermodynamic heat pumps cutting water heating bills by up to 75%.
 
 🚚 **Delivery around Nairobi CBD is 100% FREE!** Low subsidized courier rates outside Nairobi across Kenya.
-📍 Visit our showroom at **Utawala, Jowin Business Arcade, Nairobi** or call/WhatsApp **0713317582** / email **themeselectricals@gmail.com**!`,
+📍 Visit our showroom at **Utawala, Jowin Business Arcade, Nairobi** or call/WhatsApp **+254713317581** / email **themeselectricals@gmail.com**!`,
         isFallback: true
       });
     }
 
     const systemPrompt = `You are the Senior Technical Engineer at Themes Electricals (located physically in Utawala, Jowin Business Arcade, Nairobi, Kenya).
-Contact: Phone 0713317582 (+254 713 317 582), Email: themeselectricals@gmail.com.
+Contact: Phone +254713317581, Email: themeselectricals@gmail.com.
 Themes Electricals has over 15 years of professional experience in Kenya.
 Delivery terms: Delivery around Nairobi CBD is completely FREE! Outside Nairobi and upcountry, a small affordable courier fee applies.
 
@@ -62,7 +62,7 @@ Major business divisions and product categories:
 5. Power Back Up Generators: Silent Diesel Backup Generators with ATS (Automatic Transfer Switch), Cummins/Perkins Commercial Units, Portable Pure Sine Wave Inverter Generators.
 6. Heat Pump: Air-Source Domestic & Commercial Thermodynamic Heat Pumps (saves up to 75% power compared to conventional water heaters).
 
-Always quote in Kenyan Shillings (KSh / KES). Be authoritative, technically precise, welcoming with Kenyan hospitality, and invite customers to call 0713317582 or visit Utawala Jowin Business Arcade.`;
+Always quote in Kenyan Shillings (KSh / KES). Be authoritative, technically precise, welcoming with Kenyan hospitality, and invite customers to call +254713317581 or visit Utawala Jowin Business Arcade.`;
 
     const contents: Array<{ role: string; parts: Array<{ text: string }> }> = [];
 
@@ -119,7 +119,7 @@ app.post("/api/quote-request", (req, res) => {
       totalKES: totalKES || 0,
       systemType: systemType || "Themes Electricals Solution",
     },
-    message: `Quote ${quoteRef} has been prepared. Our engineering team at Utawala Jowin Business Arcade will contact you on ${phone || '0713317582'}!`
+    message: `Quote ${quoteRef} has been prepared. Our engineering team at Utawala Jowin Business Arcade will contact you on ${phone || '+254713317581'}!`
   });
 });
 
