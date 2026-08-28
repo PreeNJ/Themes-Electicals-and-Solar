@@ -13,7 +13,8 @@ import { QuoteModal } from './components/QuoteModal';
 import { AIAssistantModal } from './components/AIAssistantModal';
 import { ProductComparison } from './components/ProductComparison';
 import { Product, CartItem, SolarKit, SizingResult } from './types';
-import { Zap, ShoppingBag, ShoppingCart, ArrowLeft, Home, Sun, Droplets, Package, MapPin, CheckCircle2 } from 'lucide-react';
+import { Zap, ShoppingBag, ShoppingCart, Phone, ArrowLeft, Home, Sun, Droplets, Package, MapPin, CheckCircle2 } from 'lucide-react';
+import { WhatsAppIcon } from './components/WhatsAppIcon';
 import { formatKES } from './utils/formatters';
 import { STORE_INFO, PRODUCTS } from './data/products';
 
@@ -433,6 +434,44 @@ export default function App() {
           </div>
         )}
       </main>
+
+      {/* Floating contact and assistant actions */}
+      <div className="fixed bottom-5 right-5 z-40 flex flex-col gap-2.5 items-end">
+        <a
+          href={STORE_INFO.socialLinks.phone}
+          className="w-12 h-12 bg-sky-500 hover:bg-sky-400 text-white rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110"
+          title={`Call Themes Electricals (${STORE_INFO.phone})`}
+          aria-label={`Call Themes Electricals at ${STORE_INFO.phone}`}
+          id="floating-call-btn"
+        >
+          <Phone className="w-5 h-5" />
+        </a>
+
+        <a
+          href={STORE_INFO.socialLinks.whatsapp}
+          target="_blank"
+          rel="noreferrer"
+          className="w-12 h-12 bg-emerald-500 hover:bg-emerald-400 text-white rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110"
+          title="WhatsApp Themes Electricals"
+          aria-label="WhatsApp Themes Electricals"
+          id="floating-whatsapp-btn"
+        >
+          <WhatsAppIcon className="w-6 h-6" />
+        </a>
+
+        <button
+          onClick={() => {
+            setAiContext(null);
+            setIsAIOpen(true);
+          }}
+          className="w-12 h-12 bg-sky-900 hover:bg-sky-800 text-sky-300 rounded-full flex items-center justify-center shadow-lg border border-sky-400/40 transition-transform hover:scale-110"
+          title="Ask Themes Electricals AI Engineer"
+          aria-label="Ask Themes Electricals AI Engineer"
+          id="floating-ai-btn"
+        >
+          <Zap className="w-5 h-5 fill-sky-300" />
+        </button>
+      </div>
 
       {/* Global Footer */}
       <Footer

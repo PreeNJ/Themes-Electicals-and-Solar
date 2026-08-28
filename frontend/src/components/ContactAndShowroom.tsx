@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { 
-  MapPin, 
-  Phone, 
-  Mail, 
-  Clock, 
-  Truck, 
-  Building, 
-  Send, 
+import {
+  MapPin,
+  Phone,
+  Mail,
+  Clock,
+  Truck,
+  Building,
+  Send,
   CheckCircle2,
   ShieldCheck,
   PhoneCall,
@@ -32,7 +32,7 @@ export const ContactAndShowroom: React.FC = () => {
   return (
     <section className="py-12 bg-slate-50 border-t border-slate-200" id="showroom-contact-section">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto mb-10">
           <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-100 border border-blue-300 text-blue-900 text-xs font-bold uppercase tracking-wider mb-2">
@@ -48,10 +48,10 @@ export const ContactAndShowroom: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
+
           {/* Showroom & Logistics Information */}
           <div className="lg:col-span-7 space-y-6">
-            
+
             {/* Showroom Card */}
             <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-5 text-xs text-slate-700">
               <div className="flex items-center justify-between pb-4 border-b border-slate-100 flex-wrap gap-3">
@@ -273,7 +273,7 @@ export const ContactAndShowroom: React.FC = () => {
                     required
                     value={inquiryPhone}
                     onChange={(e) => setInquiryPhone(e.target.value)}
-                    placeholder="e.g. 0713317582"
+                    placeholder="e.g. +254742844354"
                     className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-xs focus:ring-1 focus:ring-blue-600"
                   />
                 </div>

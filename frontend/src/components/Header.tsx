@@ -115,9 +115,8 @@ export const Header: React.FC<HeaderProps> = ({
                 <Zap className="w-6 h-6 text-white fill-amber-300 stroke-[2.2]" />
               </div>
               <div>
-                <div className="flex items-center gap-1">
-                  <span className="font-extrabold text-2xl tracking-tight text-sky-800">Themes</span>
-                  <span className="font-bold text-2xl tracking-tight text-sky-600">Electricals</span>
+                <div className="flex items-center">
+                  <span className="font-extrabold text-xl sm:text-2xl tracking-tight text-sky-700 whitespace-nowrap">Themes Electricals and Solar Systems</span>
                 </div>
                 <p className="text-[11px] text-slate-500 font-semibold tracking-wide">
                   Solar Systems • Lighting • Pumps • Generators • Heat Pumps

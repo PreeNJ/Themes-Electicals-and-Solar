@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  X, 
-  Send, 
-  Zap, 
-  User, 
+import {
+  X,
+  Send,
+  Zap,
+  User,
   Lightbulb
 } from 'lucide-react';
 import { STORE_INFO } from '../data/products';
@@ -24,7 +24,7 @@ interface ChatMessage {
 export const AIAssistantModal: React.FC<AIAssistantModalProps> = ({
   isOpen,
   onClose,
-initialContext
+  initialContext
 }) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -56,7 +56,7 @@ With **15 years of industry experience**, how can I assist your setup today? You
 • Estimated Total Cost: KSh ${initialContext.estimatedTotalKES ? initialContext.estimatedTotalKES.toLocaleString() : '325,000'}
 
 Can you verify if this setup is optimal for Kenyan conditions and what warranty comes with Themes Electricals?`;
-      
+
       handleSendMessage(contextMsg);
     }
   }, [isOpen, initialContext]);
@@ -128,7 +128,7 @@ Can you verify if this setup is optimal for Kenyan conditions and what warranty 
   if (!isOpen) return null;
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs cursor-pointer animate-in fade-in duration-200"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
@@ -136,11 +136,11 @@ Can you verify if this setup is optimal for Kenyan conditions and what warranty 
         }
       }}
     >
-      <div 
+      <div
         className="bg-white rounded-2xl max-w-2xl w-full h-[85vh] shadow-2xl border border-slate-200 flex flex-col overflow-hidden cursor-default"
         onClick={(e) => e.stopPropagation()}
       >
-        
+
         {/* Modal Header */}
         <div className="p-4 bg-blue-950 text-white flex items-center justify-between border-b border-blue-900 shrink-0">
           <div className="flex items-center gap-3">
@@ -155,7 +155,7 @@ Can you verify if this setup is optimal for Kenyan conditions and what warranty 
                 </span>
               </div>
               <p className="text-[11px] text-slate-300">
-                Utawala Jowin Business Arcade • Nairobi • 0713317582
+                Utawala Jowin Business Arcade • Nairobi • {STORE_INFO.phone}
               </p>
             </div>
           </div>
@@ -184,19 +184,17 @@ Can you verify if this setup is optimal for Kenyan conditions and what warranty 
                 )}
 
                 <div
-                  className={`max-w-[85%] rounded-2xl p-3.5 space-y-1 ${
-                    isUser
+                  className={`max-w-[85%] rounded-2xl p-3.5 space-y-1 ${isUser
                       ? 'bg-red-600 text-white font-medium rounded-tr-xs'
                       : 'bg-white border border-slate-200 text-slate-800 shadow-xs rounded-tl-xs'
-                  }`}
+                    }`}
                 >
                   <div className="whitespace-pre-wrap leading-relaxed">
                     {msg.text}
                   </div>
                   <div
-                    className={`text-[10px] ${
-                      isUser ? 'text-red-100' : 'text-slate-400'
-                    } text-right`}
+                    className={`text-[10px] ${isUser ? 'text-red-100' : 'text-slate-400'
+                      } text-right`}
                   >
                     {msg.timestamp}
                   </div>

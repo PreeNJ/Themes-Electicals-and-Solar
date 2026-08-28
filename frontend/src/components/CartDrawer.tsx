@@ -44,7 +44,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   const [deliveryType, setDeliveryType] = useState<'nairobi_cbd' | 'pickup' | 'nairobi_metro' | 'outside_nairobi'>('nairobi_cbd');
   const [includeInstallation, setIncludeInstallation] = useState<boolean>(false);
   const [isCheckingOutMPesa, setIsCheckingOutMPesa] = useState<boolean>(false);
-  const [mpesaPhone, setMpesaPhone] = useState<string>('0713317581');
+  const [mpesaPhone, setMpesaPhone] = useState<string>('+254742844354');
   const [mpesaStatus, setMpesaStatus] = useState<'idle' | 'prompting' | 'success'>('idle');
 
   if (!isOpen) return null;
@@ -91,7 +91,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
   const handleSimulateMPesa = () => {
     if (!mpesaPhone || mpesaPhone.length < 10) {
-      alert('Please enter a valid Safaricom M-Pesa phone number (e.g. 0713317581)');
+      alert('Please enter a valid Safaricom M-Pesa phone number (e.g. +254742844354)');
       return;
     }
 
@@ -116,7 +116,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
     const message = `Hello Themes Electricals (Utawala),\n\nI would like to place an order for the following equipment:\n\n📦 *Order Items:*\n${itemsSummary}\n\n*Equipment Subtotal:* ${formatKES(itemsSubtotal)}\n*Delivery Option:* ${selectedDeliveryObj.label} (${selectedDeliveryObj.badge})\n${includeInstallation ? `*Professional Installation:* ${formatKES(installationFee)}\n` : ''}*Estimated Total:* ${formatKES(grandTotal)}\n\nPlease confirm availability and payment details. Thank you!`;
 
-    const waUrl = `https://wa.me/254713317581?text=${encodeURIComponent(message)}`;
+    const waUrl = `https://wa.me/254742844354?text=${encodeURIComponent(message)}`;
     window.open(waUrl, '_blank');
 
     if (onOrderSuccess) {
@@ -262,8 +262,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                                 }}
                                 disabled={isAtMaxStock}
                                 className={`px-2.5 py-1 text-xs font-bold transition-colors rounded-r-lg ${isAtMaxStock
-                                    ? 'text-slate-300 cursor-not-allowed bg-slate-100'
-                                    : 'text-slate-700 hover:bg-slate-200 active:bg-slate-300'
+                                  ? 'text-slate-300 cursor-not-allowed bg-slate-100'
+                                  : 'text-slate-700 hover:bg-slate-200 active:bg-slate-300'
                                   }`}
                                 title={isAtMaxStock ? `Max stock (${item.product.stockCount}) reached` : 'Increase quantity'}
                               >
@@ -312,8 +312,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                       <label
                         key={d.id}
                         className={`flex items-center justify-between p-2.5 rounded-xl border cursor-pointer transition-all ${deliveryType === d.id
-                            ? 'bg-blue-50/90 border-blue-600 text-blue-950 font-bold shadow-2xs'
-                            : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
+                          ? 'bg-blue-50/90 border-blue-600 text-blue-950 font-bold shadow-2xs'
+                          : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
                           }`}
                       >
                         <div className="flex items-center gap-2.5">
@@ -330,8 +330,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                           </div>
                         </div>
                         <span className={`font-mono text-[11px] font-bold text-right ${d.fee === 0
-                            ? 'text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded'
-                            : 'text-slate-900 bg-slate-200/80 px-2 py-0.5 rounded'
+                          ? 'text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded'
+                          : 'text-slate-900 bg-slate-200/80 px-2 py-0.5 rounded'
                           }`}>
                           {d.badge}
                         </span>
@@ -430,7 +430,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                         type="tel"
                         value={mpesaPhone}
                         onChange={(e) => setMpesaPhone(e.target.value)}
-                        placeholder="e.g. 0713317582"
+                        placeholder="e.g. +254742844354"
                         className="w-full px-3 py-2 bg-slate-900 border border-emerald-500/50 rounded-lg text-xs text-white font-mono"
                       />
                       <button

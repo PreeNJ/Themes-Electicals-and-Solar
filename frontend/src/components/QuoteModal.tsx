@@ -32,7 +32,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
   sizingResult
 }) => {
   const [customerName, setCustomerName] = useState('Eng. David Mwangi');
-  const [customerPhone, setCustomerPhone] = useState('0713317581');
+  const [customerPhone, setCustomerPhone] = useState('+254742844354');
   const [customerEmail, setCustomerEmail] = useState('themeselectricals@gmail.com');
   const [customerCounty, setCustomerCounty] = useState('Utawala / Nairobi CBD');
   const [deliveryOption, setDeliveryOption] = useState<'nairobi_cbd' | 'pickup' | 'outside_nairobi'>('nairobi_cbd');
@@ -307,7 +307,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
             <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2 text-xs">
               <span className="font-bold text-blue-950 block">Payment & Banking Details:</span>
               <div className="space-y-1 text-slate-700">
-                <p><strong>Hotline:</strong> 0713317582 | <strong>Email:</strong> themeselectricals@gmail.com</p>
+                <p><strong>Hotline:</strong> {STORE_INFO.phone} | <strong>Email:</strong> themeselectricals@gmail.com</p>
                 <p><strong>Physical Store:</strong> Utawala Jowin Business Arcade, Nairobi</p>
                 <p><strong>Payment:</strong> Safaricom M-Pesa / Bank Wire / Showroom POS</p>
                 <p className="text-[11px] text-slate-500 pt-1">
