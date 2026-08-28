@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { 
-  X, 
-  Printer, 
-  FileText, 
-  Send, 
-  Phone, 
-  Mail, 
-  MapPin, 
-  CheckCircle2, 
+import {
+  X,
+  Printer,
+  FileText,
+  Send,
+  Phone,
+  Mail,
+  MapPin,
+  CheckCircle2,
   Download,
   Zap,
   ShieldCheck
@@ -32,7 +32,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
   sizingResult
 }) => {
   const [customerName, setCustomerName] = useState('Eng. David Mwangi');
-  const [customerPhone, setCustomerPhone] = useState('+254 713 317 582');
+  const [customerPhone, setCustomerPhone] = useState('0713317581');
   const [customerEmail, setCustomerEmail] = useState('themeselectricals@gmail.com');
   const [customerCounty, setCustomerCounty] = useState('Utawala / Nairobi CBD');
   const [deliveryOption, setDeliveryOption] = useState<'nairobi_cbd' | 'pickup' | 'outside_nairobi'>('nairobi_cbd');
@@ -139,7 +139,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
   };
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs overflow-y-auto cursor-pointer animate-in fade-in duration-200"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
@@ -147,11 +147,11 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
         }
       }}
     >
-      <div 
+      <div
         className="bg-white rounded-2xl max-w-4xl w-full my-6 shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[92vh] cursor-default"
         onClick={(e) => e.stopPropagation()}
       >
-        
+
         {/* Top Modal Controls */}
         <div className="p-4 bg-blue-950 text-white flex items-center justify-between border-b border-blue-900 shrink-0">
           <div className="flex items-center gap-2">
@@ -182,7 +182,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
 
         {/* Printable Quotation Content */}
         <div className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-6 text-slate-800 printable-quote-area">
-          
+
           {/* Header Letterhead */}
           <div className="flex flex-col sm:flex-row justify-between items-start gap-4 pb-6 border-b-2 border-blue-950">
             <div>
@@ -302,7 +302,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
 
           {/* Additional Options & Calculations */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-            
+
             {/* Payment & Showroom Details */}
             <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2 text-xs">
               <span className="font-bold text-blue-950 block">Payment & Banking Details:</span>

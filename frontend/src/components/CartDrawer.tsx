@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { 
-  X, 
-  Trash2, 
-  ShoppingCart, 
+import {
+  X,
+  Trash2,
+  ShoppingCart,
   ShoppingBag,
-  FileText, 
-  Smartphone, 
-  CheckCircle2, 
-  Truck, 
-  Wrench, 
+  FileText,
+  Smartphone,
+  CheckCircle2,
+  Truck,
+  Wrench,
   AlertCircle,
   ArrowRight
 } from 'lucide-react';
@@ -44,43 +44,43 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   const [deliveryType, setDeliveryType] = useState<'nairobi_cbd' | 'pickup' | 'nairobi_metro' | 'outside_nairobi'>('nairobi_cbd');
   const [includeInstallation, setIncludeInstallation] = useState<boolean>(false);
   const [isCheckingOutMPesa, setIsCheckingOutMPesa] = useState<boolean>(false);
-  const [mpesaPhone, setMpesaPhone] = useState<string>('+254713317582');
+  const [mpesaPhone, setMpesaPhone] = useState<string>('0713317581');
   const [mpesaStatus, setMpesaStatus] = useState<'idle' | 'prompting' | 'success'>('idle');
 
   if (!isOpen) return null;
 
   const totalItemsCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   const itemsSubtotal = cart.reduce((sum, item) => sum + item.product.priceKES * item.quantity, 0);
-  
+
   // Delivery fee logic with requested placeholders for Nairobi Metro and Outside Nairobi
   const deliveryOptions = [
-    { 
-      id: 'nairobi_cbd', 
-      label: 'Nairobi CBD Delivery', 
-      badge: 'FREE', 
-      fee: 0, 
-      note: 'Same-day fast dispatch' 
+    {
+      id: 'nairobi_cbd',
+      label: 'Nairobi CBD Delivery',
+      badge: 'FREE',
+      fee: 0,
+      note: 'Same-day fast dispatch'
     },
-    { 
-      id: 'pickup', 
-      label: 'Store Pickup (Utawala Showroom)', 
-      badge: 'FREE', 
-      fee: 0, 
-      note: 'Jowin Business Arcade, Utawala' 
+    {
+      id: 'pickup',
+      label: 'Store Pickup (Utawala Showroom)',
+      badge: 'FREE',
+      fee: 0,
+      note: 'Jowin Business Arcade, Utawala'
     },
-    { 
-      id: 'nairobi_metro', 
-      label: 'Nairobi Metro (Utawala, Ruai, Westlands, Karen, etc.)', 
-      badge: 'KSh 500 (Est. Placeholder)', 
-      fee: 500, 
-      note: 'Delivery fee estimate' 
+    {
+      id: 'nairobi_metro',
+      label: 'Nairobi Metro (Utawala, Ruai, Westlands, Karen, etc.)',
+      badge: 'KSh 500 (Est. Placeholder)',
+      fee: 500,
+      note: 'Delivery fee estimate'
     },
-    { 
-      id: 'outside_nairobi', 
-      label: 'Outside Nairobi / Upcountry Dispatch', 
-      badge: 'KSh 1,200 (Est. Placeholder)', 
-      fee: 1200, 
-      note: 'Countrywide parcel courier' 
+    {
+      id: 'outside_nairobi',
+      label: 'Outside Nairobi / Upcountry Dispatch',
+      badge: 'KSh 1,200 (Est. Placeholder)',
+      fee: 1200,
+      note: 'Countrywide parcel courier'
     },
   ];
 
@@ -91,7 +91,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
   const handleSimulateMPesa = () => {
     if (!mpesaPhone || mpesaPhone.length < 10) {
-      alert('Please enter a valid Safaricom M-Pesa phone number (e.g. 0713317582)');
+      alert('Please enter a valid Safaricom M-Pesa phone number (e.g. 0713317581)');
       return;
     }
 
@@ -113,10 +113,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
     if (cart.length === 0) return;
 
     const itemsSummary = cart.map(i => `• ${i.quantity}x ${i.product.name} (${formatKES(i.product.priceKES * i.quantity)})`).join('\n');
-    
+
     const message = `Hello Themes Electricals (Utawala),\n\nI would like to place an order for the following equipment:\n\n📦 *Order Items:*\n${itemsSummary}\n\n*Equipment Subtotal:* ${formatKES(itemsSubtotal)}\n*Delivery Option:* ${selectedDeliveryObj.label} (${selectedDeliveryObj.badge})\n${includeInstallation ? `*Professional Installation:* ${formatKES(installationFee)}\n` : ''}*Estimated Total:* ${formatKES(grandTotal)}\n\nPlease confirm availability and payment details. Thank you!`;
 
-    const waUrl = `https://wa.me/254713317582?text=${encodeURIComponent(message)}`;
+    const waUrl = `https://wa.me/254713317581?text=${encodeURIComponent(message)}`;
     window.open(waUrl, '_blank');
 
     if (onOrderSuccess) {
@@ -125,8 +125,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   };
 
   return (
-    <div 
-      className="fixed inset-0 z-50 overflow-hidden bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-200 cursor-pointer" 
+    <div
+      className="fixed inset-0 z-50 overflow-hidden bg-slate-950/70 backdrop-blur-xs animate-in fade-in duration-200 cursor-pointer"
       id="cart-drawer-modal"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
@@ -134,7 +134,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
         }
       }}
     >
-      <div 
+      <div
         className="absolute inset-y-0 right-0 max-w-full flex pl-6 sm:pl-10"
         onClick={(e) => {
           if (e.target === e.currentTarget) {
@@ -142,11 +142,11 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           }
         }}
       >
-        <div 
+        <div
           className="w-screen max-w-md bg-white shadow-2xl border-l border-slate-200 flex flex-col justify-between cursor-default"
           onClick={(e) => e.stopPropagation()}
         >
-          
+
           {/* Drawer Header: Clean, modern, with item count inside cart/bag icon and without 15-yr/showroom clutter */}
           <div className="p-4 sm:p-5 bg-blue-950 text-white flex items-center justify-between shadow-xs">
             <div className="flex items-center gap-3">
@@ -227,7 +227,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                           className="w-14 h-14 object-cover rounded-lg border border-slate-200 shrink-0 bg-slate-100"
                           referrerPolicy="no-referrer"
                         />
-                        
+
                         <div className="flex-1 min-w-0">
                           <h4 className="font-bold text-xs text-slate-900 line-clamp-1">
                             {item.product.name}
@@ -261,11 +261,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                                   }
                                 }}
                                 disabled={isAtMaxStock}
-                                className={`px-2.5 py-1 text-xs font-bold transition-colors rounded-r-lg ${
-                                  isAtMaxStock 
-                                    ? 'text-slate-300 cursor-not-allowed bg-slate-100' 
+                                className={`px-2.5 py-1 text-xs font-bold transition-colors rounded-r-lg ${isAtMaxStock
+                                    ? 'text-slate-300 cursor-not-allowed bg-slate-100'
                                     : 'text-slate-700 hover:bg-slate-200 active:bg-slate-300'
-                                }`}
+                                  }`}
                                 title={isAtMaxStock ? `Max stock (${item.product.stockCount}) reached` : 'Increase quantity'}
                               >
                                 +
@@ -307,16 +306,15 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                       <span>Select Delivery Destination:</span>
                     </span>
                   </div>
-                  
+
                   <div className="space-y-1.5">
                     {deliveryOptions.map((d) => (
                       <label
                         key={d.id}
-                        className={`flex items-center justify-between p-2.5 rounded-xl border cursor-pointer transition-all ${
-                          deliveryType === d.id
+                        className={`flex items-center justify-between p-2.5 rounded-xl border cursor-pointer transition-all ${deliveryType === d.id
                             ? 'bg-blue-50/90 border-blue-600 text-blue-950 font-bold shadow-2xs'
                             : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
-                        }`}
+                          }`}
                       >
                         <div className="flex items-center gap-2.5">
                           <input
@@ -331,11 +329,10 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                             <span className="text-[10px] text-slate-500 font-normal">{d.note}</span>
                           </div>
                         </div>
-                        <span className={`font-mono text-[11px] font-bold text-right ${
-                          d.fee === 0 
-                            ? 'text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded' 
+                        <span className={`font-mono text-[11px] font-bold text-right ${d.fee === 0
+                            ? 'text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded'
                             : 'text-slate-900 bg-slate-200/80 px-2 py-0.5 rounded'
-                        }`}>
+                          }`}>
                           {d.badge}
                         </span>
                       </label>
@@ -380,7 +377,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
           {/* Drawer Footer & Checkout / Quote / WhatsApp Actions */}
           {cart.length > 0 && (
             <div className="p-4 sm:p-5 bg-slate-50 border-t border-slate-200 space-y-3">
-              
+
               {/* Cost Summary Breakdown */}
               <div className="space-y-1 text-xs text-slate-600">
                 <div className="flex justify-between">

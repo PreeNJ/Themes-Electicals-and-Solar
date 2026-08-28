@@ -13,8 +13,7 @@ import { QuoteModal } from './components/QuoteModal';
 import { AIAssistantModal } from './components/AIAssistantModal';
 import { ProductComparison } from './components/ProductComparison';
 import { Product, CartItem, SolarKit, SizingResult } from './types';
-import { Zap, ShoppingBag, ShoppingCart, Phone, ArrowLeft, Home, Sun, Droplets, Package, MapPin, CheckCircle2 } from 'lucide-react';
-import { WhatsAppIcon } from './components/WhatsAppIcon';
+import { Zap, ShoppingBag, ShoppingCart, ArrowLeft, Home, Sun, Droplets, Package, MapPin, CheckCircle2 } from 'lucide-react';
 import { formatKES } from './utils/formatters';
 import { STORE_INFO, PRODUCTS } from './data/products';
 
@@ -39,7 +38,7 @@ export default function App() {
   const [isAIOpen, setIsAIOpen] = useState<boolean>(false);
   const [isComparisonOpen, setIsComparisonOpen] = useState<boolean>(false);
   const [viewingProduct, setViewingProduct] = useState<Product | null>(null);
-  
+
   // Specific Quote Context State
   const [quoteKit, setQuoteKit] = useState<SolarKit | null>(null);
   const [quoteSizingResult, setQuoteSizingResult] = useState<SizingResult | null>(null);
@@ -244,8 +243,8 @@ export default function App() {
   const totalCartKES = cart.reduce((sum, item) => sum + item.product.priceKES * item.quantity, 0);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans antialiased selection:bg-red-600 selection:text-white">
-      
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans antialiased selection:bg-sky-600 selection:text-white">
+
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-6 left-6 z-50 bg-slate-950 text-white px-4 py-3 rounded-xl shadow-2xl border border-slate-800 flex items-center gap-3 text-xs font-semibold animate-in slide-in-from-bottom-5">
@@ -334,7 +333,7 @@ export default function App() {
               <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-2xs">
                 <button
                   onClick={() => navigateToTab('catalog')}
-                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-red-50 hover:text-red-600 text-slate-700 font-bold text-xs sm:text-sm transition-colors"
+                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-sky-50 hover:text-sky-600 text-slate-700 font-bold text-xs sm:text-sm transition-colors"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span>Back to Home / Product Catalog</span>
@@ -362,7 +361,7 @@ export default function App() {
               <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-2xs">
                 <button
                   onClick={() => navigateToTab('catalog')}
-                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-red-50 hover:text-red-600 text-slate-700 font-bold text-xs sm:text-sm transition-colors"
+                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-sky-50 hover:text-sky-600 text-slate-700 font-bold text-xs sm:text-sm transition-colors"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span>Back to Home / Product Catalog</span>
@@ -389,7 +388,7 @@ export default function App() {
               <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-2xs">
                 <button
                   onClick={() => navigateToTab('catalog')}
-                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-red-50 hover:text-red-600 text-slate-700 font-bold text-xs sm:text-sm transition-colors"
+                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-sky-50 hover:text-sky-600 text-slate-700 font-bold text-xs sm:text-sm transition-colors"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span>Back to Home / Product Catalog</span>
@@ -417,7 +416,7 @@ export default function App() {
               <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-2xs">
                 <button
                   onClick={() => navigateToTab('catalog')}
-                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-red-50 hover:text-red-600 text-slate-700 font-bold text-xs sm:text-sm transition-colors"
+                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-sky-50 hover:text-sky-600 text-slate-700 font-bold text-xs sm:text-sm transition-colors"
                 >
                   <ArrowLeft className="w-4 h-4" />
                   <span>Back to Home / Product Catalog</span>
@@ -434,61 +433,6 @@ export default function App() {
           </div>
         )}
       </main>
-
-      {/* Floating Quick Action Widget */}
-      <div className="fixed bottom-5 right-5 z-40 flex flex-col gap-2.5 items-end">
-        {/* Floating Phone Call Direct */}
-        <a
-          href={`tel:${STORE_INFO.phone}`}
-          className="w-12 h-12 bg-red-600 hover:bg-red-700 text-white rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110"
-          title={`Call Themes Electricals (${STORE_INFO.phone})`}
-          id="floating-call-btn"
-        >
-          <Phone className="w-5 h-5" />
-        </a>
-
-        {/* Floating WhatsApp Direct */}
-        <a
-          href={STORE_INFO.socialLinks.whatsapp}
-          target="_blank"
-          rel="noreferrer"
-          className="w-12 h-12 bg-[#25D366] hover:bg-[#20bd5a] text-white rounded-full flex items-center justify-center shadow-lg transition-transform hover:scale-110"
-          title="WhatsApp Themes Electricals"
-          id="floating-whatsapp-btn"
-        >
-          <WhatsAppIcon className="w-6 h-6" />
-        </a>
-
-        {/* Floating AI Solar Advisor */}
-        <button
-          onClick={() => {
-            setAiContext(null);
-            setIsAIOpen(true);
-          }}
-          className="w-12 h-12 bg-blue-950 hover:bg-blue-900 text-red-400 rounded-full flex items-center justify-center shadow-lg border border-red-500/40 transition-transform hover:scale-110"
-          title="Ask Themes Electricals AI Engineer"
-          id="floating-ai-btn"
-        >
-          <Zap className="w-5 h-5 fill-red-400" />
-        </button>
-
-        {/* Floating Cart Trigger with item count inside shopping bag, no price */}
-        {totalCartCount > 0 && (
-          <button
-            onClick={() => setIsCartOpen(true)}
-            className="flex items-center gap-2 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-black text-xs rounded-full shadow-xl transition-transform hover:scale-105"
-            id="floating-cart-trigger"
-          >
-            <div className="relative flex items-center justify-center">
-              <ShoppingBag className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1.5 bg-white text-blue-950 text-[10px] font-black rounded-full h-4 min-w-4 px-0.5 flex items-center justify-center shadow-xs">
-                {totalCartCount}
-              </span>
-            </div>
-            <span>Cart ({totalCartCount} {totalCartCount === 1 ? 'Product' : 'Products'})</span>
-          </button>
-        )}
-      </div>
 
       {/* Global Footer */}
       <Footer

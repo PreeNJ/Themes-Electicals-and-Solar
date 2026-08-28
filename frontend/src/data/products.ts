@@ -5,9 +5,9 @@ export const STORE_INFO = {
   legalName: 'Themes Electricals & Solar Engineering Ltd',
   tagline: '15 Years of Professional Excellence in Solar, Power & Electrical Engineering',
   location: 'Utawala, Jowin Business Arcade, Nairobi, Kenya',
-  phone: '+254713317582',
-  phoneDisplay: '+254 713 317 582',
-  phoneInternational: '+254713317582',
+  phone: '0713317581',
+  phoneDisplay: '0713317581',
+  phoneInternational: '+254713317581',
   email: 'themeselectricals@gmail.com',
   experience: '15 Years Experience',
   hours: 'Mon - Sat: 7:30 AM - 6:30 PM | Sunday: 9:00 AM - 4:00 PM',
@@ -17,8 +17,8 @@ export const STORE_INFO = {
     instagram: 'https://www.instagram.com/themeselectricals',
     facebook: 'https://www.facebook.com/themeselectricals',
     email: 'mailto:themeselectricals@gmail.com',
-    phone: 'tel:+254713317582',
-    whatsapp: 'https://wa.me/254713317582?text=Hello%20Themes%20Electricals,%20I%20am%20inquiring%20about%20your%20products%20and%20installation%20services.'
+    phone: 'tel:0713317581',
+    whatsapp: 'https://wa.me/254713317581?text=Hello%20Themes%20Electricals,%20I%20am%20inquiring%20about%20your%20products%20and%20installation%20services.'
   },
   deliveryRegions: [
     'Nairobi CBD (FREE Delivery Guaranteed)',

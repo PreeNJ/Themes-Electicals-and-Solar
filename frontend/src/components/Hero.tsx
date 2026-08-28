@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { 
-  ShieldCheck, 
-  Truck, 
-  Award, 
-  ArrowRight, 
-  Sliders, 
-  FileCheck2, 
-  ChevronLeft, 
-  ChevronRight, 
+import {
+  ShieldCheck,
+  Truck,
+  Award,
+  ArrowRight,
+  Sliders,
+  FileCheck2,
+  ChevronLeft,
+  ChevronRight,
   CheckCircle2,
   Sparkles,
   Zap,
@@ -66,8 +66,8 @@ export const Hero: React.FC<HeroProps> = ({
       badgeTag: 'Popular Choice',
       featurePills: ['Growatt & Deye Inverters', 'LiFePO4 Lithium', 'FREE Nairobi Delivery'],
       image: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=1200&q=80',
-      bgGradient: 'from-slate-950 via-blue-950 to-slate-900',
-      accentColor: 'text-red-500'
+      bgGradient: 'from-sky-800 via-sky-700 to-sky-600',
+      accentColor: 'text-sky-300'
     },
     {
       id: 'lighting',
@@ -82,7 +82,7 @@ export const Hero: React.FC<HeroProps> = ({
       badgeTag: 'Commercial Grade',
       featurePills: ['UFO High Bays', '60x60 Slim Panels', '50,000+ Hrs Lifespan'],
       image: 'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=1200&q=80',
-      bgGradient: 'from-slate-950 via-blue-900 to-slate-950',
+      bgGradient: 'from-sky-800 via-sky-700 to-sky-600',
       accentColor: 'text-amber-400'
     },
     {
@@ -98,7 +98,7 @@ export const Hero: React.FC<HeroProps> = ({
       badgeTag: 'Zero Fuel Bills',
       featurePills: ['Depths to 250m', 'MPPT Controllers', 'Stainless Steel Body'],
       image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80',
-      bgGradient: 'from-blue-950 via-slate-950 to-blue-900',
+      bgGradient: 'from-sky-800 via-sky-700 to-sky-600',
       accentColor: 'text-emerald-400'
     },
     {
@@ -114,8 +114,8 @@ export const Hero: React.FC<HeroProps> = ({
       badgeTag: 'Zero Power Cost',
       featurePills: ['Radar Motion Sensor', 'IP67 Weatherproof', 'Dusk-to-Dawn Auto'],
       image: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=1200&q=80',
-      bgGradient: 'from-slate-950 via-slate-900 to-blue-950',
-      accentColor: 'text-red-400'
+      bgGradient: 'from-sky-800 via-sky-700 to-sky-600',
+      accentColor: 'text-sky-300'
     },
     {
       id: 'generators-heaters',
@@ -130,7 +130,7 @@ export const Hero: React.FC<HeroProps> = ({
       badgeTag: '75% Power Saving',
       featurePills: ['Silent Diesel ATS', '75% Energy Reduction', '2-Year Warranty'],
       image: 'https://images.unsplash.com/photo-1613665813446-82a78c468a1d?auto=format&fit=crop&w=1200&q=80',
-      bgGradient: 'from-blue-950 via-slate-950 to-slate-900',
+      bgGradient: 'from-sky-800 via-sky-700 to-sky-600',
       accentColor: 'text-blue-400'
     }
   ];
@@ -213,8 +213,8 @@ export const Hero: React.FC<HeroProps> = ({
   const activeSlide = slides[currentSlide];
 
   return (
-    <div 
-      className="relative bg-slate-950 text-white overflow-hidden select-none" 
+    <div
+      className="relative bg-sky-800 text-white overflow-hidden select-none"
       id="hero-banner-carousel"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
@@ -226,7 +226,7 @@ export const Hero: React.FC<HeroProps> = ({
     >
       {/* Background Subtle Grid */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:28px_28px] pointer-events-none" />
-      
+
       {/* Dynamic Slide Background with Smooth Fade */}
       <div className="relative min-h-[380px] sm:min-h-[440px] lg:min-h-[470px] flex items-center">
         {slides.map((slide, index) => {
@@ -235,25 +235,24 @@ export const Hero: React.FC<HeroProps> = ({
           return (
             <div
               key={slide.id}
-              className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
-                isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
-              }`}
+              className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
+                }`}
             >
               {/* Background gradient & Image Overlay */}
-              <div className={`absolute inset-0 bg-gradient-to-r ${slide.bgGradient} opacity-95`} />
+              <div className={`absolute inset-0 bg-gradient-to-r ${slide.bgGradient} opacity-70`} />
               {!hasError ? (
                 <img
                   src={slide.image}
                   alt={slide.categoryTitle}
                   onError={() => setImageErrorMap((prev) => ({ ...prev, [slide.id]: true }))}
-                  className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-25 sm:opacity-35"
+                  className="absolute inset-0 w-full h-full object-cover opacity-55 sm:opacity-65"
                   referrerPolicy="no-referrer"
                   loading="lazy"
                 />
               ) : (
                 <div className="absolute inset-0 bg-radial from-blue-600/20 to-transparent opacity-40" />
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-r from-slate-950/75 via-slate-950/25 to-transparent" />
             </div>
           );
         })}
@@ -261,18 +260,18 @@ export const Hero: React.FC<HeroProps> = ({
         {/* Content Container with Responsive Typography */}
         <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
-            
+
             {/* Left Column: Copy & Actions */}
             <div className="lg:col-span-7 xl:col-span-8 space-y-3 sm:space-y-4 text-left">
-              
+
               {/* Clean Badge: 15 Years of Engineering Excellence (No location) */}
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/80 border border-blue-500/40 text-xs font-semibold shadow-inner">
-                <span className="flex h-2 w-2 rounded-full bg-red-500 animate-pulse"></span>
+                <span className="flex h-2 w-2 rounded-full bg-sky-300 animate-pulse"></span>
                 <span className="text-white font-bold tracking-wide">15 Years of Engineering Excellence</span>
               </div>
 
               {/* Category Subtitle */}
-              <div className="text-[11px] sm:text-xs font-extrabold uppercase tracking-widest text-red-400 flex items-center gap-1.5">
+              <div className="text-[11px] sm:text-xs font-extrabold uppercase tracking-widest text-sky-300 flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>{activeSlide.categoryTitle}</span>
               </div>
@@ -291,11 +290,11 @@ export const Hero: React.FC<HeroProps> = ({
               {/* Feature Pills */}
               <div className="flex flex-wrap gap-1.5 sm:gap-2 pt-0.5">
                 {activeSlide.featurePills.map((pill, idx) => (
-                  <span 
+                  <span
                     key={idx}
                     className="bg-slate-900/90 border border-slate-700/80 px-2.5 py-1 rounded-lg text-[11px] sm:text-xs text-slate-300 flex items-center gap-1 shadow-xs whitespace-nowrap"
                   >
-                    <CheckCircle2 className="w-3 h-3 text-red-400 shrink-0" />
+                    <CheckCircle2 className="w-3 h-3 text-sky-300 shrink-0" />
                     <span>{pill}</span>
                   </span>
                 ))}
@@ -305,7 +304,7 @@ export const Hero: React.FC<HeroProps> = ({
               <div className="flex flex-wrap items-center gap-2.5 sm:gap-3 pt-2 sm:pt-3">
                 <button
                   onClick={() => triggerAction(activeSlide.onPrimaryAction)}
-                  className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-extrabold text-xs sm:text-sm shadow-lg shadow-red-600/30 transition-all transform active:scale-95 min-h-[44px]"
+                  className="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-extrabold text-xs sm:text-sm shadow-lg shadow-sky-500/30 transition-all transform active:scale-95 min-h-[44px]"
                   id={`hero-slide-primary-${activeSlide.id}`}
                 >
                   <Sliders className="w-4 h-4 text-white stroke-[2.5]" />
@@ -327,14 +326,14 @@ export const Hero: React.FC<HeroProps> = ({
             {/* Right Column: Clean Non-Overlapping Snapshot Card (Desktop & Tablet) */}
             <div className="hidden lg:block lg:col-span-5 xl:col-span-4">
               <div className="bg-slate-900/90 backdrop-blur-md border border-slate-700/80 rounded-2xl p-4 sm:p-5 shadow-2xl relative overflow-hidden group">
-                
+
                 {/* Clean Non-Overlapping Top Header Row */}
                 <div className="flex items-center justify-between gap-2 mb-3">
                   <span className="text-[11px] font-bold text-slate-300 flex items-center gap-1">
-                    <Zap className="w-3.5 h-3.5 text-red-400" />
+                    <Zap className="w-3.5 h-3.5 text-sky-300" />
                     Featured Spotlight
                   </span>
-                  <span className="bg-red-600 text-white text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full shadow-xs whitespace-nowrap">
+                  <span className="bg-sky-500 text-white text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full shadow-xs whitespace-nowrap">
                     {activeSlide.badgeTag}
                   </span>
                 </div>
@@ -354,7 +353,7 @@ export const Hero: React.FC<HeroProps> = ({
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent pointer-events-none" />
                   <div className="absolute bottom-2 left-3 right-3 text-left">
-                    <span className="text-[10px] font-bold text-red-400 uppercase tracking-wider block">Category</span>
+                    <span className="text-[10px] font-bold text-sky-300 uppercase tracking-wider block">Category</span>
                     <span className="text-xs font-bold text-white line-clamp-1">{activeSlide.categoryTitle}</span>
                   </div>
                 </div>
@@ -374,7 +373,7 @@ export const Hero: React.FC<HeroProps> = ({
                 {/* Instant Quote Button */}
                 <button
                   onClick={() => triggerAction('quote')}
-                  className="w-full py-2.5 bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold rounded-xl text-xs transition-all flex items-center justify-center gap-1.5 shadow-md active:scale-95"
+                  className="w-full py-2.5 bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-400 hover:to-sky-500 text-white font-bold rounded-xl text-xs transition-all flex items-center justify-center gap-1.5 shadow-md active:scale-95"
                 >
                   <FileCheck2 className="w-3.5 h-3.5" />
                   <span>Request Official Proforma</span>
@@ -391,7 +390,7 @@ export const Hero: React.FC<HeroProps> = ({
             onClick={handlePrev}
             aria-label="Previous Slide"
             title="Previous Slide"
-            className="pointer-events-auto w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-900/80 hover:bg-red-600 text-white flex items-center justify-center border border-slate-700/60 backdrop-blur-xs transition-all hover:scale-105 shadow-md active:scale-95 focus:outline-none"
+            className="pointer-events-auto w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-sky-900/80 hover:bg-sky-500 text-white flex items-center justify-center border border-sky-300/40 backdrop-blur-xs transition-all hover:scale-105 shadow-md active:scale-95 focus:outline-none"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
@@ -400,7 +399,7 @@ export const Hero: React.FC<HeroProps> = ({
             onClick={handleNext}
             aria-label="Next Slide"
             title="Next Slide"
-            className="pointer-events-auto w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-900/80 hover:bg-red-600 text-white flex items-center justify-center border border-slate-700/60 backdrop-blur-xs transition-all hover:scale-105 shadow-md active:scale-95 focus:outline-none"
+            className="pointer-events-auto w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-sky-900/80 hover:bg-sky-500 text-white flex items-center justify-center border border-sky-300/40 backdrop-blur-xs transition-all hover:scale-105 shadow-md active:scale-95 focus:outline-none"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
@@ -410,7 +409,7 @@ export const Hero: React.FC<HeroProps> = ({
       {/* Sliding Indicators & Continuous Loop Status */}
       <div className="relative z-20 bg-slate-950/95 border-t border-slate-800/80 px-4 py-2.5">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2.5">
-          
+
           {/* Pagination Indicators, Next/Prev & Slide Counter */}
           <div className="flex items-center gap-2.5">
             <div className="flex items-center gap-1">
@@ -440,11 +439,10 @@ export const Hero: React.FC<HeroProps> = ({
                     key={idx}
                     onClick={() => setCurrentSlide(idx)}
                     aria-label={`Jump to slide ${idx + 1}`}
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      isActive
-                        ? 'w-7 sm:w-8 bg-red-600 shadow-xs'
-                        : 'w-2 bg-slate-700 hover:bg-slate-500'
-                    }`}
+                    className={`h-2 rounded-full transition-all duration-300 ${isActive
+                      ? 'w-7 sm:w-8 bg-sky-400 shadow-xs'
+                      : 'w-2 bg-slate-700 hover:bg-slate-500'
+                      }`}
                   />
                 );
               })}
@@ -457,7 +455,7 @@ export const Hero: React.FC<HeroProps> = ({
           {/* Quick Trust Highlights */}
           <div className="flex items-center gap-3 sm:gap-4 text-[11px] text-slate-300 flex-wrap justify-center">
             <div className="flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-red-400 shrink-0" />
+              <ShieldCheck className="w-3.5 h-3.5 text-sky-300 shrink-0" />
               <span>15 Years Experience</span>
             </div>
             <div className="flex items-center gap-1.5">
