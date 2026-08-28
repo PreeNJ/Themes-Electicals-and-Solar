@@ -44,7 +44,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
   const [deliveryType, setDeliveryType] = useState<'nairobi_cbd' | 'pickup' | 'nairobi_metro' | 'outside_nairobi'>('nairobi_cbd');
   const [includeInstallation, setIncludeInstallation] = useState<boolean>(false);
   const [isCheckingOutMPesa, setIsCheckingOutMPesa] = useState<boolean>(false);
-  const [mpesaPhone, setMpesaPhone] = useState<string>('+254742844354');
+  const [mpesaPhone, setMpesaPhone] = useState<string>('+254713317581');
   const [mpesaStatus, setMpesaStatus] = useState<'idle' | 'prompting' | 'success'>('idle');
 
   if (!isOpen) return null;
@@ -91,7 +91,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
   const handleSimulateMPesa = () => {
     if (!mpesaPhone || mpesaPhone.length < 10) {
-      alert('Please enter a valid Safaricom M-Pesa phone number (e.g. +254742844354)');
+      alert('Please enter a valid Safaricom M-Pesa phone number (e.g. +254713317581)');
       return;
     }
 
@@ -116,7 +116,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
 
     const message = `Hello Themes Electricals (Utawala),\n\nI would like to place an order for the following equipment:\n\n📦 *Order Items:*\n${itemsSummary}\n\n*Equipment Subtotal:* ${formatKES(itemsSubtotal)}\n*Delivery Option:* ${selectedDeliveryObj.label} (${selectedDeliveryObj.badge})\n${includeInstallation ? `*Professional Installation:* ${formatKES(installationFee)}\n` : ''}*Estimated Total:* ${formatKES(grandTotal)}\n\nPlease confirm availability and payment details. Thank you!`;
 
-    const waUrl = `https://wa.me/254742844354?text=${encodeURIComponent(message)}`;
+    const waUrl = `https://wa.me/254713317581?text=${encodeURIComponent(message)}`;
     window.open(waUrl, '_blank');
 
     if (onOrderSuccess) {
@@ -430,7 +430,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                         type="tel"
                         value={mpesaPhone}
                         onChange={(e) => setMpesaPhone(e.target.value)}
-                        placeholder="e.g. +254742844354"
+                        placeholder="e.g. +254713317581"
                         className="w-full px-3 py-2 bg-slate-900 border border-emerald-500/50 rounded-lg text-xs text-white font-mono"
                       />
                       <button

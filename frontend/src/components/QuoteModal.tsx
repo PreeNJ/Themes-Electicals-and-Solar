@@ -32,7 +32,7 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
   sizingResult
 }) => {
   const [customerName, setCustomerName] = useState('Eng. David Mwangi');
-  const [customerPhone, setCustomerPhone] = useState('+254742844354');
+  const [customerPhone, setCustomerPhone] = useState('+254713317581');
   const [customerEmail, setCustomerEmail] = useState('themeselectricals@gmail.com');
   const [customerCounty, setCustomerCounty] = useState('Utawala / Nairobi CBD');
   const [deliveryOption, setDeliveryOption] = useState<'nairobi_cbd' | 'pickup' | 'outside_nairobi'>('nairobi_cbd');

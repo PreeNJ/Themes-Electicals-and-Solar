@@ -273,7 +273,7 @@ export const ContactAndShowroom: React.FC = () => {
                     required
                     value={inquiryPhone}
                     onChange={(e) => setInquiryPhone(e.target.value)}
-                    placeholder="e.g. +254742844354"
+                    placeholder="e.g. +254713317581"
                     className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-lg text-xs focus:ring-1 focus:ring-blue-600"
                   />
                 </div>
