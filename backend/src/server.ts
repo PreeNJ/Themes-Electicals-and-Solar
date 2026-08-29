@@ -16,10 +16,14 @@ function getGeminiClient(): GoogleGenAI | null {
   return aiClient;
 }
 
-const app = express();
+export const app = express();
 
 app.use(cors({ origin: FRONTEND_ORIGIN }));
 app.use(express.json());
+
+app.get("/", (_req, res) => {
+  res.json({ status: "ok", message: "Themes Electricals backend is running", timestamp: new Date().toISOString() });
+});
 
 // Health check
 app.get("/api/health", (_req, res) => {
