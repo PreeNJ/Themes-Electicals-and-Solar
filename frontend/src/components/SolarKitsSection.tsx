@@ -82,7 +82,7 @@ export const SolarKitsSection: React.FC<SolarKitsSectionProps> = ({
           {SOLAR_KITS.map((kit) => (
             <div
               key={kit.id}
-              className="bg-[#0a4260] rounded-2xl border border-sky-800 flex flex-col justify-between overflow-hidden hover:border-red-500/50 transition-all hover:shadow-xl group"
+              className="bg-sky-900 rounded-2xl border border-sky-800 flex flex-col justify-between overflow-hidden hover:border-red-500/50 transition-all hover:shadow-xl group"
             >
               <div>
                 {/* Header image & badge */}
