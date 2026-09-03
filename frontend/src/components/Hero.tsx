@@ -65,8 +65,8 @@ export const Hero: React.FC<HeroProps> = ({
       badgeTag: 'Popular Choice',
       featurePills: ['Growatt & Deye Inverters', 'LiFePO4 Lithium', 'FREE Nairobi Delivery'],
       image: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=1200&q=80',
-      bgGradient: 'from-sky-800 via-sky-700 to-sky-600',
-      accentColor: 'text-sky-300'
+      bgGradient: 'from-blue-900 via-blue-800 to-blue-950',
+      accentColor: 'text-blue-300'
     },
     {
       id: 'lighting',
@@ -81,7 +81,7 @@ export const Hero: React.FC<HeroProps> = ({
       badgeTag: 'Commercial Grade',
       featurePills: ['UFO High Bays', '60x60 Slim Panels', '50,000+ Hrs Lifespan'],
       image: 'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?auto=format&fit=crop&w=1200&q=80',
-      bgGradient: 'from-sky-800 via-sky-700 to-sky-600',
+      bgGradient: 'from-blue-900 via-blue-800 to-blue-950',
       accentColor: 'text-amber-400'
     },
     {
@@ -97,7 +97,7 @@ export const Hero: React.FC<HeroProps> = ({
       badgeTag: 'Zero Fuel Bills',
       featurePills: ['Depths to 250m', 'MPPT Controllers', 'Stainless Steel Body'],
       image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80',
-      bgGradient: 'from-sky-800 via-sky-700 to-sky-600',
+      bgGradient: 'from-blue-900 via-blue-800 to-blue-950',
       accentColor: 'text-emerald-400'
     },
     {
@@ -113,8 +113,8 @@ export const Hero: React.FC<HeroProps> = ({
       badgeTag: 'Zero Power Cost',
       featurePills: ['Radar Motion Sensor', 'IP67 Weatherproof', 'Dusk-to-Dawn Auto'],
       image: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=1200&q=80',
-      bgGradient: 'from-sky-800 via-sky-700 to-sky-600',
-      accentColor: 'text-sky-300'
+      bgGradient: 'from-blue-900 via-blue-800 to-blue-950',
+      accentColor: 'text-blue-300'
     },
     {
       id: 'generators-heaters',
@@ -129,7 +129,7 @@ export const Hero: React.FC<HeroProps> = ({
       badgeTag: '75% Power Saving',
       featurePills: ['Silent Diesel ATS', '75% Energy Reduction', '2-Year Warranty'],
       image: 'https://images.unsplash.com/photo-1613665813446-82a78c468a1d?auto=format&fit=crop&w=1200&q=80',
-      bgGradient: 'from-sky-800 via-sky-700 to-sky-600',
+      bgGradient: 'from-blue-900 via-blue-800 to-blue-950',
       accentColor: 'text-blue-400'
     }
   ];

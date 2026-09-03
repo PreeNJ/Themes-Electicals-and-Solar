@@ -55,7 +55,7 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-xs" id="main-header">
       {/* Top Announcement Bar */}
-      <div className="bg-blue-900 text-white text-xs py-1.5 px-4 font-medium" id="top-announcement-bar">
+      <div className="bg-sky-600 text-white text-xs py-1.5 px-4 font-medium" id="top-announcement-bar">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <div className="flex items-center gap-2 text-center sm:text-left flex-wrap">
             <span className="text-blue-100 flex items-center gap-1.5">
