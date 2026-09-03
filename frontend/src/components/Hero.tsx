@@ -5,7 +5,6 @@ import {
   Award,
   ArrowRight,
   Sliders,
-  FileCheck2,
   ChevronLeft,
   ChevronRight,
   CheckCircle2,
@@ -45,7 +44,7 @@ export const Hero: React.FC<HeroProps> = ({
   onOpenQuoteModal,
   onOpenAIAdvisor
 }) => {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(1);
   const [isPaused, setIsPaused] = useState(false);
   const [imageErrorMap, setImageErrorMap] = useState<Record<string, boolean>>({});
 
@@ -214,7 +213,7 @@ export const Hero: React.FC<HeroProps> = ({
 
   return (
     <div
-      className="relative bg-sky-800 text-white overflow-hidden select-none"
+      className="relative bg-blue-950 text-white overflow-hidden select-none"
       id="hero-banner-carousel"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
@@ -258,7 +257,7 @@ export const Hero: React.FC<HeroProps> = ({
         })}
 
         {/* Content Container with Responsive Typography */}
-        <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 w-full">
+        <div className="relative z-20 max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
 
             {/* Left Column: Copy & Actions */}
@@ -339,7 +338,7 @@ export const Hero: React.FC<HeroProps> = ({
                 </div>
 
                 {/* Card Image Container */}
-                <div className="h-36 sm:h-40 rounded-xl overflow-hidden mb-3 border border-slate-700/90 relative bg-slate-950">
+                <div className="h-44 sm:h-48 rounded-xl overflow-hidden mb-3 border border-slate-700/90 relative bg-slate-950">
                   <img
                     src={activeSlide.image}
                     alt={activeSlide.headline}
@@ -370,14 +369,6 @@ export const Hero: React.FC<HeroProps> = ({
                   </div>
                 </div>
 
-                {/* Instant Quote Button */}
-                <button
-                  onClick={() => triggerAction('quote')}
-                  className="w-full py-2.5 bg-gradient-to-r from-sky-500 to-sky-600 hover:from-sky-400 hover:to-sky-500 text-white font-bold rounded-xl text-xs transition-all flex items-center justify-center gap-1.5 shadow-md active:scale-95"
-                >
-                  <FileCheck2 className="w-3.5 h-3.5" />
-                  <span>Request Official Proforma</span>
-                </button>
               </div>
             </div>
 

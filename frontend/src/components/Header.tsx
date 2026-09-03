@@ -55,23 +55,23 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-xs" id="main-header">
       {/* Top Announcement Bar */}
-      <div className="bg-sky-700 text-white text-xs py-1.5 px-4 font-medium" id="top-announcement-bar">
+      <div className="bg-blue-900 text-white text-xs py-1.5 px-4 font-medium" id="top-announcement-bar">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
           <div className="flex items-center gap-2 text-center sm:text-left flex-wrap">
-            <span className="text-sky-100 flex items-center gap-1.5">
-              <Truck className="w-3.5 h-3.5 text-sky-300 shrink-0" />
+            <span className="text-blue-100 flex items-center gap-1.5">
+              <Truck className="w-3.5 h-3.5 text-red-300 shrink-0" />
               <strong className="text-white font-semibold">FREE Delivery in Nairobi CBD</strong> • Affordable Upcountry Dispatch • Utawala Jowin Business Arcade
             </span>
           </div>
 
-          <div className="flex items-center gap-3 text-sky-100">
+          <div className="flex items-center gap-3 text-blue-100">
             <a
               href={STORE_INFO.socialLinks.phone}
-              className="flex items-center gap-1.5 hover:text-white transition-colors bg-sky-800/80 px-2 py-0.5 rounded"
+              className="flex items-center gap-1.5 hover:text-white transition-colors bg-blue-950/80 px-2 py-0.5 rounded"
               title="Direct Phone Call"
               id="header-phone-link"
             >
-              <PhoneCall className="w-3.5 h-3.5 text-sky-300" />
+              <PhoneCall className="w-3.5 h-3.5 text-red-300" />
               <span className="font-bold text-white tracking-wide">{STORE_INFO.phone}</span>
             </a>
             <a
@@ -80,7 +80,7 @@ export const Header: React.FC<HeaderProps> = ({
               title="Send an Email"
               id="header-email-link"
             >
-              <Mail className="w-3.5 h-3.5 text-sky-200" />
+              <Mail className="w-3.5 h-3.5 text-blue-200" />
               <span>{STORE_INFO.email}</span>
             </a>
             <a
@@ -98,7 +98,7 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* Main Header Bar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+      <div className="max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-8 py-3">
         <div className="flex items-center justify-between gap-4">
 
           {/* Logo */}
@@ -111,12 +111,12 @@ export const Header: React.FC<HeaderProps> = ({
               className="flex items-center gap-3 text-left focus:outline-hidden group"
               id="brand-logo-btn"
             >
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-sky-400 via-sky-600 to-red-500 flex items-center justify-center text-white shadow-md ring-2 ring-sky-100 group-hover:scale-105 transition-transform">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 via-blue-700 to-red-600 flex items-center justify-center text-white shadow-md ring-2 ring-blue-100 group-hover:scale-105 transition-transform">
                 <Zap className="w-6 h-6 text-white fill-amber-300 stroke-[2.2]" />
               </div>
               <div>
                 <div className="flex items-center">
-                  <span className="font-extrabold text-xl sm:text-2xl tracking-tight text-sky-700 whitespace-nowrap">Themes Electricals and Solar Systems</span>
+                  <span className="font-extrabold text-xl sm:text-2xl tracking-tight text-blue-900 whitespace-nowrap">Themes <span className="text-red-600">Electricals</span></span>
                 </div>
                 <p className="text-[11px] text-slate-500 font-semibold tracking-wide">
                   Solar Systems • Lighting • Pumps • Generators • Heat Pumps
@@ -242,8 +242,8 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* Navigation Sub-Bar */}
-      <nav className="bg-sky-700 text-white text-xs font-medium border-t border-sky-600" id="main-nav-bar">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav className="bg-slate-950 text-white text-xs font-medium border-t border-slate-800" id="main-nav-bar">
+        <div className="max-w-[1520px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between overflow-x-auto py-1 scrollbar-none gap-2">
 
             <div className="flex items-center gap-1 sm:gap-2 shrink-0">
@@ -252,7 +252,7 @@ export const Header: React.FC<HeaderProps> = ({
               <div className="relative">
                 <button
                   onClick={() => setCategoriesDropdownOpen(!categoriesDropdownOpen)}
-                  className="flex items-center gap-1.5 px-3 py-2 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-md transition-colors shadow-xs"
+                  className="flex items-center gap-1.5 px-3 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-md transition-colors shadow-xs"
                   id="categories-dropdown-btn"
                 >
                   <Layers className="w-3.5 h-3.5" />
@@ -297,7 +297,7 @@ export const Header: React.FC<HeaderProps> = ({
                 }}
                 className={`px-3 py-2 rounded-md transition-colors ${activeTab === 'catalog'
                   ? 'text-white bg-blue-700 font-bold'
-                  : 'text-sky-100 hover:text-white hover:bg-sky-600'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800'
                   }`}
                 id="nav-catalog-btn"
               >
@@ -308,7 +308,7 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={() => onNavigateTab('sizer')}
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-md transition-colors ${activeTab === 'sizer'
                   ? 'text-white bg-blue-700 font-bold'
-                  : 'text-sky-100 hover:text-white hover:bg-sky-600'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800'
                   }`}
                 id="nav-sizer-btn"
               >
@@ -323,7 +323,7 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={() => onNavigateTab('pumps')}
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-md transition-colors ${activeTab === 'pumps'
                   ? 'text-white bg-blue-700 font-bold'
-                  : 'text-sky-100 hover:text-white hover:bg-sky-600'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800'
                   }`}
                 id="nav-pumps-btn"
               >
@@ -335,7 +335,7 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={() => onNavigateTab('kits')}
                 className={`flex items-center gap-1.5 px-3 py-2 rounded-md transition-colors ${activeTab === 'kits'
                   ? 'text-white bg-blue-700 font-bold'
-                  : 'text-sky-100 hover:text-white hover:bg-sky-600'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800'
                   }`}
                 id="nav-kits-btn"
               >
@@ -347,7 +347,7 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={() => onNavigateTab('contact')}
                 className={`flex items-center gap-1 px-3 py-2 rounded-md transition-colors ${activeTab === 'contact'
                   ? 'text-white bg-blue-700 font-bold'
-                  : 'text-sky-100 hover:text-white hover:bg-sky-600'
+                  : 'text-slate-300 hover:text-white hover:bg-slate-800'
                   }`}
                 id="nav-contact-btn"
               >
