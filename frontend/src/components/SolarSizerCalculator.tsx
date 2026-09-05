@@ -1,13 +1,12 @@
 import React, { useState, useMemo } from 'react';
-import { 
-  Sliders, 
-  Sun, 
-  Zap, 
-  BatteryCharging, 
-  RotateCcw, 
-  ShoppingCart, 
-  FileText, 
-  Sparkles,
+import {
+  Sliders,
+  Sun,
+  Zap,
+  BatteryCharging,
+  RotateCcw,
+  ShoppingCart,
+  FileText,
   Info,
   Plus,
   Minus
@@ -19,16 +18,14 @@ import { formatKES, formatNumber } from '../utils/formatters';
 interface SolarSizerCalculatorProps {
   onAddToCart: (product: Product, quantity?: number) => void;
   onOpenQuoteModalWithSizing: (result: SizingResult) => void;
-  onOpenAIAdvisorWithContext: (context: any) => void;
 }
 
 export const SolarSizerCalculator: React.FC<SolarSizerCalculatorProps> = ({
   onAddToCart,
-  onOpenQuoteModalWithSizing,
-  onOpenAIAdvisorWithContext
+  onOpenQuoteModalWithSizing
 }) => {
   const [calcMode, setCalcMode] = useState<'appliances' | 'bill'>('appliances');
-  
+
   // Appliance Quantities and Hours state
   const [applianceState, setApplianceState] = useState<Record<string, { qty: number; hours: number }>>(() => {
     const initial: Record<string, { qty: number; hours: number }> = {};
@@ -214,7 +211,7 @@ export const SolarSizerCalculator: React.FC<SolarSizerCalculatorProps> = ({
   return (
     <section className="py-10 bg-slate-50 border-t border-slate-200" id="solar-sizer-section">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-8">
           <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-100 border border-blue-300 text-blue-900 text-xs font-bold uppercase tracking-wider mb-2">
@@ -234,21 +231,19 @@ export const SolarSizerCalculator: React.FC<SolarSizerCalculatorProps> = ({
           <div className="bg-slate-200 p-1 rounded-xl flex gap-1 max-w-md w-full">
             <button
               onClick={() => setCalcMode('appliances')}
-              className={`flex-1 py-2 px-3 rounded-lg text-xs sm:text-sm font-bold transition-all ${
-                calcMode === 'appliances'
+              className={`flex-1 py-2 px-3 rounded-lg text-xs sm:text-sm font-bold transition-all ${calcMode === 'appliances'
                   ? 'bg-blue-900 text-white shadow-sm'
                   : 'text-slate-700 hover:text-slate-900'
-              }`}
+                }`}
             >
               1. Sizing by Appliances
             </button>
             <button
               onClick={() => setCalcMode('bill')}
-              className={`flex-1 py-2 px-3 rounded-lg text-xs sm:text-sm font-bold transition-all ${
-                calcMode === 'bill'
+              className={`flex-1 py-2 px-3 rounded-lg text-xs sm:text-sm font-bold transition-all ${calcMode === 'bill'
                   ? 'bg-blue-900 text-white shadow-sm'
                   : 'text-slate-700 hover:text-slate-900'
-              }`}
+                }`}
             >
               2. Sizing by KPLC Bill (KES)
             </button>
@@ -257,10 +252,10 @@ export const SolarSizerCalculator: React.FC<SolarSizerCalculatorProps> = ({
 
         {/* Main Grid: Inputs on Left, Real-Time Result Dashboard on Right */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
+
           {/* Inputs Column */}
           <div className="lg:col-span-7 space-y-5">
-            
+
             {calcMode === 'appliances' ? (
               <div className="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-sm">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-100">
@@ -268,7 +263,7 @@ export const SolarSizerCalculator: React.FC<SolarSizerCalculatorProps> = ({
                     <h3 className="font-bold text-slate-900 text-base">Select Your Daily Household & Office Appliances</h3>
                     <p className="text-xs text-slate-500">Adjust quantity and running hours per day</p>
                   </div>
-                  
+
                   {/* Reset Actions */}
                   <div className="flex items-center gap-2">
                     <button
@@ -388,11 +383,10 @@ export const SolarSizerCalculator: React.FC<SolarSizerCalculatorProps> = ({
                     <button
                       key={preset}
                       onClick={() => setMonthlyBillKES(preset)}
-                      className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all ${
-                        monthlyBillKES === preset
+                      className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all ${monthlyBillKES === preset
                           ? 'bg-blue-50 border-blue-600 text-blue-950 ring-1 ring-blue-600'
                           : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
-                      }`}
+                        }`}
                     >
                       {formatKES(preset)} / mo
                     </button>
@@ -437,11 +431,10 @@ export const SolarSizerCalculator: React.FC<SolarSizerCalculatorProps> = ({
                       <button
                         key={opt.hours}
                         onClick={() => setBackupHoursNight(opt.hours)}
-                        className={`p-2.5 rounded-xl text-xs font-semibold border transition-all text-center ${
-                          backupHoursNight === opt.hours
+                        className={`p-2.5 rounded-xl text-xs font-semibold border transition-all text-center ${backupHoursNight === opt.hours
                             ? 'bg-blue-900 border-blue-900 text-white font-bold'
                             : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
-                        }`}
+                          }`}
                       >
                         {opt.label}
                       </button>
@@ -463,11 +456,10 @@ export const SolarSizerCalculator: React.FC<SolarSizerCalculatorProps> = ({
                   <button
                     key={pref}
                     onClick={() => setSystemPreference(pref)}
-                    className={`px-3 py-1.5 rounded-lg font-bold text-xs uppercase transition-colors ${
-                      systemPreference === pref
+                    className={`px-3 py-1.5 rounded-lg font-bold text-xs uppercase transition-colors ${systemPreference === pref
                         ? 'bg-red-600 text-white'
                         : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                    }`}
+                      }`}
                   >
                     {pref === 'hybrid' ? 'Hybrid Solar' : pref === 'offgrid' ? 'Off-Grid' : 'Grid-Tie'}
                   </button>
@@ -479,9 +471,9 @@ export const SolarSizerCalculator: React.FC<SolarSizerCalculatorProps> = ({
 
           {/* Sizing Results Dashboard (Right Column) */}
           <div className="lg:col-span-5 space-y-4">
-            
+
             <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-white rounded-2xl p-6 border border-slate-800 shadow-xl space-y-5">
-              
+
               <div className="flex items-center justify-between pb-3 border-b border-slate-800">
                 <div>
                   <div className="flex items-center gap-2">
@@ -507,7 +499,7 @@ export const SolarSizerCalculator: React.FC<SolarSizerCalculatorProps> = ({
 
               {/* Equipment Specifications Grid */}
               <div className="space-y-3 text-xs">
-                
+
                 {/* Inverter */}
                 <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 flex items-start gap-3">
                   <div className="p-2 rounded-lg bg-red-600/20 text-red-400 shrink-0">
@@ -599,21 +591,13 @@ export const SolarSizerCalculator: React.FC<SolarSizerCalculatorProps> = ({
                   <span>Load Sized System to Cart</span>
                 </button>
 
-                <div className="grid grid-cols-2 gap-2">
+                <div>
                   <button
                     onClick={() => onOpenQuoteModalWithSizing(sizingResult)}
-                    className="py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors border border-slate-700"
+                    className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors border border-slate-700"
                   >
                     <FileText className="w-3.5 h-3.5 text-slate-400" />
                     <span>Get Proforma Quote</span>
-                  </button>
-
-                  <button
-                    onClick={() => onOpenAIAdvisorWithContext(sizingResult)}
-                    className="py-2.5 bg-blue-900 hover:bg-blue-800 text-blue-200 font-semibold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors border border-blue-700"
-                  >
-                    <Sparkles className="w-3.5 h-3.5 text-blue-300" />
-                    <span>Ask AI Engineer</span>
                   </button>
                 </div>
               </div>

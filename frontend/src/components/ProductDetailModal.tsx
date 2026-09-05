@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { 
-  X, 
-  Star, 
-  ShieldCheck, 
-  Truck, 
-  ShoppingCart, 
-  FileText, 
-  Zap, 
-  Check, 
+import {
+  X,
+  Star,
+  ShieldCheck,
+  Truck,
+  ShoppingCart,
+  FileText,
+  Check,
   AlertCircle
 } from 'lucide-react';
 import { Product } from '../types';
@@ -19,15 +18,13 @@ interface ProductDetailModalProps {
   onClose: () => void;
   onAddToCart: (product: Product, quantity: number) => void;
   onOpenQuoteModal: (product: Product) => void;
-  onAskAIAboutProduct: (product: Product) => void;
 }
 
 export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   product,
   onClose,
   onAddToCart,
-  onOpenQuoteModal,
-  onAskAIAboutProduct
+  onOpenQuoteModal
 }) => {
   const [qty, setQty] = useState(1);
 
@@ -37,8 +34,8 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   const isAtMaxStock = qty >= product.stockCount;
 
   return (
-    <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-xs animate-in fade-in duration-200 cursor-pointer" 
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/75 backdrop-blur-xs animate-in fade-in duration-200 cursor-pointer"
       id="product-detail-modal"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
@@ -46,11 +43,11 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
         }
       }}
     >
-      <div 
+      <div
         className="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-slate-200 relative cursor-default"
         onClick={(e) => e.stopPropagation()}
       >
-        
+
         {/* Close Button */}
         <button
           onClick={onClose}
@@ -61,7 +58,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
         </button>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
-          
+
           {/* Left Column: Image & Badges */}
           <div className="space-y-4">
             <div className="relative h-64 sm:h-72 rounded-xl bg-slate-100 overflow-hidden border border-slate-200 shadow-2xs">
@@ -90,17 +87,6 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               </div>
             </div>
 
-            {/* AI Advisor prompt button */}
-            <button
-              onClick={() => {
-                onClose();
-                onAskAIAboutProduct(product);
-              }}
-              className="w-full py-2.5 px-3 rounded-xl bg-blue-950 text-white text-xs font-bold flex items-center justify-center gap-2 hover:bg-blue-900 transition-colors border border-blue-800 shadow-2xs"
-            >
-              <Zap className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-              <span>Ask AI Engineer About Compatibility</span>
-            </button>
           </div>
 
           {/* Right Column: Title, Specs & Purchasing */}
@@ -221,11 +207,10 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                     onClose();
                   }}
                   disabled={isOutOfStock}
-                  className={`py-3.5 font-bold rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition-colors ${
-                    isOutOfStock 
-                      ? 'bg-slate-300 text-slate-500 cursor-not-allowed' 
+                  className={`py-3.5 font-bold rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition-colors ${isOutOfStock
+                      ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
                       : 'bg-red-600 hover:bg-red-700 active:bg-red-800 text-white shadow-red-600/20'
-                  }`}
+                    }`}
                   id="add-to-cart-modal-btn"
                 >
                   <ShoppingCart className="w-4 h-4" />

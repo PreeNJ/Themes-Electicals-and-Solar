@@ -18,7 +18,6 @@ interface HeroProps {
   onExploreProducts: () => void;
   onOpenSizer: () => void;
   onOpenQuoteModal: () => void;
-  onOpenAIAdvisor: () => void;
 }
 
 interface BannerSlide {
@@ -30,7 +29,7 @@ interface BannerSlide {
   primaryActionLabel: string;
   onPrimaryAction: 'sizer' | 'explore' | 'quote' | 'ai';
   secondaryActionLabel: string;
-  onSecondaryAction: 'sizer' | 'explore' | 'quote' | 'ai';
+  onSecondaryAction: 'sizer' | 'explore' | 'quote';
   badgeTag: string;
   featurePills: string[];
   image: string;
@@ -41,8 +40,7 @@ interface BannerSlide {
 export const Hero: React.FC<HeroProps> = ({
   onExploreProducts,
   onOpenSizer,
-  onOpenQuoteModal,
-  onOpenAIAdvisor
+  onOpenQuoteModal
 }) => {
   const [currentSlide, setCurrentSlide] = useState(1);
   const [isPaused, setIsPaused] = useState(false);
@@ -108,8 +106,8 @@ export const Hero: React.FC<HeroProps> = ({
       description: 'Dusk-to-dawn radar motion sensors, integrated LiFePO4 batteries, and heavy-duty galvanized mounting.',
       primaryActionLabel: 'View Street Lights',
       onPrimaryAction: 'explore',
-      secondaryActionLabel: 'Ask AI Advisor',
-      onSecondaryAction: 'ai',
+      secondaryActionLabel: 'Request a Quote',
+      onSecondaryAction: 'quote',
       badgeTag: 'Zero Power Cost',
       featurePills: ['Radar Motion Sensor', 'IP67 Weatherproof', 'Dusk-to-Dawn Auto'],
       image: 'https://images.unsplash.com/photo-1508873696983-2df5293cb32f?auto=format&fit=crop&w=1200&q=80',
@@ -192,7 +190,7 @@ export const Hero: React.FC<HeroProps> = ({
     touchEndXRef.current = null;
   };
 
-  const triggerAction = (actionType: 'sizer' | 'explore' | 'quote' | 'ai') => {
+  const triggerAction = (actionType: 'sizer' | 'explore' | 'quote') => {
     switch (actionType) {
       case 'sizer':
         onOpenSizer();
@@ -202,9 +200,6 @@ export const Hero: React.FC<HeroProps> = ({
         break;
       case 'quote':
         onOpenQuoteModal();
-        break;
-      case 'ai':
-        onOpenAIAdvisor();
         break;
     }
   };

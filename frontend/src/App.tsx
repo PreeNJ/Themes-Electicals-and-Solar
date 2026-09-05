@@ -10,7 +10,6 @@ import { Footer } from './components/Footer';
 import { ProductDetailModal } from './components/ProductDetailModal';
 import { CartDrawer } from './components/CartDrawer';
 import { QuoteModal } from './components/QuoteModal';
-import { AIAssistantModal } from './components/AIAssistantModal';
 import { ProductComparison } from './components/ProductComparison';
 import { Product, CartItem, SolarKit, SizingResult } from './types';
 import { Zap, ShoppingBag, ShoppingCart, Phone, ArrowLeft, Home, Sun, Droplets, Package, MapPin, CheckCircle2 } from 'lucide-react';
@@ -36,14 +35,12 @@ export default function App() {
   // Modals & Drawers State
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
   const [isQuoteOpen, setIsQuoteOpen] = useState<boolean>(false);
-  const [isAIOpen, setIsAIOpen] = useState<boolean>(false);
   const [isComparisonOpen, setIsComparisonOpen] = useState<boolean>(false);
   const [viewingProduct, setViewingProduct] = useState<Product | null>(null);
 
   // Specific Quote Context State
   const [quoteKit, setQuoteKit] = useState<SolarKit | null>(null);
   const [quoteSizingResult, setQuoteSizingResult] = useState<SizingResult | null>(null);
-  const [aiContext, setAiContext] = useState<any>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Synchronize Browser History & Hash for seamless Back/Forward Navigation
@@ -224,22 +221,6 @@ export default function App() {
     setIsQuoteOpen(true);
   };
 
-  const handleOpenAIAdvisorWithContext = (context: any) => {
-    setAiContext(context);
-    setIsAIOpen(true);
-  };
-
-  const handleAskAIAboutProduct = (product: Product) => {
-    setAiContext({
-      productName: product.name,
-      brand: product.brand,
-      category: product.category,
-      specs: product.specs,
-      priceKES: product.priceKES
-    });
-    setIsAIOpen(true);
-  };
-
   const totalCartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
   const totalCartKES = cart.reduce((sum, item) => sum + item.product.priceKES * item.quantity, 0);
 
@@ -261,10 +242,6 @@ export default function App() {
         onOpenCart={() => setIsCartOpen(true)}
         onOpenQuoteModal={() => handleOpenQuoteGeneral()}
         onOpenComparison={() => setIsComparisonOpen(true)}
-        onOpenAIAdvisor={() => {
-          setAiContext(null);
-          setIsAIOpen(true);
-        }}
         onSelectCategory={(cat) => setSelectedCategory(cat)}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -283,7 +260,6 @@ export default function App() {
               }}
               onOpenSizer={() => navigateToTab('sizer')}
               onOpenQuoteModal={() => handleOpenQuoteGeneral()}
-              onOpenAIAdvisor={() => setIsAIOpen(true)}
             />
 
             {/* Turnkey Kits Showcase Strip */}
@@ -313,7 +289,6 @@ export default function App() {
             <SolarSizerCalculator
               onAddToCart={handleAddToCart}
               onOpenQuoteModalWithSizing={handleOpenQuoteWithSizing}
-              onOpenAIAdvisorWithContext={handleOpenAIAdvisorWithContext}
             />
 
             {/* Borehole Pumping Calculator */}
@@ -350,7 +325,6 @@ export default function App() {
             <SolarSizerCalculator
               onAddToCart={handleAddToCart}
               onOpenQuoteModalWithSizing={handleOpenQuoteWithSizing}
-              onOpenAIAdvisorWithContext={handleOpenAIAdvisorWithContext}
             />
           </div>
         )}
@@ -435,7 +409,7 @@ export default function App() {
         )}
       </main>
 
-      {/* Floating contact and assistant actions */}
+      {/* Floating contact actions */}
       <div className="fixed bottom-5 right-5 z-40 flex flex-col gap-2.5 items-end">
         <a
           href={STORE_INFO.socialLinks.phone}
@@ -459,18 +433,6 @@ export default function App() {
           <WhatsAppIcon className="w-6 h-6" />
         </a>
 
-        <button
-          onClick={() => {
-            setAiContext(null);
-            setIsAIOpen(true);
-          }}
-          className="w-12 h-12 bg-sky-900 hover:bg-sky-800 text-sky-300 rounded-full flex items-center justify-center shadow-lg border border-sky-400/40 transition-transform hover:scale-110"
-          title="Ask Themes Electricals AI Engineer"
-          aria-label="Ask Themes Electricals AI Engineer"
-          id="floating-ai-btn"
-        >
-          <Zap className="w-5 h-5 fill-sky-300" />
-        </button>
       </div>
 
       {/* Global Footer */}
@@ -488,7 +450,6 @@ export default function App() {
         onClose={() => setViewingProduct(null)}
         onAddToCart={handleAddToCart}
         onOpenQuoteModal={(p) => handleOpenQuoteGeneral()}
-        onAskAIAboutProduct={handleAskAIAboutProduct}
       />
 
       <CartDrawer
@@ -521,12 +482,6 @@ export default function App() {
         cart={cart}
         customKit={quoteKit}
         sizingResult={quoteSizingResult}
-      />
-
-      <AIAssistantModal
-        isOpen={isAIOpen}
-        onClose={() => setIsAIOpen(false)}
-        initialContext={aiContext}
       />
 
       <ProductComparison

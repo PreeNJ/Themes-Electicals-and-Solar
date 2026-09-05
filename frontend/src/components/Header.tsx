@@ -11,7 +11,6 @@ import {
   X,
   Layers,
   Droplets,
-  HelpCircle,
   Package,
   Mail,
   Truck
@@ -26,7 +25,6 @@ interface HeaderProps {
   onOpenCart: () => void;
   onOpenQuoteModal: () => void;
   onOpenComparison: () => void;
-  onOpenAIAdvisor: () => void;
   onSelectCategory: (cat: string) => void;
   searchQuery: string;
   onSearchChange: (q: string) => void;
@@ -40,7 +38,6 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenCart,
   onOpenQuoteModal,
   onOpenComparison,
-  onOpenAIAdvisor,
   onSelectCategory,
   searchQuery,
   onSearchChange,
@@ -357,17 +354,6 @@ export const Header: React.FC<HeaderProps> = ({
 
             </div>
 
-            {/* Right side help chip */}
-            <div className="hidden lg:flex items-center gap-3 shrink-0">
-              <button
-                onClick={onOpenAIAdvisor}
-                className="flex items-center gap-1 text-slate-400 hover:text-blue-300 transition-colors text-[11px]"
-              >
-                <HelpCircle className="w-3.5 h-3.5 text-red-400" />
-                <span>Need Technical Advice? Ask Chat Bot</span>
-              </button>
-            </div>
-
           </div>
         </div>
       </nav>
@@ -433,20 +419,10 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="pt-2 border-t border-slate-800 flex gap-2">
             <button
               onClick={() => {
-                onOpenAIAdvisor();
-                setMobileMenuOpen(false);
-              }}
-              className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-xs flex items-center justify-center gap-1.5 shadow-md"
-            >
-              <Zap className="w-3.5 h-3.5 fill-amber-300 text-amber-300" />
-              <span>Chat Bot Advisor</span>
-            </button>
-            <button
-              onClick={() => {
                 onOpenQuoteModal();
                 setMobileMenuOpen(false);
               }}
-              className="flex-1 py-2.5 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-lg text-xs flex items-center justify-center gap-1 shadow-md"
+              className="w-full py-2.5 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-lg text-xs flex items-center justify-center gap-1 shadow-md"
             >
               <FileText className="w-3.5 h-3.5" />
               <span>Get Quote</span>
