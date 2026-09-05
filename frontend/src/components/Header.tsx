@@ -151,16 +151,6 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Action Tools */}
           <div className="flex items-center gap-2 sm:gap-3">
 
-            {/* Chat Bot Advisor Button */}
-            <button
-              onClick={onOpenAIAdvisor}
-              className="hidden lg:flex items-center gap-1.5 px-3 py-2 bg-sky-700 text-white hover:bg-sky-800 rounded-lg text-xs font-semibold shadow-xs transition-colors border border-sky-600"
-              id="ai-advisor-header-btn"
-            >
-              <Zap className="w-3.5 h-3.5 text-amber-300 fill-amber-300" />
-              <span>Chat Bot Advisor</span>
-            </button>
-
             {/* Comparison Button */}
             {comparedProducts.length > 0 && (
               <button

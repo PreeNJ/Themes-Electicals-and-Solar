@@ -27,7 +27,7 @@ interface BannerSlide {
   accentWord: string;
   description: string;
   primaryActionLabel: string;
-  onPrimaryAction: 'sizer' | 'explore' | 'quote' | 'ai';
+  onPrimaryAction: 'sizer' | 'explore' | 'quote';
   secondaryActionLabel: string;
   onSecondaryAction: 'sizer' | 'explore' | 'quote';
   badgeTag: string;
