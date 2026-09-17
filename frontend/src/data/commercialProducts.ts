@@ -455,90 +455,90 @@ export const COMMERCIAL_PRODUCTS: Product[] = [
   // ==========================================
   // HEAT PUMPS (Water Heating Efficiency)
   // ==========================================
-//   {
-//     id: 'domestic-air-source-heat-pump-200l',
-//     name: 'Midea 200L All-In-One Energy-Saving Domestic Heat Pump Water Heater',
-//     brand: 'Midea Commercial',
-//     category: 'heat_pumps',
-//     priceKES: 145000,
-//     originalPriceKES: 170000,
-//     rating: 4.9,
-//     reviewCount: 23,
-//     inStock: true,
-//     stockCount: 10,
-//     image: 'https://solarshop.co.ke/wp-content/uploads/2024/05/Eraslan-200-Liters-Pressurized-Flat-Plate-indirect-Solar-Water-Heater_kenya.webp',
-//     badge: '75% Power Saving',
-//     shortDesc: 'Cuts water heating electric bills by 75% compared to conventional geysers. Provides hot water 24/7 rain or shine.',
-//     description: 'Extracts ambient thermal energy from the air and transfers it into water using high-efficiency R134a refrigerant cycle. Unlike roof solar thermal tubes, heat pumps work flawlessly during cold, cloudy, or rainy Nairobi days.',
-//     specs: {
-//       'Tank Capacity': '200 Liters Enamel Food-Grade Stainless Steel Tank',
-//       'Heating Power': 'Heat Pump 2.8kW (Consumes only 680W electricity)',
-//       'COP Rating': '4.1 High Efficiency Coefficient of Performance',
-//       'Hot Water Temp': 'Up to 65°C',
-//       'Backup Element': 'Built-in 1.5kW Auxiliary Booster'
-//     },
-//     warranty: '5-Year Compressor Warranty | 3-Year System',
-//     features: [
-//       'Saves 75% power compared to standard electric resistance geysers',
-//       'Operates seamlessly with home solar systems with very low 680W draw',
-//       'Smart Wi-Fi smartphone app for temperature scheduling'
-//     ]
-//   },
-//   {
-//     id: 'domestic-air-source-heat-pump-300l',
-//     name: 'Midea 300L Premium Villa Air-Source Heat Pump Water Heater',
-//     brand: 'Midea Commercial',
-//     category: 'heat_pumps',
-//     priceKES: 195000,
-//     originalPriceKES: 230000,
-//     rating: 5.0,
-//     reviewCount: 18,
-//     inStock: true,
-//     stockCount: 8,
-//     image: 'https://solarshop.co.ke/wp-content/uploads/2024/05/Eraslan-300-Liters-Pressurized-Flat-Plate-indirect-Solar-Water-Heater-Kenya.webp',
-//     badge: 'Villa & Large Family',
-//     shortDesc: '300-Liter luxury hot water solution for multi-bathroom homes, hotels, and guest houses with continuous high-volume demand.',
-//     description: 'Dual-coil pressurized heat pump water heater with anti-legionella sterilization cycle, titanium enamel tank, and Panasonic DC inverter compressor.',
-//     specs: {
-//       'Tank Capacity': '300 Liters (Ideal for 6-8 Person Households)',
-//       'Heating Output': '4.2 kW Thermal Output (Consumes only 980W power)',
-//       'COP': '4.3 Seasonal Efficiency Rating',
-//       'Max Water Pressure': '0.7 MPa (High pressure shower compatible)'
-//     },
-//     warranty: '5-Year Compressor Warranty',
-//     features: [
-//       'Hot water for up to 5 simultaneous rain-showers',
-//       'Automatic anti-bacterial 70°C pasteurization cycle',
-//       'Quiet operation at under 45 dB'
-//     ]
-//   },
-//   {
-//     id: 'commercial-swimming-pool-heat-pump',
-//     name: 'Themes AquaTherm 18kW Commercial Swimming Pool Heat Pump',
-//     brand: 'Themes Professional',
-//     category: 'heat_pumps',
-//     priceKES: 285000,
-//     originalPriceKES: 330000,
-//     rating: 4.8,
-//     reviewCount: 12,
-//     inStock: true,
-//     stockCount: 5,
-//     image: 'https://macire.co.ke/wp-content/uploads/2025/10/150Ltrs-stainless-Non-Pressurised-3.jpg',
-//     badge: 'Pool & Spa Luxury',
-//     shortDesc: 'Maintains comfortable 28°C - 32°C swimming pool temperatures all year round for residential and hotel pools up to 60,000 liters.',
-//     description: 'Equipped with spiral titanium tube heat exchanger resistant to chlorine, salt, and water corrosion. Mitsubishi DC inverter compressor dynamically modulates output according to weather conditions.',
-//     specs: {
-//       'Heating Capacity': '18.0 kW (61,000 BTU/h)',
-//       'Power Input': '2.9 kW at COP 6.2',
-//       'Pool Volume': 'Suitable for pools up to 55 - 65 m³ (60,000 Liters)',
-//       'Heat Exchanger': 'Titanium Tube in PVC Shell (Chlorine & Salt Resistant)',
-//       'Working Range': '-7°C to 43°C Ambient Air Temperature'
-//     },
-//     warranty: '3-Year Warranty | 5-Year Titanium Exchanger',
-//     features: [
-//       'Enables year-round heated swimming even during chilly Nairobi July weather',
-//       'Up to 80% cheaper than LPG gas or electric resistive pool heaters',
-//       'Smart digital touchscreen with automatic temperature maintenance'
-//     ]
-//   }
-// ];
+  {
+    id: 'domestic-air-source-heat-pump-200l',
+    name: 'Midea 200L All-In-One Energy-Saving Domestic Heat Pump Water Heater',
+    brand: 'Midea Commercial',
+    category: 'heat_pumps',
+    priceKES: 145000,
+    originalPriceKES: 170000,
+    rating: 4.9,
+    reviewCount: 23,
+    inStock: true,
+    stockCount: 10,
+    image: 'https://solarshop.co.ke/wp-content/uploads/2024/05/Eraslan-200-Liters-Pressurized-Flat-Plate-indirect-Solar-Water-Heater_kenya.webp',
+    badge: '75% Power Saving',
+    shortDesc: 'Cuts water heating electric bills by 75% compared to conventional geysers. Provides hot water 24/7 rain or shine.',
+    description: 'Extracts ambient thermal energy from the air and transfers it into water using high-efficiency R134a refrigerant cycle. Unlike roof solar thermal tubes, heat pumps work flawlessly during cold, cloudy, or rainy Nairobi days.',
+    specs: {
+      'Tank Capacity': '200 Liters Enamel Food-Grade Stainless Steel Tank',
+      'Heating Power': 'Heat Pump 2.8kW (Consumes only 680W electricity)',
+      'COP Rating': '4.1 High Efficiency Coefficient of Performance',
+      'Hot Water Temp': 'Up to 65°C',
+      'Backup Element': 'Built-in 1.5kW Auxiliary Booster'
+    },
+    warranty: '5-Year Compressor Warranty | 3-Year System',
+    features: [
+      'Saves 75% power compared to standard electric resistance geysers',
+      'Operates seamlessly with home solar systems with very low 680W draw',
+      'Smart Wi-Fi smartphone app for temperature scheduling'
+    ]
+  },
+  {
+    id: 'domestic-air-source-heat-pump-300l',
+    name: 'Midea 300L Premium Villa Air-Source Heat Pump Water Heater',
+    brand: 'Midea Commercial',
+    category: 'heat_pumps',
+    priceKES: 195000,
+    originalPriceKES: 230000,
+    rating: 5.0,
+    reviewCount: 18,
+    inStock: true,
+    stockCount: 8,
+    image: 'https://solarshop.co.ke/wp-content/uploads/2024/05/Eraslan-300-Liters-Pressurized-Flat-Plate-indirect-Solar-Water-Heater-Kenya.webp',
+    badge: 'Villa & Large Family',
+    shortDesc: '300-Liter luxury hot water solution for multi-bathroom homes, hotels, and guest houses with continuous high-volume demand.',
+    description: 'Dual-coil pressurized heat pump water heater with anti-legionella sterilization cycle, titanium enamel tank, and Panasonic DC inverter compressor.',
+    specs: {
+      'Tank Capacity': '300 Liters (Ideal for 6-8 Person Households)',
+      'Heating Output': '4.2 kW Thermal Output (Consumes only 980W power)',
+      'COP': '4.3 Seasonal Efficiency Rating',
+      'Max Water Pressure': '0.7 MPa (High pressure shower compatible)'
+    },
+    warranty: '5-Year Compressor Warranty',
+    features: [
+      'Hot water for up to 5 simultaneous rain-showers',
+      'Automatic anti-bacterial 70°C pasteurization cycle',
+      'Quiet operation at under 45 dB'
+    ]
+  },
+  {
+    id: 'commercial-swimming-pool-heat-pump',
+    name: 'Themes AquaTherm 18kW Commercial Swimming Pool Heat Pump',
+    brand: 'Themes Professional',
+    category: 'heat_pumps',
+    priceKES: 285000,
+    originalPriceKES: 330000,
+    rating: 4.8,
+    reviewCount: 12,
+    inStock: true,
+    stockCount: 5,
+    image: 'https://macire.co.ke/wp-content/uploads/2025/10/150Ltrs-stainless-Non-Pressurised-3.jpg',
+    badge: 'Pool & Spa Luxury',
+    shortDesc: 'Maintains comfortable 28°C - 32°C swimming pool temperatures all year round for residential and hotel pools up to 60,000 liters.',
+    description: 'Equipped with spiral titanium tube heat exchanger resistant to chlorine, salt, and water corrosion. Mitsubishi DC inverter compressor dynamically modulates output according to weather conditions.',
+    specs: {
+      'Heating Capacity': '18.0 kW (61,000 BTU/h)',
+      'Power Input': '2.9 kW at COP 6.2',
+      'Pool Volume': 'Suitable for pools up to 55 - 65 m³ (60,000 Liters)',
+      'Heat Exchanger': 'Titanium Tube in PVC Shell (Chlorine & Salt Resistant)',
+      'Working Range': '-7°C to 43°C Ambient Air Temperature'
+    },
+    warranty: '3-Year Warranty | 5-Year Titanium Exchanger',
+    features: [
+      'Enables year-round heated swimming even during chilly Nairobi July weather',
+      'Up to 80% cheaper than LPG gas or electric resistive pool heaters',
+      'Smart digital touchscreen with automatic temperature maintenance'
+    ]
+  }
+];
