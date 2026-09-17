@@ -1,12 +1,12 @@
 import React, { useState, useMemo } from 'react';
-import {
-  Search,
-  Filter,
-  Star,
-  ShoppingCart,
-  Eye,
-  ShieldCheck,
-  Sliders,
+import { 
+  Search, 
+  Filter, 
+  Star, 
+  ShoppingCart, 
+  Eye, 
+  ShieldCheck, 
+  Sliders, 
   Truck,
   PackageCheck
 } from 'lucide-react';
@@ -46,9 +46,22 @@ export const Catalog: React.FC<CatalogProps> = ({
   // Filtered & Sorted Products
   const filteredProducts = useMemo(() => {
     return allProducts.filter((product) => {
-      // Category filter
-      if (selectedCategory !== 'all' && product.category !== selectedCategory) {
-        return false;
+      // Category & Subcategory filter
+      if (selectedCategory !== 'all') {
+        if (selectedCategory === 'solar_systems') {
+          if (product.category !== 'solar_systems') return false;
+        } else if (selectedCategory === 'inverters') {
+          const isInv = product.id.includes('inverter') || product.name.toLowerCase().includes('inverter');
+          if (!isInv) return false;
+        } else if (selectedCategory === 'batteries') {
+          const isBat = product.id.includes('battery') || product.name.toLowerCase().includes('battery') || product.brand.toLowerCase() === 'dyness';
+          if (!isBat) return false;
+        } else if (selectedCategory === 'panels') {
+          const isPanel = product.id.includes('solar-panel') || product.name.toLowerCase().includes('solar panel') || product.name.toLowerCase().includes('bifacial');
+          if (!isPanel) return false;
+        } else if (product.category !== selectedCategory) {
+          return false;
+        }
       }
       // Brand filter
       if (selectedBrand !== 'all' && product.brand.toLowerCase() !== selectedBrand.toLowerCase()) {
@@ -69,7 +82,7 @@ export const Catalog: React.FC<CatalogProps> = ({
         const matchesBrand = product.brand.toLowerCase().includes(q);
         const matchesDesc = product.description.toLowerCase().includes(q);
         const matchesShort = product.shortDesc.toLowerCase().includes(q);
-        const matchesSpecs = Object.entries(product.specs).some(([k, v]) =>
+        const matchesSpecs = Object.entries(product.specs).some(([k, v]) => 
           k.toLowerCase().includes(q) || v.toLowerCase().includes(q)
         );
         if (!matchesName && !matchesBrand && !matchesDesc && !matchesShort && !matchesSpecs) {
@@ -88,16 +101,16 @@ export const Catalog: React.FC<CatalogProps> = ({
   return (
     <section className="py-8 sm:py-12 bg-slate-50/50" id="products-catalog-section">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
+        
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 pb-4 border-b border-slate-200 gap-4">
           <div>
             <div className="flex items-center gap-2 text-xs font-bold text-red-600 uppercase tracking-wider mb-1">
               <span>Themes Electricals Inventory</span>
               <span>•</span>
-              <span className="text-blue-900 font-bold">Utawala Showroom Stock</span>
+              <span className="text-[#1246c7] font-bold">Utawala Showroom Stock</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-black text-blue-950 tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
               Featured Systems & Equipment
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 mt-1">
@@ -117,15 +130,17 @@ export const Catalog: React.FC<CatalogProps> = ({
             <button
               key={cat.id}
               onClick={() => onSelectCategory(cat.id)}
-              className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all flex items-center gap-2 shadow-2xs ${selectedCategory === cat.id
+              className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all flex items-center gap-2 shadow-2xs ${
+                selectedCategory === cat.id
                   ? 'bg-red-600 text-white shadow-md shadow-red-600/20'
-                  : 'bg-white text-slate-700 hover:bg-blue-50 hover:text-blue-900 border border-slate-200'
-                }`}
+                  : 'bg-white text-slate-700 hover:bg-blue-50 hover:text-[#1246c7] border border-slate-200'
+              }`}
             >
               <span>{cat.name}</span>
               {cat.badge && (
-                <span className={`text-[10px] px-1.5 py-0.2 rounded font-bold ${selectedCategory === cat.id ? 'bg-white/20 text-white' : 'bg-red-100 text-red-700'
-                  }`}>
+                <span className={`text-[10px] px-1.5 py-0.2 rounded font-bold ${
+                  selectedCategory === cat.id ? 'bg-white/20 text-white' : 'bg-red-100 text-red-700'
+                }`}>
                   {cat.badge}
                 </span>
               )}
@@ -134,10 +149,10 @@ export const Catalog: React.FC<CatalogProps> = ({
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-
+          
           {/* Left Sidebar Filter Controls */}
           <div className="lg:col-span-3 space-y-6 bg-white p-5 rounded-2xl border border-slate-200 text-xs text-slate-800 shadow-2xs">
-
+            
             <div className="flex items-center justify-between pb-2 border-b border-slate-200">
               <div className="flex items-center gap-1.5 font-bold text-sm text-blue-950">
                 <Filter className="w-4 h-4 text-red-600" />
@@ -166,7 +181,7 @@ export const Catalog: React.FC<CatalogProps> = ({
                 onChange={(e) => setSelectedBrand(e.target.value)}
                 className="w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-xs font-medium focus:ring-1 focus:ring-blue-600 focus:bg-white"
               >
-                <option value="all">All Brands (Jinko, Growatt, Deye, Perkins...)</option>
+                <option value="all">All Brands (Huawei, Sosen, Dyness, Jinko, Deye...)</option>
                 {POPULAR_BRANDS.map((brand) => (
                   <option key={brand} value={brand}>{brand}</option>
                 ))}
@@ -246,7 +261,7 @@ export const Catalog: React.FC<CatalogProps> = ({
 
           {/* Right Product Grid */}
           <div className="lg:col-span-9 space-y-4">
-
+            
             {/* Results count & Active search notice */}
             <div className="flex items-center justify-between text-xs text-slate-600 bg-white p-3 rounded-xl border border-slate-200">
               <span>
@@ -283,7 +298,7 @@ export const Catalog: React.FC<CatalogProps> = ({
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 {filteredProducts.map((product) => {
                   const isCompared = comparedProducts.some((p) => p.id === product.id);
                   const isOutOfStock = product.stockCount <= 0;
@@ -295,7 +310,7 @@ export const Catalog: React.FC<CatalogProps> = ({
                     >
                       <div>
                         {/* Image Container with high-quality visual framing */}
-                        <div className="relative aspect-square sm:aspect-auto sm:h-48 bg-slate-100 overflow-hidden">
+                        <div className="relative h-48 bg-slate-100 overflow-hidden">
                           <img
                             src={product.image}
                             alt={product.name}
@@ -303,121 +318,32 @@ export const Catalog: React.FC<CatalogProps> = ({
                             referrerPolicy="no-referrer"
                           />
                           {product.badge && (
-                            <span className="absolute top-2 left-2 sm:top-2.5 sm:left-2.5 bg-red-600 text-white text-[9px] sm:text-[10px] font-black uppercase px-1.5 sm:px-2 py-0.5 rounded shadow-xs">
+                            <span className="absolute top-2.5 left-2.5 bg-red-600 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded shadow-xs">
                               {product.badge}
                             </span>
                           )}
-                          <span className="absolute bottom-2 left-2 sm:bottom-2.5 sm:left-2.5 bg-slate-900/90 text-white text-[9px] sm:text-[10px] font-bold px-1.5 sm:px-2 py-0.5 rounded border border-slate-700 backdrop-blur-2xs max-w-[calc(100%-1rem)] truncate">
+                          <span className="absolute bottom-2.5 left-2.5 bg-slate-900/90 text-white text-[10px] font-bold px-2 py-0.5 rounded border border-slate-700 backdrop-blur-2xs">
                             {product.brand}
                           </span>
                         </div>
 
                         {/* Details */}
-                        <div className="p-2.5 sm:p-4 space-y-2 sm:space-y-2.5">
+                        <div className="p-4 space-y-2.5">
                           {/* Rating & Accurate Stock Counter */}
                           <div className="flex items-center justify-between text-xs">
                             <div className="flex items-center gap-1 text-amber-500">
                               <Star className="w-3.5 h-3.5 fill-amber-400" />
-                              <span className="font-bold text-slate-800 text-[10px] sm:text-[11px]">{product.rating}</span>
-                              <span className="text-slate-400 text-[9px] sm:text-[10px]">({product.reviewCount})</span>
+                              <span className="font-bold text-slate-800 text-[11px]">{product.rating}</span>
+                              <span className="text-slate-400 text-[10px]">({product.reviewCount})</span>
                             </div>
 
                             {product.stockCount > 0 ? (
-                              <span className="text-emerald-800 bg-emerald-50 px-1.5 sm:px-2 py-0.5 rounded font-bold text-[9px] sm:text-[10px] border border-emerald-200 truncate max-w-full">
+                              <span className="text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded font-bold text-[10px] border border-emerald-200">
                                 ● In Stock ({product.stockCount} left)
                               </span>
                             ) : (
-                              <span className="text-red-700 bg-red-50 px-1.5 sm:px-2 py-0.5 rounded font-bold text-[9px] sm:text-[10px] border border-red-200">
+                              <span className="text-red-700 bg-red-50 px-2 py-0.5 rounded font-bold text-[10px] border border-red-200">
                                 Out of Stock
                               </span>
                             )}
-                          </div>
-
-                          {/* Product Title */}
-                          <h3
-                            onClick={() => onViewProduct(product)}
-                            className="font-bold text-slate-900 text-xs sm:text-sm leading-snug line-clamp-2 hover:text-blue-700 cursor-pointer transition-colors"
-                          >
-                            {product.name}
-                          </h3>
-
-                          <p className="text-[10px] sm:text-xs text-slate-500 line-clamp-2 leading-relaxed">
-                            {product.shortDesc}
-                          </p>
-
-                          {/* Key Specs tags */}
-                          <div className="flex flex-wrap gap-1 pt-1">
-                            {Object.entries(product.specs).slice(0, 2).map(([key, val]) => (
-                              <span key={key} className="bg-slate-100 text-slate-700 text-[9px] sm:text-[10px] px-1.5 sm:px-2 py-0.5 rounded font-mono font-medium truncate max-w-full">
-                                {val}
-                              </span>
-                            ))}
-                          </div>
-
-                        </div>
-                      </div>
-
-                      {/* Pricing and Action Footer */}
-                      <div className="p-2.5 sm:p-4 pt-0 space-y-2 sm:space-y-3">
-                        <div className="flex items-baseline justify-between gap-1 pt-2 border-t border-slate-100">
-                          <div>
-                            <span className="text-xs sm:text-lg font-black text-blue-950 font-mono">
-                              {formatKES(product.priceKES)}
-                            </span>
-                            {product.originalPriceKES && (
-                              <span className="text-[11px] text-slate-400 line-through block font-mono">
-                                {formatKES(product.originalPriceKES)}
-                              </span>
-                            )}
-                          </div>
-
-                          <button
-                            onClick={() => onViewProduct(product)}
-                            className="text-blue-700 hover:text-blue-900 text-[10px] sm:text-xs font-bold flex items-center gap-1"
-                          >
-                            <Eye className="w-3.5 h-3.5" />
-                            <span className="hidden sm:inline">Specs</span>
-                          </button>
-                        </div>
-
-                        <div className="flex items-center gap-1.5 sm:gap-2">
-                          <button
-                            onClick={() => onAddToCart(product, 1)}
-                            disabled={isOutOfStock}
-                            className={`flex-1 py-2 sm:py-2.5 font-bold rounded-xl text-[10px] sm:text-xs flex items-center justify-center gap-1 sm:gap-1.5 transition-colors shadow-xs ${isOutOfStock
-                                ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
-                                : 'bg-red-600 hover:bg-red-700 text-white'
-                              }`}
-                          >
-                            <ShoppingCart className="w-3.5 h-3.5" />
-                            <span className="truncate">{isOutOfStock ? 'Out of Stock' : 'Add to Cart'}</span>
-                          </button>
-
-                          {/* Compare toggle */}
-                          <button
-                            onClick={() => onToggleCompare(product)}
-                            className={`p-2 sm:p-2.5 rounded-xl border text-xs font-semibold transition-colors shrink-0 ${isCompared
-                                ? 'bg-blue-950 border-blue-950 text-white'
-                                : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100'
-                              }`}
-                            title={isCompared ? 'Remove from comparison' : 'Compare product'}
-                          >
-                            <Sliders className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </div>
-
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-  );
-};
+             */}

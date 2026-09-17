@@ -34,31 +34,31 @@ export const SOLAR_PRODUCTS: Product[] = [
   // - deye-15kw-3phase-hybrid
   // - deye-20kw-3phase-hybrid
 
-//   // 6. MUST SOLAR HYBRID INVERTERS
-//   // - must-3kw-hybrid-inverter
-//   // - must-5kw-hybrid-inverter
-//   // - must-10kw-hybrid-inverter
+  // 6. MUST SOLAR HYBRID INVERTERS
+  // - must-3kw-hybrid-inverter
+  // - must-5kw-hybrid-inverter
+  // - must-10kw-hybrid-inverter
 
-//   // 7. TBB POWER HYBRID INVERTERS
-//   // - tbb-3kw-hybrid-inverter
-//   // - tbb-5kw-hybrid-inverter
-//   // - tbb-6kw-hybrid-inverter
-//   // - tbb-8kw-hybrid-inverter
-//   // - tbb-10kw-hybrid-inverter
+  // 7. TBB POWER HYBRID INVERTERS
+  // - tbb-3kw-hybrid-inverter
+  // - tbb-5kw-hybrid-inverter
+  // - tbb-6kw-hybrid-inverter
+  // - tbb-8kw-hybrid-inverter
+  // - tbb-10kw-hybrid-inverter
 
-//   // 8. DYNESS LITHIUM BATTERIES (Preserving handwritten ratings)
-//   // - dyness-2.5kwh-battery (Dyness 2.5 kWh DL2.5)
-//   // - dyness-5kwh-battery (Dyness 5 kWh DL5.0C / BX51100)
-//   // - dyness-15kw-15kwh-battery (Dyness 15 kW / 15 kWh High-Voltage Rack)
-//   // - dyness-100kwh-commercial-ess (Dyness 100 kWh Industrial ESS)
+  // 8. DYNESS LITHIUM BATTERIES (Preserving handwritten ratings)
+  // - dyness-2.5kwh-battery (Dyness 2.5 kWh DL2.5)
+  // - dyness-5kwh-battery (Dyness 5 kWh DL5.0C / BX51100)
+  // - dyness-15kw-15kwh-battery (Dyness 15 kW / 15 kWh High-Voltage Rack)
+  // - dyness-100kwh-commercial-ess (Dyness 100 kWh Industrial ESS)
 
-//   // 9. TBB & DEYE LITHIUM BATTERIES
-//   // - tbb-5kwh-lithium-battery
-//   // - tbb-10kwh-lithium-battery
-//   // - deye-5kwh-lithium-battery
-//   // - deye-10kwh-lithium-battery
+  // 9. TBB & DEYE LITHIUM BATTERIES
+  // - tbb-5kwh-lithium-battery
+  // - tbb-10kwh-lithium-battery
+  // - deye-5kwh-lithium-battery
+  // - deye-10kwh-lithium-battery
 
-//   // 10. COMPLETE SOLAR KITS
-//   // - themes-complete-home-solar-kit-3kva
-//   // - themes-5kw-dyness-villa-package
-// ];
+  // 10. COMPLETE SOLAR KITS
+  // - themes-complete-home-solar-kit-3kva
+  // - themes-5kw-dyness-villa-package
+];
