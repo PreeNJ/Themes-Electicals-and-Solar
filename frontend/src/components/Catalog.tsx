@@ -1,13 +1,13 @@
 import React, { useState, useMemo } from 'react';
-import { 
-  Search, 
-  Filter, 
-  Star, 
-  ShoppingCart, 
-  Eye, 
-  Sliders, 
+import {
+  Search,
+  Filter,
+  Star,
+  ShoppingCart,
+  Eye,
+  Sliders,
   Truck,
-  PackageCheck
+  PackageCheck,
 } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { Product } from '../types';
@@ -39,7 +39,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   isCompared,
   onAddToCart,
   onViewProduct,
-  onToggleCompare
+  onToggleCompare,
 }) => {
   const isOutOfStock = product.stockCount <= 0;
 
@@ -82,7 +82,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             )}
           </div>
 
-          <h3 
+          <h3
             onClick={() => onViewProduct(product)}
             className="font-bold text-slate-900 text-sm leading-snug line-clamp-2 hover:text-blue-700 cursor-pointer transition-colors"
           >
@@ -94,11 +94,16 @@ const ProductCard: React.FC<ProductCardProps> = ({
           </p>
 
           <div className="flex flex-wrap gap-1 pt-1">
-            {Object.entries(product.specs).slice(0, 2).map(([key, val]) => (
-              <span key={key} className="bg-slate-100 text-slate-700 text-[10px] px-2 py-0.5 rounded font-mono font-medium">
-                {val}
-              </span>
-            ))}
+            {Object.entries(product.specs)
+              .slice(0, 2)
+              .map(([key, val]) => (
+                <span
+                  key={key}
+                  className="bg-slate-100 text-slate-700 text-[10px] px-2 py-0.5 rounded font-mono font-medium"
+                >
+                  {String(val)}
+                </span>
+              ))}
           </div>
         </div>
       </div>
@@ -130,7 +135,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             onClick={() => onAddToCart(product, 1)}
             disabled={isOutOfStock}
             className={`flex-1 py-2.5 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors shadow-xs ${
-              isOutOfStock 
+              isOutOfStock
                 ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
                 : 'bg-red-600 hover:bg-red-700 text-white'
             }`}
@@ -165,7 +170,7 @@ export const Catalog: React.FC<CatalogProps> = ({
   onViewProduct,
   comparedProducts,
   onToggleCompare,
-  allProducts = PRODUCTS
+  allProducts = PRODUCTS,
 }) => {
   const [selectedBrand, setSelectedBrand] = useState<string>('all');
   const [inStockOnly, setInStockOnly] = useState<boolean>(false);
@@ -173,58 +178,72 @@ export const Catalog: React.FC<CatalogProps> = ({
   const [maxPrice, setMaxPrice] = useState<number>(700000);
 
   const filteredProducts = useMemo(() => {
-    return allProducts.filter((product) => {
-      if (selectedCategory !== 'all') {
-        if (selectedCategory === 'solar_systems') {
-          if (product.category !== 'solar_systems') return false;
-        } else if (selectedCategory === 'inverters') {
-          const isInv = product.id.includes('inverter') || product.name.toLowerCase().includes('inverter');
-          if (!isInv) return false;
-        } else if (selectedCategory === 'batteries') {
-          const isBat = product.id.includes('battery') || product.name.toLowerCase().includes('battery') || product.brand.toLowerCase() === 'dyness';
-          if (!isBat) return false;
-        } else if (selectedCategory === 'panels') {
-          const isPanel = product.id.includes('solar-panel') || product.name.toLowerCase().includes('solar panel') || product.name.toLowerCase().includes('bifacial');
-          if (!isPanel) return false;
-        } else if (product.category !== selectedCategory) {
+    return allProducts
+      .filter((product) => {
+        if (selectedCategory !== 'all') {
+          if (selectedCategory === 'solar_systems') {
+            if (product.category !== 'solar_systems') return false;
+          } else if (selectedCategory === 'inverters') {
+            const isInv =
+              product.id.includes('inverter') || product.name.toLowerCase().includes('inverter');
+            if (!isInv) return false;
+          } else if (selectedCategory === 'batteries') {
+            const isBat =
+              product.id.includes('battery') ||
+              product.name.toLowerCase().includes('battery') ||
+              product.brand.toLowerCase() === 'dyness';
+            if (!isBat) return false;
+          } else if (selectedCategory === 'panels') {
+            const isPanel =
+              product.id.includes('solar-panel') ||
+              product.name.toLowerCase().includes('solar panel') ||
+              product.name.toLowerCase().includes('bifacial');
+            if (!isPanel) return false;
+          } else if (product.category !== selectedCategory) {
+            return false;
+          }
+        }
+
+        if (selectedBrand !== 'all' && product.brand.toLowerCase() !== selectedBrand.toLowerCase()) {
           return false;
         }
-      }
-      if (selectedBrand !== 'all' && product.brand.toLowerCase() !== selectedBrand.toLowerCase()) {
-        return false;
-      }
-      if (inStockOnly && product.stockCount <= 0) {
-        return false;
-      }
-      if (product.priceKES > maxPrice) {
-        return false;
-      }
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase();
-        const matchesName = product.name.toLowerCase().includes(q);
-        const matchesBrand = product.brand.toLowerCase().includes(q);
-        const matchesDesc = product.description.toLowerCase().includes(q);
-        const matchesShort = product.shortDesc.toLowerCase().includes(q);
-        const matchesSpecs = Object.entries(product.specs).some(([k, v]) => 
-          k.toLowerCase().includes(q) || v.toLowerCase().includes(q)
-        );
-        if (!matchesName && !matchesBrand && !matchesDesc && !matchesShort && !matchesSpecs) {
+
+        if (inStockOnly && product.stockCount <= 0) {
           return false;
         }
-      }
-      return true;
-    }).sort((a, b) => {
-      if (sortBy === 'price-asc') return a.priceKES - b.priceKES;
-      if (sortBy === 'price-desc') return b.priceKES - a.priceKES;
-      if (sortBy === 'rating') return b.rating - a.rating;
-      return 0;
-    });
+
+        if (product.priceKES > maxPrice) {
+          return false;
+        }
+
+        if (searchQuery.trim()) {
+          const q = searchQuery.toLowerCase();
+          const matchesName = product.name.toLowerCase().includes(q);
+          const matchesBrand = product.brand.toLowerCase().includes(q);
+          const matchesDesc = product.description.toLowerCase().includes(q);
+          const matchesShort = product.shortDesc.toLowerCase().includes(q);
+          const matchesSpecs = Object.entries(product.specs).some(
+            ([key, value]) => key.toLowerCase().includes(q) || String(value).toLowerCase().includes(q)
+          );
+
+          if (!matchesName && !matchesBrand && !matchesDesc && !matchesShort && !matchesSpecs) {
+            return false;
+          }
+        }
+
+        return true;
+      })
+      .sort((a, b) => {
+        if (sortBy === 'price-asc') return a.priceKES - b.priceKES;
+        if (sortBy === 'price-desc') return b.priceKES - a.priceKES;
+        if (sortBy === 'rating') return b.rating - a.rating;
+        return 0;
+      });
   }, [allProducts, selectedCategory, selectedBrand, inStockOnly, maxPrice, searchQuery, sortBy]);
 
   return (
     <section className="py-8 sm:py-12 bg-slate-50/50" id="products-catalog-section">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 pb-4 border-b border-slate-200 gap-4">
           <div>
             <div className="flex items-center gap-2 text-xs font-bold text-red-600 uppercase tracking-wider mb-1">
@@ -236,13 +255,17 @@ export const Catalog: React.FC<CatalogProps> = ({
               Featured Systems & Equipment
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 mt-1">
-              Top quality Solar Systems, Commercial Lighting, Borehole Solar Pumps, Power Backup Generators & Heat Pumps.
+              Top quality Solar Systems, Commercial Lighting, Borehole Solar Pumps, Power Backup
+              Generators & Heat Pumps.
             </p>
           </div>
 
           <div className="flex items-center gap-2 text-xs bg-white border border-slate-200 text-slate-800 px-3.5 py-2 rounded-xl shadow-2xs">
             <Truck className="w-4 h-4 text-red-600 shrink-0" />
-            <span><strong>Nairobi CBD:</strong> FREE Delivery • <strong>Upcountry:</strong> Subsidized Dispatch</span>
+            <span>
+              <strong>Nairobi CBD:</strong> FREE Delivery • <strong>Upcountry:</strong> Subsidized
+              Dispatch
+            </span>
           </div>
         </div>
 
@@ -259,9 +282,11 @@ export const Catalog: React.FC<CatalogProps> = ({
             >
               <span>{cat.name}</span>
               {cat.badge && (
-                <span className={`text-[10px] px-1.5 py-0.2 rounded font-bold ${
-                  selectedCategory === cat.id ? 'bg-white/20 text-white' : 'bg-red-100 text-red-700'
-                }`}>
+                <span
+                  className={`text-[10px] px-1.5 py-0.2 rounded font-bold ${
+                    selectedCategory === cat.id ? 'bg-white/20 text-white' : 'bg-red-100 text-red-700'
+                  }`}
+                >
                   {cat.badge}
                 </span>
               )}
@@ -270,9 +295,7 @@ export const Catalog: React.FC<CatalogProps> = ({
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-          
           <div className="lg:col-span-3 space-y-6 bg-white p-5 rounded-2xl border border-slate-200 text-xs text-slate-800 shadow-2xs">
-            
             <div className="flex items-center justify-between pb-2 border-b border-slate-200">
               <div className="flex items-center gap-1.5 font-bold text-sm text-blue-950">
                 <Filter className="w-4 h-4 text-red-600" />
@@ -302,7 +325,9 @@ export const Catalog: React.FC<CatalogProps> = ({
               >
                 <option value="all">All Brands (Huawei, Sosen, Dyness, Jinko, Deye...)</option>
                 {POPULAR_BRANDS.map((brand) => (
-                  <option key={brand} value={brand}>{brand}</option>
+                  <option key={brand} value={brand}>
+                    {brand}
+                  </option>
                 ))}
               </select>
             </div>
@@ -343,7 +368,7 @@ export const Catalog: React.FC<CatalogProps> = ({
               <label className="font-bold text-slate-900 block">Sort By:</label>
               <select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
+                onChange={(e) => setSortBy(e.target.value as 'featured' | 'price-asc' | 'price-desc' | 'rating')}
                 className="w-full p-2 bg-slate-50 border border-slate-300 rounded-lg text-xs font-medium focus:ring-1 focus:ring-blue-600 focus:bg-white"
               >
                 <option value="featured">Featured / Best Sellers</option>
@@ -371,19 +396,17 @@ export const Catalog: React.FC<CatalogProps> = ({
                 <span>Chat on WhatsApp: {STORE_INFO.phone}</span>
               </a>
             </div>
-
           </div>
 
           <div className="lg:col-span-9 space-y-4">
-            
             <div className="flex items-center justify-between text-xs text-slate-600 bg-white p-3 rounded-xl border border-slate-200">
               <span>
                 Showing <strong className="text-slate-900">{filteredProducts.length}</strong> equipment systems
-                {selectedCategory !== 'all' && ` in ${CATEGORIES.find(c => c.id === selectedCategory)?.name}`}
+                {selectedCategory !== 'all' && ` in ${CATEGORIES.find((c) => c.id === selectedCategory)?.name}`}
               </span>
               {searchQuery && (
                 <span className="bg-red-50 text-red-700 px-2 py-0.5 rounded font-medium">
-                  Search: &quot;{searchQuery}&quot;
+                  {`Search: "${searchQuery}"`}
                 </span>
               )}
             </div>
@@ -423,11 +446,8 @@ export const Catalog: React.FC<CatalogProps> = ({
                 ))}
               </div>
             )}
-
           </div>
-
         </div>
-
       </div>
     </section>
   );

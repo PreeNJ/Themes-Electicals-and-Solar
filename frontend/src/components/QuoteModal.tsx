@@ -117,9 +117,11 @@ export const QuoteModal: React.FC<QuoteModalProps> = ({
     window.print();
   };
 
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+
   const handleSubmitQuoteInquiry = async () => {
     try {
-      await fetch('/api/quote-request', {
+      await fetch(`${API_BASE}/api/quote-request`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

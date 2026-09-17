@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  X, 
-  Send, 
-  Zap, 
-  Bot, 
-  User, 
+import {
+  X,
+  Send,
+  Zap,
+  Bot,
+  User,
   Lightbulb
 } from 'lucide-react';
 import { STORE_INFO } from '../data/products';
@@ -47,6 +47,7 @@ With **15 years of industry experience**, how can I assist your setup today? You
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
 
   const handleSendMessage = async (textToSend?: string) => {
     const text = textToSend || inputText;
@@ -64,7 +65,7 @@ With **15 years of industry experience**, how can I assist your setup today? You
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/chat-advisor', {
+      const response = await fetch(`${API_BASE}/api/chat-advisor`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -110,7 +111,7 @@ With **15 years of industry experience**, how can I assist your setup today? You
 • Estimated Total Cost: KSh ${initialContext.estimatedTotalKES ? initialContext.estimatedTotalKES.toLocaleString() : '325,000'}
 
 Can you verify if this setup is optimal for Kenyan conditions and what warranty comes with Themes Electricals?`;
-      
+
       handleSendMessage(contextMsg);
     }
   }, [isOpen, initialContext]);
@@ -129,7 +130,7 @@ Can you verify if this setup is optimal for Kenyan conditions and what warranty 
   if (!isOpen) return null;
 
   return (
-    <div 
+    <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs cursor-pointer animate-in fade-in duration-200"
       onClick={(e) => {
         if (e.target === e.currentTarget) {
@@ -137,11 +138,11 @@ Can you verify if this setup is optimal for Kenyan conditions and what warranty 
         }
       }}
     >
-      <div 
+      <div
         className="bg-white rounded-2xl max-w-2xl w-full h-[85vh] shadow-2xl border border-slate-200 flex flex-col overflow-hidden cursor-default"
         onClick={(e) => e.stopPropagation()}
       >
-        
+
         {/* Modal Header */}
         <div className="p-4 bg-gradient-to-r from-[#0a1e48] via-[#103d98] to-[#0c276a] text-white flex items-center justify-between border-b border-blue-400/30 shrink-0">
           <div className="flex items-center gap-3">
@@ -179,29 +180,26 @@ Can you verify if this setup is optimal for Kenyan conditions and what warranty 
                 className={`flex gap-2.5 items-start ${isUser ? 'flex-row-reverse' : 'flex-row'}`}
               >
                 <div
-                  className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 shadow-xs ${
-                    isUser
+                  className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 shadow-xs ${isUser
                       ? 'bg-red-600 text-white font-bold'
                       : 'bg-[#1246c7] text-white'
-                  }`}
+                    }`}
                 >
                   {isUser ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
                 </div>
 
                 <div
-                  className={`max-w-[85%] rounded-2xl p-3.5 space-y-1 ${
-                    isUser
+                  className={`max-w-[85%] rounded-2xl p-3.5 space-y-1 ${isUser
                       ? 'bg-red-600 text-white font-medium rounded-tr-xs'
                       : 'bg-white border border-slate-200 text-slate-800 shadow-xs rounded-tl-xs'
-                  }`}
+                    }`}
                 >
                   <div className="whitespace-pre-wrap leading-relaxed">
                     {msg.text}
                   </div>
                   <div
-                    className={`text-[10px] ${
-                      isUser ? 'text-red-100' : 'text-slate-400'
-                    } text-right`}
+                    className={`text-[10px] ${isUser ? 'text-red-100' : 'text-slate-400'
+                      } text-right`}
                   >
                     {msg.timestamp}
                   </div>

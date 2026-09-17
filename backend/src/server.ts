@@ -4,12 +4,26 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const PORT = process.env.PORT ? Number(process.env.PORT) : 3001;
-const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN || "http://localhost:5173";
+const PORT = Number(process.env.PORT || 3001);
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:4173",
+  process.env.FRONTEND_ORIGIN,
+].filter(Boolean) as string[];
 
 export const app = express();
 
-app.use(cors({ origin: FRONTEND_ORIGIN }));
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+      return;
+    }
+
+    callback(new Error("Not allowed by CORS"));
+  },
+  credentials: true,
+}));
 app.use(express.json());
 
 app.get("/", (_req, res) => {
@@ -37,6 +51,19 @@ app.post("/api/quote-request", (req, res) => {
       systemType: systemType || "Themes Electricals Solution",
     },
     message: `Quote ${quoteRef} has been prepared. Our engineering team at Utawala Jowin Business Arcade will contact you on ${phone || '+254713317581'}!`
+  });
+});
+
+app.post("/api/chat-advisor", (req, res) => {
+  const { message } = req.body || {};
+
+  const reply = message
+    ? `Thank you for your inquiry. Based on the details provided, we recommend a tailored solar or electrical solution for your project. Please share your load profile, roof layout, and budget for a more precise sizing recommendation.`
+    : "Please tell us about your power requirement and location so we can recommend the right solution.";
+
+  res.json({
+    success: true,
+    reply,
   });
 });
 

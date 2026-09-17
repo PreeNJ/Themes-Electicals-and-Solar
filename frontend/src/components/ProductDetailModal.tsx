@@ -18,13 +18,15 @@ interface ProductDetailModalProps {
   onClose: () => void;
   onAddToCart: (product: Product, quantity: number) => void;
   onOpenQuoteModal: (product: Product) => void;
+  onAskAIAboutProduct: (product: Product) => void;
 }
 
 export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   product,
   onClose,
   onAddToCart,
-  onOpenQuoteModal
+  onOpenQuoteModal,
+  onAskAIAboutProduct
 }) => {
   const [qty, setQty] = useState(1);
 
@@ -199,8 +201,8 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 </p>
               )}
 
-              {/* Action Buttons: Add to Cart & Proforma Quote */}
-              <div className="grid grid-cols-2 gap-2.5 pt-1">
+              {/* Action Buttons: Add to Cart, Ask AI, & Proforma Quote */}
+              <div className="grid grid-cols-3 gap-2 pt-1">
                 <button
                   onClick={() => {
                     onAddToCart(product, qty);
@@ -208,13 +210,25 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                   }}
                   disabled={isOutOfStock}
                   className={`py-3.5 font-bold rounded-xl text-xs flex items-center justify-center gap-2 shadow-sm transition-colors ${isOutOfStock
-                      ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
-                      : 'bg-red-600 hover:bg-red-700 active:bg-red-800 text-white shadow-red-600/20'
+                    ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                    : 'bg-red-600 hover:bg-red-700 active:bg-red-800 text-white shadow-red-600/20'
                     }`}
                   id="add-to-cart-modal-btn"
                 >
                   <ShoppingCart className="w-4 h-4" />
-                  <span>Add to Cart</span>
+                  <span>Add</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    onClose();
+                    onAskAIAboutProduct(product);
+                  }}
+                  className="py-3.5 bg-gradient-to-r from-[#0a1e48] to-[#103d98] hover:from-[#0d275d] hover:to-[#0d2d7a] text-white font-semibold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors shadow-2xs"
+                  id="ask-ai-product-btn"
+                >
+                  <Star className="w-3.5 h-3.5 fill-amber-300" />
+                  <span>Ask AI</span>
                 </button>
 
                 <button
@@ -226,7 +240,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                   id="generate-quote-modal-btn"
                 >
                   <FileText className="w-3.5 h-3.5" />
-                  <span>Generate Quote</span>
+                  <span>Quote</span>
                 </button>
               </div>
 
