@@ -164,30 +164,30 @@ export const SOLAR_KITS: SolarKit[] = [
       battery: '2x 5.12kWh Dyness / Deye LiFePO4 Modular Rack Lithium Storage (10.24kWh Total Storage)',
       accessories: '3-Phase industrial combiner box, bi-directional energy meter, heavy cable trays, and circuit breakers'
     },
-//     powers: [
-//       '3-Phase motors, Cold rooms, Commercial refrigeration & Freezers',
-//       'Office IT servers, 25+ workstations, Printers & Photocopiers',
-//       'High-power borehole water pumps up to 5.5HP',
-//       'Drastic 80-90% reduction in commercial KPLC power bills'
-//     ],
-//     estimatedDailyYieldKWh: 37.0,
-//     warranty: '10-Year Performance & 5-Year Full System Guarantee'
-//   }
-// ];
+    powers: [
+      '3-Phase motors, Cold rooms, Commercial refrigeration & Freezers',
+      'Office IT servers, 25+ workstations, Printers & Photocopiers',
+      'High-power borehole water pumps up to 5.5HP',
+      'Drastic 80-90% reduction in commercial KPLC power bills'
+    ],
+    estimatedDailyYieldKWh: 37.0,
+    warranty: '10-Year Performance & 5-Year Full System Guarantee'
+  }
+];
 
-// export const SIZING_APPLIANCES: SizingAppliance[] = [
-//   { id: 'lights', name: 'LED Lights (Indoor & Outdoor)', icon: 'Lightbulb', wattage: 12, defaultQty: 10, defaultHours: 6, category: 'lighting' },
-//   { id: 'security-lights', name: 'Security LED Floodlights (50W)', icon: 'Shield', wattage: 50, defaultQty: 2, defaultHours: 10, category: 'lighting' },
-//   { id: 'smart-tv', name: 'Smart TV (50"-65") + Sound System', icon: 'Tv', wattage: 120, defaultQty: 1, defaultHours: 5, category: 'entertainment' },
-//   { id: 'fridge', name: 'Double-Door Refrigerator', icon: 'Refrigerator', wattage: 150, defaultQty: 1, defaultHours: 12, category: 'cooling' },
-//   { id: 'freezer', name: 'Deep Chest Freezer', icon: 'Box', wattage: 200, defaultQty: 1, defaultHours: 10, category: 'cooling' },
-//   { id: 'wifi', name: 'Wi-Fi Router & CCTV DVR System', icon: 'Wifi', wattage: 35, defaultQty: 1, defaultHours: 24, category: 'work' },
-//   { id: 'laptop', name: 'Desktop Computer / Laptop Workstations', icon: 'Laptop', wattage: 80, defaultQty: 2, defaultHours: 8, category: 'work' },
-//   { id: 'microwave', name: 'Microwave Oven / Air Fryer', icon: 'Microwave', wattage: 1000, defaultQty: 1, defaultHours: 0.5, category: 'kitchen' },
-//   { id: 'kettle', name: 'Electric Kettle / Coffee Maker', icon: 'Coffee', wattage: 1500, defaultQty: 1, defaultHours: 0.3, category: 'kitchen' },
-//   { id: 'washing-machine', name: 'Automatic Washing Machine', icon: 'Disc', wattage: 600, defaultQty: 1, defaultHours: 1, category: 'water' },
-//   { id: 'booster-pump', name: 'Domestic Water Booster Pump (0.5HP)', icon: 'Droplets', wattage: 375, defaultQty: 1, defaultHours: 2, category: 'water' },
-//   { id: 'borehole-pump', name: 'Submersible Borehole Pump (1.5HP)', icon: 'Waves', wattage: 1100, defaultQty: 0, defaultHours: 3, category: 'water' },
-//   { id: 'heat-pump-geyser', name: 'Thermodynamic Heat Pump Geyser', icon: 'Flame', wattage: 650, defaultQty: 1, defaultHours: 3, category: 'water' },
-//   { id: 'fan', name: 'Ceiling / Standing Fan', icon: 'Wind', wattage: 60, defaultQty: 2, defaultHours: 6, category: 'cooling' }
-// ];
+export const SIZING_APPLIANCES: SizingAppliance[] = [
+  { id: 'lights', name: 'LED Lights (Indoor & Outdoor)', icon: 'Lightbulb', wattage: 12, defaultQty: 10, defaultHours: 6, category: 'lighting' },
+  { id: 'security-lights', name: 'Security LED Floodlights (50W)', icon: 'Shield', wattage: 50, defaultQty: 2, defaultHours: 10, category: 'lighting' },
+  { id: 'smart-tv', name: 'Smart TV (50"-65") + Sound System', icon: 'Tv', wattage: 120, defaultQty: 1, defaultHours: 5, category: 'entertainment' },
+  { id: 'fridge', name: 'Double-Door Refrigerator', icon: 'Refrigerator', wattage: 150, defaultQty: 1, defaultHours: 12, category: 'cooling' },
+  { id: 'freezer', name: 'Deep Chest Freezer', icon: 'Box', wattage: 200, defaultQty: 1, defaultHours: 10, category: 'cooling' },
+  { id: 'wifi', name: 'Wi-Fi Router & CCTV DVR System', icon: 'Wifi', wattage: 35, defaultQty: 1, defaultHours: 24, category: 'work' },
+  { id: 'laptop', name: 'Desktop Computer / Laptop Workstations', icon: 'Laptop', wattage: 80, defaultQty: 2, defaultHours: 8, category: 'work' },
+  { id: 'microwave', name: 'Microwave Oven / Air Fryer', icon: 'Microwave', wattage: 1000, defaultQty: 1, defaultHours: 0.5, category: 'kitchen' },
+  { id: 'kettle', name: 'Electric Kettle / Coffee Maker', icon: 'Coffee', wattage: 1500, defaultQty: 1, defaultHours: 0.3, category: 'kitchen' },
+  { id: 'washing-machine', name: 'Automatic Washing Machine', icon: 'Disc', wattage: 600, defaultQty: 1, defaultHours: 1, category: 'water' },
+  { id: 'booster-pump', name: 'Domestic Water Booster Pump (0.5HP)', icon: 'Droplets', wattage: 375, defaultQty: 1, defaultHours: 2, category: 'water' },
+  { id: 'borehole-pump', name: 'Submersible Borehole Pump (1.5HP)', icon: 'Waves', wattage: 1100, defaultQty: 0, defaultHours: 3, category: 'water' },
+  { id: 'heat-pump-geyser', name: 'Thermodynamic Heat Pump Geyser', icon: 'Flame', wattage: 650, defaultQty: 1, defaultHours: 3, category: 'water' },
+  { id: 'fan', name: 'Ceiling / Standing Fan', icon: 'Wind', wattage: 60, defaultQty: 2, defaultHours: 6, category: 'cooling' }
+];
