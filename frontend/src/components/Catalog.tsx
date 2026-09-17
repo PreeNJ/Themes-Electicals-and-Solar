@@ -46,7 +46,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col justify-between hover:shadow-lg hover:border-blue-300 transition-all group shadow-2xs">
       <div>
-        {/* Image Container */}
         <div className="relative h-48 bg-slate-100 overflow-hidden">
           <img
             src={product.image}
@@ -64,7 +63,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
           </span>
         </div>
 
-        {/* Product Details */}
         <div className="p-4 space-y-2.5">
           <div className="flex items-center justify-between text-xs">
             <div className="flex items-center gap-1 text-amber-500">
@@ -105,7 +103,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </div>
       </div>
 
-      {/* Pricing and Action Footer */}
       <div className="p-4 pt-0 space-y-3">
         <div className="flex items-baseline justify-between pt-2 border-t border-slate-100">
           <div>
@@ -228,7 +225,6 @@ export const Catalog: React.FC<CatalogProps> = ({
     <section className="py-8 sm:py-12 bg-slate-50/50" id="products-catalog-section">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 pb-4 border-b border-slate-200 gap-4">
           <div>
             <div className="flex items-center gap-2 text-xs font-bold text-red-600 uppercase tracking-wider mb-1">
@@ -250,7 +246,6 @@ export const Catalog: React.FC<CatalogProps> = ({
           </div>
         </div>
 
-        {/* Category Pill Filters */}
         <div className="flex items-center gap-2 overflow-x-auto pb-4 scrollbar-none mb-6">
           {CATEGORIES.map((cat) => (
             <button
@@ -276,7 +271,6 @@ export const Catalog: React.FC<CatalogProps> = ({
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
           
-          {/* Left Sidebar Filter Controls */}
           <div className="lg:col-span-3 space-y-6 bg-white p-5 rounded-2xl border border-slate-200 text-xs text-slate-800 shadow-2xs">
             
             <div className="flex items-center justify-between pb-2 border-b border-slate-200">
@@ -299,7 +293,6 @@ export const Catalog: React.FC<CatalogProps> = ({
               )}
             </div>
 
-            {/* Brand Filter */}
             <div className="space-y-2">
               <label className="font-bold text-slate-900 block">Manufacturer / Brand:</label>
               <select
@@ -314,7 +307,6 @@ export const Catalog: React.FC<CatalogProps> = ({
               </select>
             </div>
 
-            {/* Price Range Slider */}
             <div className="space-y-2">
               <div className="flex justify-between items-center font-bold">
                 <span className="text-slate-900">Max Budget:</span>
@@ -335,7 +327,6 @@ export const Catalog: React.FC<CatalogProps> = ({
               </div>
             </div>
 
-            {/* In Stock Only Checkbox */}
             <div className="pt-2 border-t border-slate-100">
               <label className="flex items-center gap-2 cursor-pointer select-none">
                 <input
@@ -348,7 +339,6 @@ export const Catalog: React.FC<CatalogProps> = ({
               </label>
             </div>
 
-            {/* Sort Dropdown */}
             <div className="space-y-2 pt-2 border-t border-slate-100">
               <label className="font-bold text-slate-900 block">Sort By:</label>
               <select
@@ -363,7 +353,6 @@ export const Catalog: React.FC<CatalogProps> = ({
               </select>
             </div>
 
-            {/* Quick Showroom Help Card */}
             <div className="bg-blue-950 text-white p-3.5 rounded-xl space-y-2">
               <div className="flex items-center gap-2 font-bold text-xs text-amber-400">
                 <PackageCheck className="w-4 h-4" />
@@ -385,10 +374,8 @@ export const Catalog: React.FC<CatalogProps> = ({
 
           </div>
 
-          {/* Right Product Grid */}
           <div className="lg:col-span-9 space-y-4">
             
-            {/* Results count & Active search notice */}
             <div className="flex items-center justify-between text-xs text-slate-600 bg-white p-3 rounded-xl border border-slate-200">
               <span>
                 Showing <strong className="text-slate-900">{filteredProducts.length}</strong> equipment systems
@@ -401,7 +388,6 @@ export const Catalog: React.FC<CatalogProps> = ({
               )}
             </div>
 
-            {/* Product Cards Grid */}
             {filteredProducts.length === 0 ? (
               <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 p-8 space-y-3 shadow-2xs">
                 <div className="w-12 h-12 rounded-full bg-slate-100 text-slate-500 mx-auto flex items-center justify-center">
