@@ -346,4 +346,95 @@ export const Catalog: React.FC<CatalogProps> = ({
                                 Out of Stock
                               </span>
                             )}
-             */}
+                          {/* </div>
+
+                          {/* Product Title */}
+                          <h3 
+                            onClick={() => onViewProduct(product)}
+                            className="font-bold text-slate-900 text-sm leading-snug line-clamp-2 hover:text-blue-700 cursor-pointer transition-colors"
+                          >
+                            {product.name}
+                          </h3>
+
+                          <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+                            {product.shortDesc}
+                          </p>
+
+                          {/* Key Specs tags */}
+                          <div className="flex flex-wrap gap-1 pt-1">
+                            {Object.entries(product.specs).slice(0, 2).map(([key, val]) => (
+                              <span key={key} className="bg-slate-100 text-slate-700 text-[10px] px-2 py-0.5 rounded font-mono font-medium">
+                                {val}
+                              </span>
+                            ))}
+                          </div>
+
+                        </div>
+                      </div>
+
+                      {/* Pricing and Action Footer */}
+                      <div className="p-4 pt-0 space-y-3">
+                        <div className="flex items-baseline justify-between pt-2 border-t border-slate-100">
+                          <div>
+                            <span className="text-base sm:text-lg font-black text-[#0f3eb5] font-mono">
+                              {formatKES(product.priceKES)}
+                            </span>
+                            {product.originalPriceKES && (
+                              <span className="text-[11px] text-slate-400 line-through block font-mono">
+                                {formatKES(product.originalPriceKES)}
+                              </span>
+                            )}
+                          </div>
+
+                          <button
+                            onClick={() => onViewProduct(product)}
+                            className="text-[#1246c7] hover:text-[#0e39a3] text-xs font-bold flex items-center gap-1 transition-colors"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                            <span>Specs</span>
+                          </button>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => onAddToCart(product, 1)}
+                            disabled={isOutOfStock}
+                            className={`flex-1 py-2.5 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors shadow-xs ${
+                              isOutOfStock 
+                                ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                                : 'bg-red-600 hover:bg-red-700 text-white'
+                            }`}
+                          >
+                            <ShoppingCart className="w-3.5 h-3.5" />
+                            <span>{isOutOfStock ? 'Out of Stock' : 'Add to Cart'}</span>
+                          </button>
+
+                          {/* Compare toggle */}
+                          <button
+                            onClick={() => onToggleCompare(product)}
+                            className={`p-2.5 rounded-xl border text-xs font-semibold transition-colors ${
+                              isCompared
+                                ? 'bg-[#1246c7] border-[#1246c7] text-white shadow-xs'
+                                : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-blue-50 hover:text-[#1246c7]'
+                            }`}
+                            title={isCompared ? 'Remove from comparison' : 'Compare product'}
+                          >
+                            <Sliders className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  );
+}; */}
