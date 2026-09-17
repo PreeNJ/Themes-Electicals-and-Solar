@@ -5,7 +5,6 @@ import {
   Star, 
   ShoppingCart, 
   Eye, 
-  ShieldCheck, 
   Sliders, 
   Truck,
   PackageCheck
@@ -27,6 +26,139 @@ interface CatalogProps {
   allProducts?: Product[];
 }
 
+interface ProductCardProps {
+  product: Product;
+  isCompared: boolean;
+  onAddToCart: (product: Product, quantity?: number) => void;
+  onViewProduct: (product: Product) => void;
+  onToggleCompare: (product: Product) => void;
+}
+
+const ProductCard: React.FC<ProductCardProps> = ({
+  product,
+  isCompared,
+  onAddToCart,
+  onViewProduct,
+  onToggleCompare
+}) => {
+  const isOutOfStock = product.stockCount <= 0;
+
+  return (
+    <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col justify-between hover:shadow-lg hover:border-blue-300 transition-all group shadow-2xs">
+      <div>
+        {/* Image Container */}
+        <div className="relative h-48 bg-slate-100 overflow-hidden">
+          <img
+            src={product.image}
+            alt={product.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            referrerPolicy="no-referrer"
+          />
+          {product.badge && (
+            <span className="absolute top-2.5 left-2.5 bg-red-600 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded shadow-xs">
+              {product.badge}
+            </span>
+          )}
+          <span className="absolute bottom-2.5 left-2.5 bg-slate-900/90 text-white text-[10px] font-bold px-2 py-0.5 rounded border border-slate-700 backdrop-blur-2xs">
+            {product.brand}
+          </span>
+        </div>
+
+        {/* Product Details */}
+        <div className="p-4 space-y-2.5">
+          <div className="flex items-center justify-between text-xs">
+            <div className="flex items-center gap-1 text-amber-500">
+              <Star className="w-3.5 h-3.5 fill-amber-400" />
+              <span className="font-bold text-slate-800 text-[11px]">{product.rating}</span>
+              <span className="text-slate-400 text-[10px]">({product.reviewCount})</span>
+            </div>
+
+            {product.stockCount > 0 ? (
+              <span className="text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded font-bold text-[10px] border border-emerald-200">
+                ● In Stock ({product.stockCount} left)
+              </span>
+            ) : (
+              <span className="text-red-700 bg-red-50 px-2 py-0.5 rounded font-bold text-[10px] border border-red-200">
+                Out of Stock
+              </span>
+            )}
+          </div>
+
+          <h3 
+            onClick={() => onViewProduct(product)}
+            className="font-bold text-slate-900 text-sm leading-snug line-clamp-2 hover:text-blue-700 cursor-pointer transition-colors"
+          >
+            {product.name}
+          </h3>
+
+          <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
+            {product.shortDesc}
+          </p>
+
+          <div className="flex flex-wrap gap-1 pt-1">
+            {Object.entries(product.specs).slice(0, 2).map(([key, val]) => (
+              <span key={key} className="bg-slate-100 text-slate-700 text-[10px] px-2 py-0.5 rounded font-mono font-medium">
+                {val}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Pricing and Action Footer */}
+      <div className="p-4 pt-0 space-y-3">
+        <div className="flex items-baseline justify-between pt-2 border-t border-slate-100">
+          <div>
+            <span className="text-base sm:text-lg font-black text-[#0f3eb5] font-mono">
+              {formatKES(product.priceKES)}
+            </span>
+            {product.originalPriceKES && (
+              <span className="text-[11px] text-slate-400 line-through block font-mono">
+                {formatKES(product.originalPriceKES)}
+              </span>
+            )}
+          </div>
+
+          <button
+            onClick={() => onViewProduct(product)}
+            className="text-[#1246c7] hover:text-[#0e39a3] text-xs font-bold flex items-center gap-1 transition-colors"
+          >
+            <Eye className="w-3.5 h-3.5" />
+            <span>Specs</span>
+          </button>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => onAddToCart(product, 1)}
+            disabled={isOutOfStock}
+            className={`flex-1 py-2.5 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors shadow-xs ${
+              isOutOfStock 
+                ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                : 'bg-red-600 hover:bg-red-700 text-white'
+            }`}
+          >
+            <ShoppingCart className="w-3.5 h-3.5" />
+            <span>{isOutOfStock ? 'Out of Stock' : 'Add to Cart'}</span>
+          </button>
+
+          <button
+            onClick={() => onToggleCompare(product)}
+            className={`p-2.5 rounded-xl border text-xs font-semibold transition-colors ${
+              isCompared
+                ? 'bg-[#1246c7] border-[#1246c7] text-white shadow-xs'
+                : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-blue-50 hover:text-[#1246c7]'
+            }`}
+            title={isCompared ? 'Remove from comparison' : 'Compare product'}
+          >
+            <Sliders className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const Catalog: React.FC<CatalogProps> = ({
   selectedCategory,
   onSelectCategory,
@@ -43,10 +175,8 @@ export const Catalog: React.FC<CatalogProps> = ({
   const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc' | 'rating'>('featured');
   const [maxPrice, setMaxPrice] = useState<number>(700000);
 
-  // Filtered & Sorted Products
   const filteredProducts = useMemo(() => {
     return allProducts.filter((product) => {
-      // Category & Subcategory filter
       if (selectedCategory !== 'all') {
         if (selectedCategory === 'solar_systems') {
           if (product.category !== 'solar_systems') return false;
@@ -63,19 +193,15 @@ export const Catalog: React.FC<CatalogProps> = ({
           return false;
         }
       }
-      // Brand filter
       if (selectedBrand !== 'all' && product.brand.toLowerCase() !== selectedBrand.toLowerCase()) {
         return false;
       }
-      // In stock filter
       if (inStockOnly && product.stockCount <= 0) {
         return false;
       }
-      // Price limit
       if (product.priceKES > maxPrice) {
         return false;
       }
-      // Search query
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
         const matchesName = product.name.toLowerCase().includes(q);
@@ -94,7 +220,7 @@ export const Catalog: React.FC<CatalogProps> = ({
       if (sortBy === 'price-asc') return a.priceKES - b.priceKES;
       if (sortBy === 'price-desc') return b.priceKES - a.priceKES;
       if (sortBy === 'rating') return b.rating - a.rating;
-      return 0; // featured default
+      return 0;
     });
   }, [allProducts, selectedCategory, selectedBrand, inStockOnly, maxPrice, searchQuery, sortBy]);
 
@@ -299,134 +425,16 @@ export const Catalog: React.FC<CatalogProps> = ({
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                {filteredProducts.map((product) => {
-                  const isCompared = comparedProducts.some((p) => p.id === product.id);
-                  const isOutOfStock = product.stockCount <= 0;
-
-                  return (
-                    <div
-                      key={product.id}
-                      className="bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col justify-between hover:shadow-lg hover:border-blue-300 transition-all group shadow-2xs"
-                    >
-                      <div>
-                        {/* Image Container with high-quality visual framing */}
-                        <div className="relative h-48 bg-slate-100 overflow-hidden">
-                          <img
-                            src={product.image}
-                            alt={product.name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            referrerPolicy="no-referrer"
-                          />
-                          {product.badge && (
-                            <span className="absolute top-2.5 left-2.5 bg-red-600 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded shadow-xs">
-                              {product.badge}
-                            </span>
-                          )}
-                          <span className="absolute bottom-2.5 left-2.5 bg-slate-900/90 text-white text-[10px] font-bold px-2 py-0.5 rounded border border-slate-700 backdrop-blur-2xs">
-                            {product.brand}
-                          </span>
-                        </div>
-
-                        {/* Details */}
-                        <div className="p-4 space-y-2.5">
-                          {/* Rating & Accurate Stock Counter */}
-                          <div className="flex items-center justify-between text-xs">
-                            <div className="flex items-center gap-1 text-amber-500">
-                              <Star className="w-3.5 h-3.5 fill-amber-400" />
-                              <span className="font-bold text-slate-800 text-[11px]">{product.rating}</span>
-                              <span className="text-slate-400 text-[10px]">({product.reviewCount})</span>
-                            </div>
-
-                            {product.stockCount > 0 ? (
-                              <span className="text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded font-bold text-[10px] border border-emerald-200">
-                                ● In Stock ({product.stockCount} left)
-                              </span>
-                            ) : (
-                              <span className="text-red-700 bg-red-50 px-2 py-0.5 rounded font-bold text-[10px] border border-red-200">
-                                Out of Stock
-                              </span>
-                            )}
-                          {/* </div>
-
-                          {/* Product Title */}
-                          <h3 
-                            onClick={() => onViewProduct(product)}
-                            className="font-bold text-slate-900 text-sm leading-snug line-clamp-2 hover:text-blue-700 cursor-pointer transition-colors"
-                          >
-                            {product.name}
-                          </h3>
-
-                          <p className="text-xs text-slate-500 line-clamp-2 leading-relaxed">
-                            {product.shortDesc}
-                          </p>
-
-                          {/* Key Specs tags */}
-                          <div className="flex flex-wrap gap-1 pt-1">
-                            {Object.entries(product.specs).slice(0, 2).map(([key, val]) => (
-                              <span key={key} className="bg-slate-100 text-slate-700 text-[10px] px-2 py-0.5 rounded font-mono font-medium">
-                                {val}
-                              </span>
-                            ))}
-                          </div>
-
-                        </div>
-                      </div>
-
-                      {/* Pricing and Action Footer */}
-                      <div className="p-4 pt-0 space-y-3">
-                        <div className="flex items-baseline justify-between pt-2 border-t border-slate-100">
-                          <div>
-                            <span className="text-base sm:text-lg font-black text-[#0f3eb5] font-mono">
-                              {formatKES(product.priceKES)}
-                            </span>
-                            {product.originalPriceKES && (
-                              <span className="text-[11px] text-slate-400 line-through block font-mono">
-                                {formatKES(product.originalPriceKES)}
-                              </span>
-                            )}
-                          </div>
-
-                          <button
-                            onClick={() => onViewProduct(product)}
-                            className="text-[#1246c7] hover:text-[#0e39a3] text-xs font-bold flex items-center gap-1 transition-colors"
-                          >
-                            <Eye className="w-3.5 h-3.5" />
-                            <span>Specs</span>
-                          </button>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => onAddToCart(product, 1)}
-                            disabled={isOutOfStock}
-                            className={`flex-1 py-2.5 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors shadow-xs ${
-                              isOutOfStock 
-                                ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
-                                : 'bg-red-600 hover:bg-red-700 text-white'
-                            }`}
-                          >
-                            <ShoppingCart className="w-3.5 h-3.5" />
-                            <span>{isOutOfStock ? 'Out of Stock' : 'Add to Cart'}</span>
-                          </button>
-
-                          {/* Compare toggle */}
-                          <button
-                            onClick={() => onToggleCompare(product)}
-                            className={`p-2.5 rounded-xl border text-xs font-semibold transition-colors ${
-                              isCompared
-                                ? 'bg-[#1246c7] border-[#1246c7] text-white shadow-xs'
-                                : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-blue-50 hover:text-[#1246c7]'
-                            }`}
-                            title={isCompared ? 'Remove from comparison' : 'Compare product'}
-                          >
-                            <Sliders className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </div>
-
-                    </div>
-                  );
-                })}
+                {filteredProducts.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    isCompared={comparedProducts.some((p) => p.id === product.id)}
+                    onAddToCart={onAddToCart}
+                    onViewProduct={onViewProduct}
+                    onToggleCompare={onToggleCompare}
+                  />
+                ))}
               </div>
             )}
 
@@ -437,4 +445,4 @@ export const Catalog: React.FC<CatalogProps> = ({
       </div>
     </section>
   );
-}; */}
+};
