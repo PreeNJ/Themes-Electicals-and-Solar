@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { 
+  Zap, 
   Search, 
   ShoppingCart, 
-  Truck, 
-  Mail, 
   ShoppingBag,
   FileText, 
   Sliders, 
@@ -11,52 +10,51 @@ import {
   MapPin, 
   Menu, 
   X, 
-  ChevronDown,
-  Sparkles,
-  Zap,
-  Package,
+  Layers,
   Droplets,
-  Layers
+  HelpCircle,
+  Package,
+  Mail,
+  ShieldCheck,
+  Truck
 } from 'lucide-react';
-import { STORE_INFO, CATEGORIES } from '../data/products';
 import { WhatsAppIcon } from './WhatsAppIcon';
+import { Product, CartItem } from '../types';
+import { formatKES } from '../utils/formatters';
+import { STORE_INFO, CATEGORIES } from '../data/products';
 
 interface HeaderProps {
-  cartCount: number;
+  cart: CartItem[];
+  comparedProducts: Product[];
   onOpenCart: () => void;
   onOpenQuoteModal: () => void;
-  onOpenCalculator: () => void;
-  onOpenPumpSizer: () => void;
-  onOpenContactModal: () => void;
+  onOpenComparison: () => void;
   onOpenAIAdvisor: () => void;
-  onOpenOrderLookup: () => void;
-  onSelectCategory: (category: string) => void;
-  selectedCategory: string;
+  onSelectCategory: (cat: string) => void;
   searchQuery: string;
-  onSearchChange: (query: string) => void;
+  onSearchChange: (q: string) => void;
+  onNavigateTab: (tab: 'catalog' | 'sizer' | 'pumps' | 'kits' | 'contact') => void;
+  activeTab: 'catalog' | 'sizer' | 'pumps' | 'kits' | 'contact';
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  cartCount,
+  cart,
+  comparedProducts,
   onOpenCart,
   onOpenQuoteModal,
-  onOpenCalculator,
-  onOpenPumpSizer,
-  onOpenContactModal,
+  onOpenComparison,
   onOpenAIAdvisor,
   onSelectCategory,
-  selectedCategory,
   searchQuery,
   onSearchChange,
+  onNavigateTab,
+  activeTab
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [categoriesOpen, setCategoriesOpen] = useState(false);
+  const [categoriesDropdownOpen, setCategoriesDropdownOpen] = useState(false);
 
-  const handleCategoryClick = (cat: string) => {
-    onSelectCategory(cat);
-    setCategoriesOpen(false);
-    setMobileMenuOpen(false);
-  };
+  const cartItemCount = cart.reduce((sum, i) => sum + i.quantity, 0);
+  const cartSubtotal = cart.reduce((sum, i) => sum + i.product.priceKES * i.quantity, 0);
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-xs" id="main-header">
@@ -103,215 +101,216 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
-      {/* Main Header / Search Row */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
+      {/* Main Header Bar */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
         <div className="flex items-center justify-between gap-4">
           
-          {/* Logo & Brand Identity */}
-          <div 
-            onClick={() => onSelectCategory('All')}
-            className="flex items-center gap-2.5 cursor-pointer select-none group shrink-0"
-            id="header-logo-btn"
-          >
-            <div className="w-10 h-10 bg-[#1246c7] rounded-xl flex items-center justify-center shadow-md group-hover:bg-[#0e39a3] transition-colors border border-blue-500/30">
-              <Zap className="w-5 h-5 text-white fill-white" />
-            </div>
-            <div className="leading-tight">
-              <div className="flex items-center text-xl sm:text-2xl font-black tracking-tight">
-                <span className="text-[#0d2353]">Themes</span>
-                <span className="text-[#dc2626] ml-1">Electricals</span>
+          {/* Logo */}
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={() => {
+                onNavigateTab('catalog');
+                onSelectCategory('all');
+              }}
+              className="flex items-center gap-3 text-left focus:outline-hidden group"
+              id="brand-logo-btn"
+            >
+              <div className="w-10 h-10 rounded-xl bg-[#1d4ed8] flex items-center justify-center text-white shadow-md ring-2 ring-blue-100 group-hover:scale-105 transition-transform">
+                <Zap className="w-6 h-6 text-white fill-white" />
               </div>
-              <div className="text-[10px] text-slate-500 font-bold uppercase tracking-wider -mt-0.5">
-                Solar & Electrical Hub • Nairobi
+              <div>
+                <div className="flex items-center gap-1">
+                  <span className="font-extrabold text-2xl tracking-tight text-[#0f172a]">Themes</span>
+                  <span className="font-bold text-2xl tracking-tight text-[#dc2626]">Electricals</span>
+                </div>
+                <p className="text-[11px] text-slate-500 font-semibold tracking-wide">
+                  Solar Systems • Lighting • Pumps • Generators • Heat Pumps
+                </p>
               </div>
-            </div>
+            </button>
           </div>
 
-          {/* Search Bar - Center */}
-          <div className="flex-1 max-w-2xl hidden md:block">
-            <div className="relative">
+          {/* Search Box (Desktop) */}
+          <div className="hidden md:flex flex-1 max-w-xl mx-4 relative" id="header-search-container">
+            <div className="relative w-full">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Search solar panels, lithium batteries, inverters, solar water pumps, UFO lights..."
+                placeholder="Search solar panels, lighting, borehole pumps, generators, heat pumps..."
                 value={searchQuery}
-                onChange={(e) => onSearchChange(e.target.value)}
-                className="w-full pl-10 pr-24 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#1246c7] focus:border-transparent transition-all placeholder:text-slate-400"
-                id="main-search-input"
+                onChange={(e) => {
+                  onSearchChange(e.target.value);
+                  if (activeTab !== 'catalog') onNavigateTab('catalog');
+                }}
+                className="w-full pl-10 pr-4 py-2 bg-white border border-slate-300 rounded-lg text-sm text-slate-900 placeholder-slate-400 focus:outline-hidden focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 transition-all"
+                id="header-search-input"
               />
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
               {searchQuery && (
-                <button
+                <button 
                   onClick={() => onSearchChange('')}
-                  className="absolute right-16 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-slate-600 px-1"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs bg-slate-200 rounded-full w-4 h-4 flex items-center justify-center"
                 >
-                  Clear
+                  ✕
                 </button>
               )}
-              <button 
-                onClick={() => {}}
-                className="absolute right-1.5 top-1/2 -translate-y-1/2 bg-[#1246c7] hover:bg-[#0e39a3] text-white px-3 py-1.5 rounded-md text-xs font-semibold transition-colors"
-                id="header-search-btn"
-              >
-                Search
-              </button>
             </div>
           </div>
 
-          {/* Action CTAs */}
+          {/* Action Tools */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* AI Advisor Button */}
+            
+            {/* Chat Bot Advisor Button */}
             <button
               onClick={onOpenAIAdvisor}
-              className="flex items-center gap-2 bg-[#0e275d] hover:bg-[#0a1e4a] text-white px-3 py-2 rounded-lg text-xs font-bold transition-all shadow-xs border border-blue-800"
-              title="Interactive AI Solar Engineer"
-              id="header-ai-btn"
+              className="hidden lg:flex items-center gap-2 px-4 py-2.5 bg-[#163882] text-white hover:bg-[#122e6b] rounded-lg text-xs font-bold shadow-xs hover:shadow-md transition-all"
+              id="ai-advisor-header-btn"
             >
-              <Zap className="w-4 h-4 text-amber-400 fill-amber-400 shrink-0" />
-              <div className="text-left hidden xl:block">
-                <div className="text-[11px] leading-none text-white font-bold">Chat Bot</div>
-                <div className="text-[9px] text-blue-200 font-normal">Advisor</div>
-              </div>
+              <Zap className="w-4 h-4 text-amber-400 fill-amber-400" />
+              <span>Chat Bot Advisor</span>
             </button>
 
-            {/* Instant Quotation Generator */}
+            {/* Comparison Button */}
+            {comparedProducts.length > 0 && (
+              <button
+                onClick={onOpenComparison}
+                className="flex items-center gap-1.5 px-3.5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition-colors"
+                id="compare-header-btn"
+                title="Compare Selected Products"
+              >
+                <Sliders className="w-3.5 h-3.5 text-blue-600" />
+                <span>Compare ({comparedProducts.length})</span>
+              </button>
+            )}
+
+            {/* Instant Formal Quote */}
             <button
               onClick={onOpenQuoteModal}
-              className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-800 px-3 py-2 rounded-lg text-xs font-bold transition-all border border-slate-300"
-              title="Generate PDF Proforma Invoice"
-              id="header-quote-btn"
+              className="hidden sm:flex items-center gap-2 px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-800 rounded-lg text-xs font-bold border border-slate-300 transition-colors shadow-2xs"
+              id="quote-header-btn"
             >
-              <FileText className="w-4 h-4 text-red-600 shrink-0" />
-              <div className="text-left hidden lg:block">
-                <div className="text-[11px] leading-none font-bold">Proforma</div>
-                <div className="text-[9px] text-slate-500 font-normal">Quote</div>
-              </div>
+              <FileText className="w-4 h-4 text-red-600" />
+              <span>Proforma Quote</span>
             </button>
 
-            {/* Shopping Cart Button */}
+            {/* Cart Button */}
             <button
               onClick={onOpenCart}
-              className="relative flex items-center gap-2 bg-[#dc2626] hover:bg-[#b91c1c] text-white px-3.5 py-2 rounded-lg text-xs font-bold transition-all shadow-sm"
-              id="header-cart-btn"
+              className="relative flex items-center gap-2 px-4 py-2.5 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-bold rounded-lg text-xs shadow-xs hover:shadow-md transition-all focus:outline-hidden"
+              id="cart-header-btn"
             >
-              <div className="relative">
-                <ShoppingCart className="w-4 h-4" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-white text-[#dc2626] text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
-                    {cartCount}
-                  </span>
-                )}
-              </div>
-              <span className="hidden sm:inline font-bold">Cart</span>
+              <ShoppingBag className="w-4 h-4 text-white" />
+              <span>Cart</span>
+              {cartItemCount > 0 && (
+                <span className="ml-0.5 bg-white text-red-600 text-[10px] font-black rounded-full h-4 min-w-4 px-1 flex items-center justify-center shadow-xs">
+                  {cartItemCount}
+                </span>
+              )}
             </button>
 
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-slate-700 hover:text-slate-900 md:hidden"
+              className="md:hidden p-2 text-slate-700 hover:text-[#1246c7] hover:bg-slate-100 rounded-lg"
               id="mobile-menu-toggle"
-              aria-label="Toggle Navigation Menu"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
-          </div>
 
+          </div>
         </div>
 
-        {/* Mobile Search Bar (Only shown on small screens) */}
-        <div className="mt-3 md:hidden">
-          <div className="relative">
+        {/* Mobile Search Bar */}
+        <div className="mt-2.5 md:hidden">
+          <div className="relative w-full">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search solar panels, inverters, lights..."
+              placeholder="Search solar, lighting, water pumps, generators..."
               value={searchQuery}
-              onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full pl-9 pr-8 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-[#1246c7]"
+              onChange={(e) => {
+                onSearchChange(e.target.value);
+                if (activeTab !== 'catalog') onNavigateTab('catalog');
+              }}
+              className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs text-slate-900 placeholder-slate-400 focus:outline-hidden focus:bg-white focus:ring-1 focus:ring-blue-600"
             />
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-            {searchQuery && (
-              <button
-                onClick={() => onSearchChange('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-slate-400"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            )}
           </div>
         </div>
       </div>
 
-      {/* Navigation Sub-Bar (Blue Theme) */}
-      <div className="bg-[#0e275d] border-t border-blue-900/60 hidden md:block">
+      {/* Navigation Sub-Bar */}
+      <nav className="bg-[#0b132b] text-slate-200 text-xs font-medium border-t border-slate-800 shadow-inner" id="main-nav-bar">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between overflow-x-auto py-1.5 scrollbar-none gap-2">
             
-            {/* Category Dropdown Toggle + Quick Links */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 sm:gap-2 shrink-0">
               
-              {/* Product Categories Dropdown */}
+              {/* Category Mega dropdown button */}
               <div className="relative">
                 <button
-                  onClick={() => setCategoriesOpen(!categoriesOpen)}
-                  className="flex items-center gap-2 bg-[#dc2626] hover:bg-[#b91c1c] text-white px-4 py-2.5 font-bold text-xs uppercase tracking-wider transition-colors"
+                  onClick={() => setCategoriesDropdownOpen(!categoriesDropdownOpen)}
+                  className="flex items-center gap-2 px-3.5 py-2 bg-[#dc2626] hover:bg-[#b91c1c] text-white font-bold rounded-lg transition-colors shadow-xs"
                   id="categories-dropdown-btn"
                 >
-                  <Menu className="w-4 h-4" />
+                  <Layers className="w-4 h-4 text-white" />
                   <span>Product Categories</span>
-                  <ChevronDown className={`w-3.5 h-3.5 transition-transform ${categoriesOpen ? 'rotate-180' : ''}`} />
                 </button>
 
-                {/* Dropdown Menu */}
-                {categoriesOpen && (
-                  <div 
-                    className="absolute top-full left-0 w-64 bg-white border border-slate-200 shadow-xl rounded-b-lg py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150"
-                    onMouseLeave={() => setCategoriesOpen(false)}
-                  >
-                    <div className="px-3 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
-                      Select Department
+                {categoriesDropdownOpen && (
+                  <div className="absolute left-0 top-full mt-1.5 w-72 bg-white border border-slate-200 rounded-xl shadow-2xl py-2 z-50 text-slate-800">
+                    <div className="px-4 py-1.5 text-[11px] font-bold text-[#1246c7] uppercase tracking-wider border-b border-slate-100">
+                      Themes Core Specialties
                     </div>
-                    <button
-                      onClick={() => handleCategoryClick('All')}
-                      className={`w-full text-left px-4 py-2 text-xs font-semibold flex items-center justify-between hover:bg-blue-50 transition-colors ${
-                        selectedCategory === 'All' ? 'text-[#1246c7] bg-blue-50/70 font-bold' : 'text-slate-700'
-                      }`}
-                    >
-                      <span>All Products & Systems</span>
-                    </button>
                     {CATEGORIES.map((cat) => (
                       <button
-                        key={cat}
-                        onClick={() => handleCategoryClick(cat)}
-                        className={`w-full text-left px-4 py-2 text-xs flex items-center justify-between hover:bg-blue-50 transition-colors ${
-                          selectedCategory === cat ? 'text-[#1246c7] bg-blue-50/70 font-bold' : 'text-slate-700'
-                        }`}
+                        key={cat.id}
+                        onClick={() => {
+                          onSelectCategory(cat.id);
+                          onNavigateTab('catalog');
+                          setCategoriesDropdownOpen(false);
+                        }}
+                        className="w-full text-left px-4 py-2.5 hover:bg-blue-50 text-xs font-medium flex items-center justify-between text-slate-700 hover:text-[#1246c7] transition-colors"
                       >
-                        <span>{cat}</span>
+                        <div className="flex items-center gap-2">
+                          <span>{cat.name}</span>
+                          {cat.badge && (
+                            <span className="bg-red-100 text-red-700 text-[10px] px-1.5 py-0.5 rounded font-bold">
+                              {cat.badge}
+                            </span>
+                          )}
+                        </div>
+                        <span className="text-slate-400 text-[10px]">→</span>
                       </button>
                     ))}
                   </div>
                 )}
               </div>
 
-              {/* Direct Navigation Links */}
+              {/* Main Tab Links */}
               <button
-                onClick={() => onSelectCategory('All')}
-                className={`px-3 py-2 rounded-md text-xs font-semibold transition-colors flex items-center gap-1.5 ${
-                  selectedCategory === 'All' 
-                    ? 'text-white bg-blue-900/80 font-bold' 
-                    : 'text-slate-200 hover:text-white hover:bg-blue-900/50'
+                onClick={() => {
+                  onNavigateTab('catalog');
+                  onSelectCategory('all');
+                }}
+                className={`px-3.5 py-2 rounded-lg transition-all ${
+                  activeTab === 'catalog'
+                    ? 'text-white bg-[#1d4ed8] font-bold shadow-xs'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
                 }`}
-                id="nav-all-products-btn"
+                id="nav-catalog-btn"
               >
-                <Layers className="w-4 h-4 text-blue-400" />
-                <span>All Products</span>
+                All Products
               </button>
 
               <button
-                onClick={onOpenCalculator}
-                className="flex items-center gap-2 text-slate-200 hover:text-white hover:bg-blue-900/50 px-3 py-1.5 rounded-md transition-colors text-xs font-semibold whitespace-nowrap"
-                id="nav-calc-btn"
+                onClick={() => onNavigateTab('sizer')}
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg transition-all ${
+                  activeTab === 'sizer'
+                    ? 'text-white bg-[#1d4ed8] font-bold shadow-xs'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
+                }`}
+                id="nav-sizer-btn"
               >
-                <Sliders className="w-4 h-4 text-blue-400" />
+                <Sliders className="w-4 h-4 text-blue-300" />
                 <span>Solar Sizing Calculator</span>
                 <span className="bg-[#dc2626] text-white text-[10px] px-1.5 py-0.5 rounded font-black">
                   Free
@@ -319,17 +318,25 @@ export const Header: React.FC<HeaderProps> = ({
               </button>
 
               <button
-                onClick={onOpenPumpSizer}
-                className="flex items-center gap-2 text-slate-200 hover:text-white hover:bg-blue-900/50 px-3 py-1.5 rounded-md transition-colors text-xs font-semibold whitespace-nowrap"
-                id="nav-pump-sizer-btn"
+                onClick={() => onNavigateTab('pumps')}
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg transition-all ${
+                  activeTab === 'pumps'
+                    ? 'text-white bg-[#1d4ed8] font-bold shadow-xs'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
+                }`}
+                id="nav-pumps-btn"
               >
                 <Droplets className="w-4 h-4 text-blue-400" />
                 <span>Solar Pump Sizer</span>
               </button>
 
               <button
-                onClick={() => onSelectCategory('Solar Kits')}
-                className="flex items-center gap-2 text-slate-200 hover:text-white hover:bg-blue-900/50 px-3 py-1.5 rounded-md transition-colors text-xs font-semibold whitespace-nowrap"
+                onClick={() => onNavigateTab('kits')}
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg transition-all ${
+                  activeTab === 'kits'
+                    ? 'text-white bg-[#1d4ed8] font-bold shadow-xs'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
+                }`}
                 id="nav-kits-btn"
               >
                 <Package className="w-4 h-4 text-amber-400" />
@@ -337,8 +344,12 @@ export const Header: React.FC<HeaderProps> = ({
               </button>
 
               <button
-                onClick={onOpenContactModal}
-                className="flex items-center gap-2 text-slate-200 hover:text-white hover:bg-blue-900/50 px-3 py-1.5 rounded-md transition-colors text-xs font-semibold whitespace-nowrap"
+                onClick={() => onNavigateTab('contact')}
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg transition-all ${
+                  activeTab === 'contact'
+                    ? 'text-white bg-[#1d4ed8] font-bold shadow-xs'
+                    : 'text-slate-300 hover:text-white hover:bg-white/5'
+                }`}
                 id="nav-contact-btn"
               >
                 <MapPin className="w-4 h-4 text-red-400" />
@@ -347,104 +358,118 @@ export const Header: React.FC<HeaderProps> = ({
 
             </div>
 
-            {/* Right side helper info */}
-            <div className="flex items-center gap-4 text-xs">
+            {/* Right side help chip */}
+            <div className="hidden lg:flex items-center gap-3 shrink-0">
               <button
                 onClick={onOpenAIAdvisor}
-                className="flex items-center gap-1.5 text-amber-300 hover:text-amber-200 font-bold transition-colors"
-                id="nav-ask-ai-quick-btn"
+                className="flex items-center gap-1.5 text-slate-300 hover:text-white transition-colors text-xs"
               >
-                <Sparkles className="w-3.5 h-3.5" />
+                <HelpCircle className="w-4 h-4 text-red-400" />
                 <span>Need Technical Advice? Ask Chat Bot</span>
               </button>
             </div>
 
           </div>
         </div>
-      </div>
+      </nav>
 
       {/* Mobile Drawer Navigation */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-[#0d2353] text-white border-t border-blue-900 px-4 py-4 space-y-3 animate-in fade-in duration-150">
-          <div className="text-[10px] uppercase tracking-wider text-blue-300 font-bold">Quick Navigation</div>
-          
-          <div className="grid grid-cols-2 gap-2">
+        <div className="md:hidden bg-[#091b42] border-b border-blue-900 px-4 py-4 space-y-2 text-blue-100">
+          <div className="font-bold text-xs text-red-400 uppercase tracking-wider px-2 py-1">
+            Themes Quick Navigation
+          </div>
+
+          <button
+            onClick={() => {
+              onNavigateTab('catalog');
+              onSelectCategory('all');
+              setMobileMenuOpen(false);
+            }}
+            className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold ${
+              activeTab === 'catalog' ? 'bg-red-600 text-white' : 'hover:bg-blue-900/50 text-slate-200'
+            }`}
+          >
+            All Products & Systems
+          </button>
+
+          <button
+            onClick={() => {
+              onNavigateTab('sizer');
+              setMobileMenuOpen(false);
+            }}
+            className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold flex items-center justify-between ${
+              activeTab === 'sizer' ? 'bg-red-600 text-white' : 'hover:bg-blue-900/50 text-slate-200'
+            }`}
+          >
+            <span>Solar Sizing Calculator</span>
+            <span className="bg-[#dc2626] text-white text-[10px] px-1.5 py-0.5 rounded font-bold">Free</span>
+          </button>
+
+          <button
+            onClick={() => {
+              onNavigateTab('pumps');
+              setMobileMenuOpen(false);
+            }}
+            className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold ${
+              activeTab === 'pumps' ? 'bg-red-600 text-white' : 'hover:bg-blue-900/50 text-slate-200'
+            }`}
+          >
+            Solar Water Pump Sizer
+          </button>
+
+          <button
+            onClick={() => {
+              onNavigateTab('kits');
+              setMobileMenuOpen(false);
+            }}
+            className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold ${
+              activeTab === 'kits' ? 'bg-red-600 text-white' : 'hover:bg-blue-900/50 text-slate-200'
+            }`}
+          >
+            Turnkey Solar Packages
+          </button>
+
+          <button
+            onClick={() => {
+              onNavigateTab('contact');
+              setMobileMenuOpen(false);
+            }}
+            className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold ${
+              activeTab === 'contact' ? 'bg-red-600 text-white' : 'hover:bg-blue-900/50 text-slate-200'
+            }`}
+          >
+            Showroom & Contact Details
+          </button>
+
+          <div className="pt-2 border-t border-blue-900/70">
             <button
               onClick={() => {
-                onSelectCategory('All');
+                onOpenAIAdvisor();
                 setMobileMenuOpen(false);
               }}
-              className="p-2.5 bg-blue-900/60 rounded-lg text-left text-xs font-bold flex items-center gap-2"
+              className="w-full text-left px-3 py-2 rounded-lg text-xs font-bold text-amber-300 hover:bg-blue-900/50 flex items-center gap-2"
             >
-              <ShoppingBag className="w-4 h-4 text-blue-400" />
-              <span>All Products</span>
+              <Zap className="w-4 h-4 text-amber-400" />
+              <span>Chat Bot Technical Advisor</span>
             </button>
-            <button
-              onClick={() => {
-                onOpenCalculator();
-                setMobileMenuOpen(false);
-              }}
-              className="p-2.5 bg-blue-900/60 rounded-lg text-left text-xs font-bold flex items-center gap-2"
-            >
-              <Sliders className="w-4 h-4 text-amber-400" />
-              <span>Solar Calculator</span>
-            </button>
-            <button
-              onClick={() => {
-                onOpenPumpSizer();
-                setMobileMenuOpen(false);
-              }}
-              className="p-2.5 bg-blue-900/60 rounded-lg text-left text-xs font-bold flex items-center gap-2"
-            >
-              <Droplets className="w-4 h-4 text-cyan-400" />
-              <span>Pump Sizer</span>
-            </button>
+
             <button
               onClick={() => {
                 onOpenQuoteModal();
                 setMobileMenuOpen(false);
               }}
-              className="p-2.5 bg-blue-900/60 rounded-lg text-left text-xs font-bold flex items-center gap-2"
+              className="w-full text-left px-3 py-2 rounded-lg text-xs font-bold text-red-400 hover:bg-blue-900/50 flex items-center gap-2"
             >
-              <FileText className="w-4 h-4 text-emerald-400" />
-              <span>Instant Quote</span>
+              <FileText className="w-4 h-4 text-red-400" />
+              <span>Request Proforma Quote</span>
             </button>
           </div>
 
-          <div className="pt-2 border-t border-blue-900/80">
-            <div className="text-[10px] uppercase tracking-wider text-blue-300 font-bold mb-2">Departments</div>
-            <div className="space-y-1">
-              {CATEGORIES.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => handleCategoryClick(cat)}
-                  className={`w-full text-left px-2.5 py-1.5 rounded text-xs transition-colors flex items-center justify-between ${
-                    selectedCategory === cat ? 'bg-red-600 text-white font-bold' : 'text-slate-200 hover:bg-blue-900/50'
-                  }`}
-                >
-                  <span>{cat}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="pt-3 border-t border-blue-900/80 flex items-center justify-between text-xs">
-            <a 
-              href={`tel:${STORE_INFO.phone}`} 
-              className="flex items-center gap-1 text-white font-bold"
-            >
-              <PhoneCall className="w-3.5 h-3.5 text-green-400" />
-              <span>{STORE_INFO.phone}</span>
-            </a>
-            <button
-              onClick={() => {
-                onOpenContactModal();
-                setMobileMenuOpen(false);
-              }}
-              className="text-blue-300 underline"
-            >
-              Showroom Location
-            </button>
+          <div className="pt-2 border-t border-blue-900/70 text-[11px] text-slate-300 px-3 space-y-1">
+            <p><strong>Store:</strong> Utawala Jowin Business Arcade</p>
+            <p><strong>Hotline:</strong> {STORE_INFO.phone}</p>
+            <p className="text-emerald-400">FREE Delivery in Nairobi CBD</p>
           </div>
         </div>
       )}

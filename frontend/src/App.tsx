@@ -1,403 +1,438 @@
-import { useState, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
-import { ProductCard } from './components/ProductCard';
-import { CartModal } from './components/CartModal';
-import { SolarCalculatorModal } from './components/SolarCalculatorModal';
-import { SolarPumpSizerModal } from './components/SolarPumpSizerModal';
-import { QuotationModal } from './components/QuotationModal';
-import { ContactModal } from './components/ContactModal';
-import { AIAdvisorModal } from './components/AIAdvisorModal';
-import { OrderLookupModal } from './components/OrderLookupModal';
+import { Catalog } from './components/Catalog';
+import { SolarSizerCalculator } from './components/SolarSizerCalculator';
+import { BoreholePumpSizer } from './components/BoreholePumpSizer';
+import { SolarKitsSection } from './components/SolarKitsSection';
+import { ContactAndShowroom } from './components/ContactAndShowroom';
 import { Footer } from './components/Footer';
-import { PRODUCTS, CATEGORIES, STORE_INFO } from './data/products';
-import { CartItem, Product } from './types';
+import { ProductDetailModal } from './components/ProductDetailModal';
+import { CartDrawer } from './components/CartDrawer';
+import { QuoteModal } from './components/QuoteModal';
+import { AIAssistantModal } from './components/AIAssistantModal';
+import { ProductComparison } from './components/ProductComparison';
+import { Product, CartItem, SolarKit, SizingResult } from './types';
+import { Zap, ShoppingBag, ShoppingCart, Phone, ArrowLeft, Home, Sun, Droplets, Package, MapPin, CheckCircle2 } from 'lucide-react';
 import { WhatsAppIcon } from './components/WhatsAppIcon';
-import { 
-  ShieldCheck, 
-  Truck, 
-  Wrench, 
-  Sliders, 
-  HelpCircle,
-  FileText,
-  Sparkles,
-  Phone,
-  Zap,
-  ShoppingBag
-} from 'lucide-react';
+import { formatKES } from './utils/formatters';
+import { STORE_INFO, PRODUCTS } from './data/products';
 
-export function App() {
-  // Navigation & Catalog Filters
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+type AppTab = 'catalog' | 'sizer' | 'pumps' | 'kits' | 'contact';
+
+export default function App() {
+  // Navigation & Filtering State
+  const [activeTab, setActiveTab] = useState<AppTab>('catalog');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [activeBrand, setActiveBrand] = useState<string>('All');
-  const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc'>('featured');
 
-  // Interactive Modals State
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
-  const [isPumpSizerOpen, setIsPumpSizerOpen] = useState(false);
-  const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
-  const [isContactModalOpen, setIsContactModalOpen] = useState(false);
-  const [isAIOpen, setIsAIOpen] = useState(false);
-  const [isOrderLookupOpen, setIsOrderLookupOpen] = useState(false);
+  // Dynamic Products Inventory State (Tracks and updates stock on purchases)
+  const [products, setProducts] = useState<Product[]>(PRODUCTS);
+
+  // Cart & Comparison State
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [comparedProducts, setComparedProducts] = useState<Product[]>([]);
+
+  // Modals & Drawers State
+  const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
+  const [isQuoteOpen, setIsQuoteOpen] = useState<boolean>(false);
+  const [isAIOpen, setIsAIOpen] = useState<boolean>(false);
+  const [isComparisonOpen, setIsComparisonOpen] = useState<boolean>(false);
+  const [viewingProduct, setViewingProduct] = useState<Product | null>(null);
   
-  // Context passed into modals
-  const [aiContext, setAiContext] = useState<string | null>(null);
+  // Specific Quote Context State
+  const [quoteKit, setQuoteKit] = useState<SolarKit | null>(null);
+  const [quoteSizingResult, setQuoteSizingResult] = useState<SizingResult | null>(null);
+  const [aiContext, setAiContext] = useState<any>(null);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // Cart Management State
-  const [cart, setCart] = useState<CartItem[]>(() => {
-    try {
-      const saved = localStorage.getItem('themes_electricals_cart');
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
+  // Synchronize Browser History & Hash for seamless Back/Forward Navigation
+  useEffect(() => {
+    const handleHashSync = () => {
+      const hash = window.location.hash.replace('#', '') as AppTab;
+      if (['catalog', 'sizer', 'pumps', 'kits', 'contact'].includes(hash)) {
+        setActiveTab(hash);
+      } else {
+        setActiveTab('catalog');
+      }
+    };
 
-  // Save Cart to LocalStorage
-  const saveCart = (newCart: CartItem[]) => {
-    setCart(newCart);
-    try {
-      localStorage.setItem('themes_electricals_cart', JSON.stringify(newCart));
-    } catch {
-      // ignore
+    // Initial check on load
+    handleHashSync();
+
+    window.addEventListener('popstate', handleHashSync);
+    window.addEventListener('hashchange', handleHashSync);
+    return () => {
+      window.removeEventListener('popstate', handleHashSync);
+      window.removeEventListener('hashchange', handleHashSync);
+    };
+  }, []);
+
+  const navigateToTab = useCallback((tab: AppTab) => {
+    setActiveTab(tab);
+    if (tab === 'catalog') {
+      window.history.pushState({ tab }, '', window.location.pathname);
+    } else {
+      window.history.pushState({ tab }, '', `#${tab}`);
     }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  const showToast = (msg: string) => {
+    setToastMessage(msg);
+    setTimeout(() => {
+      setToastMessage(null);
+    }, 3500);
   };
 
+  // Cart Management with Stock Bounds Enforcement
   const handleAddToCart = (product: Product, quantity = 1) => {
-    const existingIndex = cart.findIndex((item) => item.product.id === product.id);
-    if (existingIndex > -1) {
-      const updated = [...cart];
-      updated[existingIndex].quantity += quantity;
-      saveCart(updated);
-    } else {
-      saveCart([...cart, { product, quantity }]);
+    // Find current stock in live state
+    const currentProduct = products.find(p => p.id === product.id) || product;
+    const maxStock = currentProduct.stockCount;
+
+    if (maxStock <= 0) {
+      showToast(`Sorry, "${product.name.slice(0, 28)}..." is currently out of stock.`);
+      return;
     }
-    setIsCartOpen(true);
+
+    setCart((prev) => {
+      const existing = prev.find((item) => item.product.id === product.id);
+      const currentQty = existing ? existing.quantity : 0;
+      const targetQty = currentQty + quantity;
+
+      if (targetQty > maxStock) {
+        const allowedAdd = Math.max(0, maxStock - currentQty);
+        if (allowedAdd <= 0) {
+          showToast(`Maximum stock limit (${maxStock} units) already in your cart.`);
+          return prev;
+        }
+        showToast(`Added remaining ${allowedAdd} units (Max stock: ${maxStock}) to cart.`);
+        if (existing) {
+          return prev.map(item => item.product.id === product.id ? { ...item, quantity: maxStock } : item);
+        }
+        return [...prev, { product: currentProduct, quantity: maxStock }];
+      }
+
+      showToast(`Added ${quantity}x "${product.name.slice(0, 30)}..." to your cart!`);
+      if (existing) {
+        return prev.map((item) =>
+          item.product.id === product.id
+            ? { ...item, quantity: targetQty }
+            : item
+        );
+      }
+      return [...prev, { product: currentProduct, quantity }];
+    });
   };
 
-  const handleUpdateCartQuantity = (productId: string, quantity: number) => {
-    if (quantity <= 0) {
-      saveCart(cart.filter((item) => item.product.id !== productId));
-    } else {
-      saveCart(
-        cart.map((item) =>
-          item.product.id === productId ? { ...item, quantity } : item
-        )
-      );
-    }
+  const handleUpdateQty = (productId: string, delta: number) => {
+    const currentProduct = products.find(p => p.id === productId);
+    const maxStock = currentProduct ? currentProduct.stockCount : 999;
+
+    setCart((prev) =>
+      prev
+        .map((item) => {
+          if (item.product.id === productId) {
+            const nextQty = item.quantity + delta;
+            if (nextQty > maxStock) {
+              showToast(`Cannot exceed available stock limit (${maxStock} units).`);
+              return { ...item, quantity: maxStock };
+            }
+            return nextQty > 0 ? { ...item, quantity: nextQty } : null;
+          }
+          return item;
+        })
+        .filter(Boolean) as CartItem[]
+    );
   };
 
   const handleRemoveFromCart = (productId: string) => {
-    saveCart(cart.filter((item) => item.product.id !== productId));
+    setCart((prev) => prev.filter((item) => item.product.id !== productId));
+    showToast("Item removed from cart.");
   };
 
   const handleClearCart = () => {
-    saveCart([]);
+    setCart([]);
+    showToast("Cart cleared.");
   };
 
-  // Filter and Sort Products
-  const filteredProducts = useMemo(() => {
-    return PRODUCTS.filter((product) => {
-      // Category filter
-      const matchesCategory =
-        selectedCategory === 'All' || product.category === selectedCategory;
+  // Decrements stock when an order is confirmed / placed
+  const handleOrderSuccess = (purchasedItems: CartItem[]) => {
+    setProducts((prev) =>
+      prev.map((prod) => {
+        const purchased = purchasedItems.find((i) => i.product.id === prod.id);
+        if (purchased) {
+          const updatedStock = Math.max(0, prod.stockCount - purchased.quantity);
+          return {
+            ...prod,
+            stockCount: updatedStock,
+            inStock: updatedStock > 0
+          };
+        }
+        return prod;
+      })
+    );
 
-      // Search Query filter
-      const query = searchQuery.toLowerCase().trim();
-      const matchesSearch =
-        !query ||
-        product.name.toLowerCase().includes(query) ||
-        product.brand.toLowerCase().includes(query) ||
-        product.category.toLowerCase().includes(query) ||
-        product.description.toLowerCase().includes(query) ||
-        product.specs.some((spec) => spec.toLowerCase().includes(query));
-
-      // Brand filter
-      const matchesBrand = activeBrand === 'All' || product.brand === activeBrand;
-
-      return matchesCategory && matchesSearch && matchesBrand;
-    }).sort((a, b) => {
-      if (sortBy === 'price-asc') return a.price - b.price;
-      if (sortBy === 'price-desc') return b.price - a.price;
-      return 0; // Default order
-    });
-  }, [selectedCategory, searchQuery, activeBrand, sortBy]);
-
-  // Unique brands available for the current category
-  const availableBrands = useMemo(() => {
-    const brands = new Set<string>();
-    PRODUCTS.forEach((p) => {
-      if (selectedCategory === 'All' || p.category === selectedCategory) {
-        brands.add(p.brand);
+    // Also update currently viewed product if open
+    if (viewingProduct) {
+      const matching = purchasedItems.find(i => i.product.id === viewingProduct.id);
+      if (matching) {
+        const newStock = Math.max(0, viewingProduct.stockCount - matching.quantity);
+        setViewingProduct({
+          ...viewingProduct,
+          stockCount: newStock,
+          inStock: newStock > 0
+        });
       }
+    }
+
+    setCart([]);
+    showToast("Order placed successfully! Stock inventory has been updated.");
+  };
+
+  // Comparison Management
+  const handleToggleCompare = (product: Product) => {
+    setComparedProducts((prev) => {
+      const exists = prev.some((p) => p.id === product.id);
+      if (exists) {
+        return prev.filter((p) => p.id !== product.id);
+      }
+      if (prev.length >= 3) {
+        showToast('You can compare up to 3 products at a time.');
+        return prev;
+      }
+      showToast(`Added "${product.name.slice(0, 24)}..." to comparison.`);
+      return [...prev, product];
     });
-    return ['All', ...Array.from(brands)];
-  }, [selectedCategory]);
+  };
+
+  const handleRemoveCompared = (productId: string) => {
+    setComparedProducts((prev) => prev.filter((p) => p.id !== productId));
+  };
+
+  // Open Quote Modal Handlers
+  const handleOpenQuoteGeneral = (kit?: SolarKit) => {
+    setQuoteKit(kit || null);
+    setQuoteSizingResult(null);
+    setIsQuoteOpen(true);
+  };
+
+  const handleOpenQuoteWithSizing = (result: SizingResult) => {
+    setQuoteSizingResult(result);
+    setQuoteKit(null);
+    setIsQuoteOpen(true);
+  };
+
+  const handleOpenAIAdvisorWithContext = (context: any) => {
+    setAiContext(context);
+    setIsAIOpen(true);
+  };
+
+  const handleAskAIAboutProduct = (product: Product) => {
+    setAiContext({
+      productName: product.name,
+      brand: product.brand,
+      category: product.category,
+      specs: product.specs,
+      priceKES: product.priceKES
+    });
+    setIsAIOpen(true);
+  };
 
   const totalCartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const totalCartKES = cart.reduce((sum, item) => sum + item.product.priceKES * item.quantity, 0);
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans text-slate-900 selection:bg-red-500 selection:text-white" id="themes-electricals-root">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans antialiased selection:bg-red-600 selection:text-white">
       
-      {/* Global Header */}
+      {/* Toast Notification */}
+      {toastMessage && (
+        <div className="fixed bottom-6 left-6 z-50 bg-slate-950 text-white px-4 py-3 rounded-xl shadow-2xl border border-slate-800 flex items-center gap-3 text-xs font-semibold animate-in slide-in-from-bottom-5">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0 animate-pulse" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
+      {/* Main Header with embedded bag count */}
       <Header
-        cartCount={totalCartCount}
+        cart={cart}
+        comparedProducts={comparedProducts}
         onOpenCart={() => setIsCartOpen(true)}
-        onOpenQuoteModal={() => setIsQuoteModalOpen(true)}
-        onOpenCalculator={() => setIsCalculatorOpen(true)}
-        onOpenPumpSizer={() => setIsPumpSizerOpen(true)}
-        onOpenContactModal={() => setIsContactModalOpen(true)}
+        onOpenQuoteModal={() => handleOpenQuoteGeneral()}
+        onOpenComparison={() => setIsComparisonOpen(true)}
         onOpenAIAdvisor={() => {
           setAiContext(null);
           setIsAIOpen(true);
         }}
-        onOpenOrderLookup={() => setIsOrderLookupOpen(true)}
-        onSelectCategory={(category) => {
-          setSelectedCategory(category);
-          setActiveBrand('All');
-        }}
-        selectedCategory={selectedCategory}
+        onSelectCategory={(cat) => setSelectedCategory(cat)}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
+        onNavigateTab={navigateToTab}
+        activeTab={activeTab}
       />
 
-      {/* Hero Carousel Component */}
-      <Hero
-        onExploreProducts={() => {
-          setSelectedCategory('All');
-          const element = document.getElementById('catalog-section');
-          if (element) element.scrollIntoView({ behavior: 'smooth' });
-        }}
-        onOpenSizer={() => setIsCalculatorOpen(true)}
-        onOpenQuoteModal={() => setIsQuoteModalOpen(true)}
-        onOpenAIAdvisor={() => {
-          setAiContext('Please recommend an optimal complete solar backup system for my home in Kenya.');
-          setIsAIOpen(true);
-        }}
-      />
-
-      {/* Trust & Guarantee Banner */}
-      <section className="bg-white border-b border-slate-200 py-6" id="trust-banner">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-left">
-            
-            <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-blue-50 text-[#1246c7] flex items-center justify-center shrink-0">
-                <Truck className="w-6 h-6" />
-              </div>
-              <div>
-                <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">CBD Free Delivery</h4>
-                <p className="text-xs text-slate-500 mt-0.5">Same-day parcel dispatch across Kenya</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-                <ShieldCheck className="w-6 h-6" />
-              </div>
-              <div>
-                <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Official Warranties</h4>
-                <p className="text-xs text-slate-500 mt-0.5">Up to 10-year factory performance backing</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
-                <Wrench className="w-6 h-6" />
-              </div>
-              <div>
-                <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">EPRA Certified</h4>
-                <p className="text-xs text-slate-500 mt-0.5">Expert installation engineers available</p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-red-50 text-red-600 flex items-center justify-center shrink-0">
-                <FileText className="w-6 h-6" />
-              </div>
-              <div>
-                <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Instant Proforma</h4>
-                <p className="text-xs text-slate-500 mt-0.5">Download official PDF quotation in 30s</p>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* Main Catalog Viewport */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-1 w-full" id="catalog-section">
-        
-        {/* Category Pills & Quick Filter Scroller */}
-        <div className="mb-8">
-          <div className="flex items-center justify-between gap-4 mb-3 flex-wrap">
-            <div>
-              <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-                {selectedCategory === 'All' ? 'Complete Engineering Catalog' : selectedCategory}
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-                Showing {filteredProducts.length} verified products with real-time Nairobi stock
-              </p>
-            </div>
-
-            {/* Sort Dropdown */}
-            <div className="flex items-center gap-2 text-xs">
-              <span className="text-slate-500 font-medium">Sort by:</span>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as 'featured' | 'price-asc' | 'price-desc')}
-                className="bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#1246c7]"
-                id="catalog-sort-select"
-              >
-                <option value="featured">Featured / Popular</option>
-                <option value="price-asc">Price: Low to High</option>
-                <option value="price-desc">Price: High to Low</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Department Chips */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-            <button
-              onClick={() => {
-                setSelectedCategory('All');
-                setActiveBrand('All');
+      {/* Main Content Sections Based on Active Tab */}
+      <main className="flex-1">
+        {activeTab === 'catalog' && (
+          <>
+            <Hero
+              onExploreProducts={() => {
+                const el = document.getElementById('products-catalog-section');
+                el?.scrollIntoView({ behavior: 'smooth' });
               }}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all shadow-xs ${
-                selectedCategory === 'All'
-                  ? 'bg-[#1246c7] text-white'
-                  : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
-              }`}
-            >
-              All Categories ({PRODUCTS.length})
-            </button>
-            {CATEGORIES.map((cat) => {
-              const count = PRODUCTS.filter((p) => p.category === cat).length;
-              return (
-                <button
-                  key={cat}
-                  onClick={() => {
-                    setSelectedCategory(cat);
-                    setActiveBrand('All');
-                  }}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all shadow-xs ${
-                    selectedCategory === cat
-                      ? 'bg-[#1246c7] text-white'
-                      : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-100'
-                  }`}
-                >
-                  {cat} ({count})
-                </button>
-              );
-            })}
-          </div>
+              onOpenSizer={() => navigateToTab('sizer')}
+              onOpenQuoteModal={() => handleOpenQuoteGeneral()}
+              onOpenAIAdvisor={() => setIsAIOpen(true)}
+            />
 
-          {/* Secondary Brand Filter Row (If brands exist) */}
-          {availableBrands.length > 2 && (
-            <div className="flex items-center gap-2 mt-3 pt-3 border-t border-slate-200 overflow-x-auto text-xs">
-              <span className="text-slate-400 font-semibold uppercase text-[10px] tracking-wider shrink-0">
-                Filter Brand:
-              </span>
-              {availableBrands.map((b) => (
-                <button
-                  key={b}
-                  onClick={() => setActiveBrand(b)}
-                  className={`px-2.5 py-1 rounded-md text-xs font-medium whitespace-nowrap transition-colors ${
-                    activeBrand === b
-                      ? 'bg-slate-900 text-white font-bold'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                  }`}
-                >
-                  {b}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+            {/* Turnkey Kits Showcase Strip */}
+            <SolarKitsSection
+              onAddToCart={handleAddToCart}
+              onOpenQuoteModal={(kit) => handleOpenQuoteGeneral(kit)}
+              onOpenSizer={() => navigateToTab('sizer')}
+            />
 
-        {/* Product Cards Grid */}
-        {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="products-grid">
-            {filteredProducts.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                onAddToCart={handleAddToCart}
-                onAskAI={(p) => {
-                  setAiContext(`I need more technical details, sizing guidance, or compatibility advice regarding: ${p.name} (Price: KSh ${p.price.toLocaleString()}). Brand: ${p.brand}.`);
-                  setIsAIOpen(true);
-                }}
-              />
-            ))}
-          </div>
-        ) : (
-          /* Empty Search / Filter State */
-          <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 p-8">
-            <div className="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto mb-4">
-              <HelpCircle className="w-8 h-8" />
+            {/* Product Catalog with Real-time Stock */}
+            <Catalog
+              selectedCategory={selectedCategory}
+              onSelectCategory={setSelectedCategory}
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              onAddToCart={handleAddToCart}
+              onViewProduct={(p) => {
+                const latest = products.find(prod => prod.id === p.id) || p;
+                setViewingProduct(latest);
+              }}
+              comparedProducts={comparedProducts}
+              onToggleCompare={handleToggleCompare}
+              allProducts={products}
+            />
+
+            {/* Solar Sizer Teaser */}
+            <SolarSizerCalculator
+              onAddToCart={handleAddToCart}
+              onOpenQuoteModalWithSizing={handleOpenQuoteWithSizing}
+              onOpenAIAdvisorWithContext={handleOpenAIAdvisorWithContext}
+            />
+
+            {/* Borehole Pumping Calculator */}
+            <BoreholePumpSizer
+              onAddToCart={handleAddToCart}
+              onOpenQuoteModal={() => handleOpenQuoteGeneral()}
+            />
+
+            {/* Contact & Showroom */}
+            <ContactAndShowroom />
+          </>
+        )}
+
+        {/* Subpage View: Solar Sizer Calculator */}
+        {activeTab === 'sizer' && (
+          <div className="py-4 sm:py-6">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4">
+              <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-2xs">
+                <button
+                  onClick={() => navigateToTab('catalog')}
+                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-red-50 hover:text-red-600 text-slate-700 font-bold text-xs sm:text-sm transition-colors"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  <span>Back to Home / Product Catalog</span>
+                </button>
+                <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
+                  <span>Home</span>
+                  <span>/</span>
+                  <span className="text-[#1246c7] font-bold">Solar Sizer Calculator</span>
+                </div>
+              </div>
             </div>
-            <h3 className="text-base font-bold text-slate-800">No matching products found</h3>
-            <p className="text-xs text-slate-500 max-w-sm mx-auto mt-1 mb-6">
-              We couldn&apos;t find products matching &ldquo;{searchQuery}&rdquo;. Try clearing your search filters or ask our technical assistant.
-            </p>
-            <div className="flex items-center justify-center gap-3">
-              <button
-                onClick={() => {
-                  setSearchQuery('');
-                  setSelectedCategory('All');
-                  setActiveBrand('All');
-                }}
-                className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-lg transition-colors"
-              >
-                Reset All Filters
-              </button>
-              <button
-                onClick={() => {
-                  setAiContext(`Can you source or recommend an alternative for "${searchQuery}" for solar installation in Kenya?`);
-                  setIsAIOpen(true);
-                }}
-                className="px-4 py-2 bg-[#1246c7] hover:bg-[#0e39a3] text-white text-xs font-bold rounded-lg transition-colors flex items-center gap-1.5"
-              >
-                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-                Ask AI Engineer
-              </button>
-            </div>
+
+            <SolarSizerCalculator
+              onAddToCart={handleAddToCart}
+              onOpenQuoteModalWithSizing={handleOpenQuoteWithSizing}
+              onOpenAIAdvisorWithContext={handleOpenAIAdvisorWithContext}
+            />
           </div>
         )}
 
-        {/* Bottom Interactive Engineering Banner */}
-        <div className="mt-16 bg-gradient-to-r from-[#0d2353] to-[#1246c7] rounded-2xl p-6 sm:p-8 text-white flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
-          <div className="space-y-2 text-center md:text-left">
-            <div className="inline-flex items-center gap-1.5 bg-blue-500/30 text-blue-200 px-3 py-1 rounded-full text-xs font-bold">
-              <Sliders className="w-3.5 h-3.5 text-amber-300" />
-              <span>Free Engineering Assistance</span>
+        {/* Subpage View: Borehole Pump Sizer */}
+        {activeTab === 'pumps' && (
+          <div className="py-4 sm:py-6">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4">
+              <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-2xs">
+                <button
+                  onClick={() => navigateToTab('catalog')}
+                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-red-50 hover:text-red-600 text-slate-700 font-bold text-xs sm:text-sm transition-colors"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  <span>Back to Home / Product Catalog</span>
+                </button>
+                <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
+                  <span>Home</span>
+                  <span>/</span>
+                  <span className="text-[#1246c7] font-bold">Borehole & Solar Pump Sizer</span>
+                </div>
+              </div>
             </div>
-            <h3 className="text-xl sm:text-2xl font-black tracking-tight">
-              Unsure which solar inverter or pump fits your setup?
-            </h3>
-            <p className="text-xs sm:text-sm text-blue-100 max-w-xl font-normal">
-              Use our interactive calculators to accurately compute daily kilowatt-hours, battery bank size, borehole pump lift, or talk to our certified engineers directly.
-            </p>
-          </div>
 
-          <div className="flex items-center gap-3 flex-wrap justify-center shrink-0">
-            <button
-              onClick={() => setIsCalculatorOpen(true)}
-              className="px-5 py-2.5 bg-white hover:bg-blue-50 text-[#0d2353] font-bold text-xs rounded-xl shadow-md transition-all hover:scale-105"
-            >
-              Open Solar Calculator
-            </button>
-            <button
-              onClick={() => setIsPumpSizerOpen(true)}
-              className="px-5 py-2.5 bg-blue-900/80 hover:bg-blue-900 text-white font-bold text-xs rounded-xl border border-blue-400/40 transition-all hover:scale-105"
-            >
-              Solar Pump Sizer
-            </button>
+            <BoreholePumpSizer
+              onAddToCart={handleAddToCart}
+              onOpenQuoteModal={() => handleOpenQuoteGeneral()}
+            />
           </div>
-        </div>
+        )}
 
+        {/* Subpage View: Turnkey Solar Kits */}
+        {activeTab === 'kits' && (
+          <div className="py-4 sm:py-6">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4">
+              <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-2xs">
+                <button
+                  onClick={() => navigateToTab('catalog')}
+                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-red-50 hover:text-red-600 text-slate-700 font-bold text-xs sm:text-sm transition-colors"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  <span>Back to Home / Product Catalog</span>
+                </button>
+                <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
+                  <span>Home</span>
+                  <span>/</span>
+                  <span className="text-[#1246c7] font-bold">Turnkey Solar Power Packages</span>
+                </div>
+              </div>
+            </div>
+
+            <SolarKitsSection
+              onAddToCart={handleAddToCart}
+              onOpenQuoteModal={(kit) => handleOpenQuoteGeneral(kit)}
+              onOpenSizer={() => navigateToTab('sizer')}
+            />
+          </div>
+        )}
+
+        {/* Subpage View: Contact & Showroom */}
+        {activeTab === 'contact' && (
+          <div className="py-4 sm:py-6">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-4">
+              <div className="flex flex-wrap items-center justify-between gap-3 bg-white p-3 sm:p-4 rounded-xl border border-slate-200 shadow-2xs">
+                <button
+                  onClick={() => navigateToTab('catalog')}
+                  className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-slate-100 hover:bg-red-50 hover:text-red-600 text-slate-700 font-bold text-xs sm:text-sm transition-colors"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  <span>Back to Home / Product Catalog</span>
+                </button>
+                <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
+                  <span>Home</span>
+                  <span>/</span>
+                  <span className="text-[#1246c7] font-bold">Showroom & Store Location</span>
+                </div>
+              </div>
+            </div>
+
+            <ContactAndShowroom />
+          </div>
+        )}
       </main>
 
       {/* Floating Quick Action Widget - Positioned mid-right matching reference design */}
@@ -421,7 +456,7 @@ export function App() {
           title="WhatsApp Themes Electricals"
           id="floating-whatsapp-btn"
         >
-          <WhatsAppIcon className="w-5 h-5" />
+          <WhatsAppIcon className="w-6 h-6" />
         </a>
 
         {/* Floating AI Solar Advisor with pink/red lightning bolt */}
@@ -444,11 +479,11 @@ export function App() {
           <button
             onClick={() => setIsCartOpen(true)}
             className="flex items-center gap-2 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-black text-xs rounded-full shadow-xl transition-transform hover:scale-105"
-            id="floating-cart-btn"
+            id="floating-cart-trigger"
           >
-            <div className="relative">
-              <ShoppingBag className="w-4 h-4" />
-              <span className="absolute -top-1.5 -right-1.5 bg-white text-red-600 text-[10px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-xs">
+            <div className="relative flex items-center justify-center">
+              <ShoppingBag className="w-5 h-5" />
+              <span className="absolute -top-1 -right-1.5 bg-white text-[#1246c7] text-[10px] font-black rounded-full h-4 min-w-4 px-0.5 flex items-center justify-center shadow-xs">
                 {totalCartCount}
               </span>
             </div>
@@ -461,80 +496,64 @@ export function App() {
       <Footer
         onSelectCategory={(cat) => {
           setSelectedCategory(cat);
-          const element = document.getElementById('catalog-section');
-          if (element) element.scrollIntoView({ behavior: 'smooth' });
+          navigateToTab('catalog');
         }}
-        onOpenCalculator={() => setIsCalculatorOpen(true)}
-        onOpenPumpSizer={() => setIsPumpSizerOpen(true)}
-        onOpenQuoteModal={() => setIsQuoteModalOpen(true)}
-        onOpenContactModal={() => setIsContactModalOpen(true)}
-        onOpenAIAdvisor={() => {
-          setAiContext(null);
-          setIsAIOpen(true);
-        }}
-        onOpenOrderLookup={() => setIsOrderLookupOpen(true)}
+        onNavigateTab={navigateToTab}
       />
 
-      {/* Slide-over Cart Drawer */}
-      <CartModal
+      {/* Modals and Drawers */}
+      <ProductDetailModal
+        product={viewingProduct}
+        onClose={() => setViewingProduct(null)}
+        onAddToCart={handleAddToCart}
+        onOpenQuoteModal={(p) => handleOpenQuoteGeneral()}
+        onAskAIAboutProduct={handleAskAIAboutProduct}
+      />
+
+      <CartDrawer
         isOpen={isCartOpen}
         onClose={() => setIsCartOpen(false)}
         cart={cart}
-        onUpdateQuantity={handleUpdateCartQuantity}
+        onUpdateQty={handleUpdateQty}
         onRemoveItem={handleRemoveFromCart}
         onClearCart={handleClearCart}
         onOpenQuoteModal={() => {
           setIsCartOpen(false);
-          setIsQuoteModalOpen(true);
+          setIsQuoteOpen(true);
+        }}
+        onOrderSuccess={handleOrderSuccess}
+        onNavigateToProducts={() => {
+          setIsCartOpen(false);
+          navigateToTab('catalog');
+          setTimeout(() => {
+            const el = document.getElementById('products-catalog-section');
+            if (el) {
+              el.scrollIntoView({ behavior: 'smooth' });
+            }
+          }, 100);
         }}
       />
 
-      {/* Solar Sizing Calculator Modal */}
-      <SolarCalculatorModal
-        isOpen={isCalculatorOpen}
-        onClose={() => setIsCalculatorOpen(false)}
-        onApplyToCart={(recommendedProducts) => {
-          recommendedProducts.forEach((p) => handleAddToCart(p, 1));
-          setIsCalculatorOpen(false);
-        }}
-      />
-
-      {/* Solar Water Pump Sizer Modal */}
-      <SolarPumpSizerModal
-        isOpen={isPumpSizerOpen}
-        onClose={() => setIsPumpSizerOpen(false)}
-        onAddPumpToCart={(pump, qty) => {
-          handleAddToCart(pump, qty);
-          setIsPumpSizerOpen(false);
-        }}
-      />
-
-      {/* Proforma Quotation PDF Generator Modal */}
-      <QuotationModal
-        isOpen={isQuoteModalOpen}
-        onClose={() => setIsQuoteModalOpen(false)}
+      <QuoteModal
+        isOpen={isQuoteOpen}
+        onClose={() => setIsQuoteOpen(false)}
         cart={cart}
-        onClearCart={handleClearCart}
+        customKit={quoteKit}
+        sizingResult={quoteSizingResult}
       />
 
-      {/* Physical Showroom & Contact Modal */}
-      <ContactModal
-        isOpen={isContactModalOpen}
-        onClose={() => setIsContactModalOpen(false)}
-      />
-
-      {/* Order Status Lookup Modal */}
-      <OrderLookupModal
-        isOpen={isOrderLookupOpen}
-        onClose={() => setIsOrderLookupOpen(false)}
-      />
-
-      {/* Gemini-Powered Solar Technical Advisor Modal */}
-      <AIAdvisorModal
+      <AIAssistantModal
         isOpen={isAIOpen}
         onClose={() => setIsAIOpen(false)}
-        initialPrompt={aiContext}
-        onAddRecommendedProduct={handleAddToCart}
+        initialContext={aiContext}
+      />
+
+      <ProductComparison
+        isOpen={isComparisonOpen}
+        onClose={() => setIsComparisonOpen(false)}
+        products={comparedProducts}
+        onRemove={handleRemoveCompared}
+        onAddToCart={(p) => handleAddToCart(p, 1)}
       />
 
     </div>

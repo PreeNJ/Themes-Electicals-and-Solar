@@ -1,0 +1,187 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { 
+  X, 
+  Send, 
+  Zap, 
+  Bot, 
+  User, 
+  Lightbulb
+} from 'lucide-react';
+import { STORE_INFO } from '../data/products';
+
+interface AIAssistantModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  initialContext?: any;
+}
+
+interface ChatMessage {
+  id: string;
+  sender: 'user' | 'assistant';
+  text: string;
+  timestamp: string;
+}
+
+export const AIAssistantModal: React.FC<AIAssistantModalProps> = ({
+  isOpen,
+  onClose,
+  initialContext
+}) => {
+  const [messages, setMessages] = useState<ChatMessage[]>([
+    {
+      id: 'welcome',
+      sender: 'assistant',
+      text: `Hello! Jambo! 👋 I am your **Chat Bot Advisor** & Senior Electrical Engineer at **Themes Electricals**.
+
+With **15 years of industry experience**, how can I assist your setup today? You can ask me about:
+• Sizing solar systems, hybrid inverters & LiFePO4 batteries
+• Solar water pumps for deep boreholes & farming
+• Solar street lights (All-in-One & Split)
+• Power back up generators (Diesel / Petrol / ATS)
+• Air source & solar heat pumps
+• FREE delivery around Nairobi CBD or showroom pickup in Utawala Jowin Business Arcade!`,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    }
+  ]);
+
+  const [inputText, setInputText] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const handleSendMessage = async (textToSend?: string) => {
+    const text = textToSend || inputText;
+    if (!text.trim() || isLoading) return;
+
+    const userMsg: ChatMessage = {
+      id: `user-${Date.now()}`,
+      sender: 'user',
+      text,
+      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    setMessages((prev) => [...prev, userMsg]);
+    if (!textToSend) setInputText('');
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/chat-advisor', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: text,
+          context: initialContext,
+          chatHistory: messages.map((m) => ({ sender: m.sender, text: m.text }))
+        })
+      });
+
+      const data = await response.json();
+      const assistantReply = data.reply || "I'd be glad to help size your electrical or solar power system. Please let us know your location and load requirements.";
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `bot-${Date.now()}`,
+          sender: 'assistant',
+          text: assistantReply,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+      ]);
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: `bot-${Date.now()}`,
+          sender: 'assistant',
+          text: `For immediate technical assistance, please call our engineering desk at **${STORE_INFO.phone}** or email **${STORE_INFO.email}**. Visit us at Utawala Jowin Business Arcade!`,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (initialContext && isOpen) {
+      const contextMsg = `I am reviewing my solar sizing calculation:
+• Recommended Inverter: ${initialContext.recommendedInverterName || 'Hybrid Inverter'}
+• Solar Array: ${initialContext.recommendedPanelWatts || '3300'} Wp
+• Battery Storage: ${initialContext.recommendedBatteryModel || '5.12kWh LiFePO4'}
+• Estimated Total Cost: KSh ${initialContext.estimatedTotalKES ? initialContext.estimatedTotalKES.toLocaleString() : '325,000'}
+
+Can you verify if this setup is optimal for Kenyan conditions and what warranty comes with Themes Electricals?`;
+      
+      handleSendMessage(contextMsg);
+    }
+  }, [isOpen, initialContext]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isLoading]);
+
+  const sampleQuestions = [
+    "What solar system do I need for a 4-bedroom house with fridge & pump?",
+    "What borehole pump is best for an 80m well and farming?",
+    "How does a heat pump water heater reduce power bills?",
+    "Tell me about delivery to Nairobi CBD and upcountry.",
+  ];
+
+  if (!isOpen) return null;
+
+  return (
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/70 backdrop-blur-xs cursor-pointer animate-in fade-in duration-200"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
+    >
+      <div 
+        className="bg-white rounded-2xl max-w-2xl w-full h-[85vh] shadow-2xl border border-slate-200 flex flex-col overflow-hidden cursor-default"
+        onClick={(e) => e.stopPropagation()}
+      >
+        
+        {/* Modal Header */}
+        <div className="p-4 bg-gradient-to-r from-[#0a1e48] via-[#103d98] to-[#0c276a] text-white flex items-center justify-between border-b border-blue-400/30 shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-red-600 flex items-center justify-center text-white shadow-xs">
+              <Zap className="w-5 h-5 fill-amber-300" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-extrabold text-sm text-white">Themes Electricals Chat Bot Advisor</span>
+                <span className="bg-red-600/30 text-red-300 text-[10px] font-bold px-1.5 py-0.5 rounded border border-red-500/40">
+                  15 Years Experience
+                </span>
+              </div>
+              <p className="text-[11px] text-blue-200">
+                Utawala Jowin Business Arcade • Nairobi • {STORE_INFO.phone}
+              </p>
+            </div>
+          </div>
+
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-lg text-blue-200 hover:text-white hover:bg-white/10 transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Chat Stream Body */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 bg-slate-50 text-xs text-slate-800">
+          {messages.map((msg) => {
+            const isUser = msg.sender === 'user';
+            return (
+              <div
+                key={msg.id}
+                className={`flex gap-2.5 items-start ${isUser ? 'flex-row-reverse' : 'flex-row'}`}
+              >
+                <div
+                  className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 shadow-xs ${
+                    isUser
+                      ? 'bg-red-600 text-white font-bold'
+                      : 'bg-[#1246c7] text-white'
+                  }`}
+                
