@@ -494,3 +494,49 @@ export function App() {
         isOpen={isCalculatorOpen}
         onClose={() => setIsCalculatorOpen(false)}
         onApplyToCart={(recommendedProducts) => {
+          recommendedProducts.forEach((p) => handleAddToCart(p, 1));
+          setIsCalculatorOpen(false);
+        }}
+      />
+
+      {/* Solar Water Pump Sizer Modal */}
+      <SolarPumpSizerModal
+        isOpen={isPumpSizerOpen}
+        onClose={() => setIsPumpSizerOpen(false)}
+        onAddPumpToCart={(pump, qty) => {
+          handleAddToCart(pump, qty);
+          setIsPumpSizerOpen(false);
+        }}
+      />
+
+      {/* Proforma Quotation PDF Generator Modal */}
+      <QuotationModal
+        isOpen={isQuoteModalOpen}
+        onClose={() => setIsQuoteModalOpen(false)}
+        cart={cart}
+        onClearCart={handleClearCart}
+      />
+
+      {/* Physical Showroom & Contact Modal */}
+      <ContactModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+      />
+
+      {/* Order Status Lookup Modal */}
+      <OrderLookupModal
+        isOpen={isOrderLookupOpen}
+        onClose={() => setIsOrderLookupOpen(false)}
+      />
+
+      {/* Gemini-Powered Solar Technical Advisor Modal */}
+      <AIAdvisorModal
+        isOpen={isAIOpen}
+        onClose={() => setIsAIOpen(false)}
+        initialPrompt={aiContext}
+        onAddRecommendedProduct={handleAddToCart}
+      />
+
+    </div>
+  );
+}
