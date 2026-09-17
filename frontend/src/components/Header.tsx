@@ -386,3 +386,68 @@ export const Header: React.FC<HeaderProps> = ({
               }}
               className="p-2.5 bg-blue-900/60 rounded-lg text-left text-xs font-bold flex items-center gap-2"
             >
+              <Sliders className="w-4 h-4 text-amber-400" />
+              <span>Solar Calculator</span>
+            </button>
+            <button
+              onClick={() => {
+                onOpenPumpSizer();
+                setMobileMenuOpen(false);
+              }}
+              className="p-2.5 bg-blue-900/60 rounded-lg text-left text-xs font-bold flex items-center gap-2"
+            >
+              <Droplets className="w-4 h-4 text-cyan-400" />
+              <span>Pump Sizer</span>
+            </button>
+            <button
+              onClick={() => {
+                onOpenQuoteModal();
+                setMobileMenuOpen(false);
+              }}
+              className="p-2.5 bg-blue-900/60 rounded-lg text-left text-xs font-bold flex items-center gap-2"
+            >
+              <FileText className="w-4 h-4 text-emerald-400" />
+              <span>Instant Quote</span>
+            </button>
+          </div>
+
+          <div className="pt-2 border-t border-blue-900/80">
+            <div className="text-[10px] uppercase tracking-wider text-blue-300 font-bold mb-2">Departments</div>
+            <div className="space-y-1">
+              {CATEGORIES.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => handleCategoryClick(cat)}
+                  className={`w-full text-left px-2.5 py-1.5 rounded text-xs transition-colors flex items-center justify-between ${
+                    selectedCategory === cat ? 'bg-red-600 text-white font-bold' : 'text-slate-200 hover:bg-blue-900/50'
+                  }`}
+                >
+                  <span>{cat}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="pt-3 border-t border-blue-900/80 flex items-center justify-between text-xs">
+            <a 
+              href={`tel:${STORE_INFO.phone}`} 
+              className="flex items-center gap-1 text-white font-bold"
+            >
+              <PhoneCall className="w-3.5 h-3.5 text-green-400" />
+              <span>{STORE_INFO.phone}</span>
+            </a>
+            <button
+              onClick={() => {
+                onOpenContactModal();
+                setMobileMenuOpen(false);
+              }}
+              className="text-blue-300 underline"
+            >
+              Showroom Location
+            </button>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+};
