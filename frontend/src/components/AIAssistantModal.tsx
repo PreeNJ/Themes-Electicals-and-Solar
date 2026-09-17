@@ -184,4 +184,97 @@ Can you verify if this setup is optimal for Kenyan conditions and what warranty 
                       ? 'bg-red-600 text-white font-bold'
                       : 'bg-[#1246c7] text-white'
                   }`}
-                
+                >
+                  {isUser ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
+                </div>
+
+                <div
+                  className={`max-w-[85%] rounded-2xl p-3.5 space-y-1 ${
+                    isUser
+                      ? 'bg-red-600 text-white font-medium rounded-tr-xs'
+                      : 'bg-white border border-slate-200 text-slate-800 shadow-xs rounded-tl-xs'
+                  }`}
+                >
+                  <div className="whitespace-pre-wrap leading-relaxed">
+                    {msg.text}
+                  </div>
+                  <div
+                    className={`text-[10px] ${
+                      isUser ? 'text-red-100' : 'text-slate-400'
+                    } text-right`}
+                  >
+                    {msg.timestamp}
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+
+          {isLoading && (
+            <div className="flex gap-2.5 items-start">
+              <div className="w-7 h-7 rounded-lg bg-[#1246c7] text-white flex items-center justify-center shadow-xs">
+                <Bot className="w-4 h-4" />
+              </div>
+              <div className="bg-white border border-slate-200 rounded-2xl p-3 shadow-xs flex items-center gap-2 text-slate-500 text-xs">
+                <div className="w-2 h-2 bg-red-600 rounded-full animate-pulse" />
+                <div className="w-2 h-2 bg-red-600 rounded-full animate-pulse delay-100" />
+                <div className="w-2 h-2 bg-red-600 rounded-full animate-pulse delay-200" />
+                <span>Themes Electricals engineer analyzing requirement...</span>
+              </div>
+            </div>
+          )}
+
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Preset Prompt Suggestions */}
+        {messages.length < 3 && (
+          <div className="p-3 bg-white border-t border-slate-200 space-y-1.5 shrink-0">
+            <span className="text-[11px] font-bold text-slate-600 flex items-center gap-1">
+              <Lightbulb className="w-3 h-3 text-red-600" />
+              <span>Suggested Technical Queries:</span>
+            </span>
+            <div className="flex flex-wrap gap-1.5">
+              {sampleQuestions.map((q, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => handleSendMessage(q)}
+                  className="text-left text-[11px] bg-slate-100 hover:bg-blue-50 hover:text-[#1246c7] text-slate-700 px-2.5 py-1 rounded-lg border border-slate-200 transition-colors"
+                >
+                  {q}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Input Bar */}
+        <div className="p-3 bg-white border-t border-slate-200 shrink-0">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSendMessage();
+            }}
+            className="flex gap-2"
+          >
+            <input
+              type="text"
+              value={inputText}
+              onChange={(e) => setInputText(e.target.value)}
+              placeholder="Ask about lighting, solar pumps, street lights, generators, heat pumps..."
+              className="flex-1 px-3.5 py-2.5 bg-slate-100 border border-slate-300 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-hidden focus:bg-white focus:ring-1 focus:ring-red-600"
+            />
+            <button
+              type="submit"
+              disabled={isLoading || !inputText.trim()}
+              className="px-4 py-2.5 bg-red-600 hover:bg-red-700 disabled:opacity-40 text-white font-bold rounded-xl text-xs flex items-center justify-center transition-colors shadow-sm"
+            >
+              <Send className="w-4 h-4" />
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  );
+};
