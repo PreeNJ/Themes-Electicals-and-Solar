@@ -1,12 +1,13 @@
 import React, { useState, useMemo } from 'react';
-import {
-  Sliders,
-  Sun,
-  Zap,
-  BatteryCharging,
-  RotateCcw,
-  ShoppingCart,
-  FileText,
+import { 
+  Sliders, 
+  Sun, 
+  Zap, 
+  BatteryCharging, 
+  RotateCcw, 
+  ShoppingCart, 
+  FileText, 
+  Sparkles,
   Info,
   Plus,
   Minus
@@ -18,14 +19,16 @@ import { formatKES, formatNumber } from '../utils/formatters';
 interface SolarSizerCalculatorProps {
   onAddToCart: (product: Product, quantity?: number) => void;
   onOpenQuoteModalWithSizing: (result: SizingResult) => void;
+  onOpenAIAdvisorWithContext: (context: any) => void;
 }
 
 export const SolarSizerCalculator: React.FC<SolarSizerCalculatorProps> = ({
   onAddToCart,
-  onOpenQuoteModalWithSizing
+  onOpenQuoteModalWithSizing,
+  onOpenAIAdvisorWithContext
 }) => {
   const [calcMode, setCalcMode] = useState<'appliances' | 'bill'>('appliances');
-
+  
   // Appliance Quantities and Hours state
   const [applianceState, setApplianceState] = useState<Record<string, { qty: number; hours: number }>>(() => {
     const initial: Record<string, { qty: number; hours: number }> = {};
@@ -124,21 +127,24 @@ export const SolarSizerCalculator: React.FC<SolarSizerCalculatorProps> = ({
 
     // Inverter sizing with 25% surge safety margin
     const rawInverterKW = (peakWatts * 1.25) / 1000;
-    let recommendedInverterKW = 3.0;
-    let recommendedInverterName = 'Themes 3.2kVA / 3000W Pure Sine Wave 24V Inverter';
+    let recommendedInverterKW = 3.6;
+    let recommendedInverterName = 'Sosen 3.6 kW Off-Grid Solar Inverter (Pure Sine Wave)';
 
-    if (rawInverterKW > 7.5) {
+    if (rawInverterKW > 12.0) {
+      recommendedInverterKW = 15.0;
+      recommendedInverterName = 'Sosen 15 kW Hybrid 3 Phase Solar Inverter';
+    } else if (rawInverterKW > 7.5) {
       recommendedInverterKW = 10.0;
-      recommendedInverterName = 'Deye 10kW Three-Phase Hybrid Inverter 48V';
+      recommendedInverterName = 'Huawei 10 kW SUN2000 Smart String Solar Inverter';
     } else if (rawInverterKW > 4.5) {
       recommendedInverterKW = 5.0;
-      recommendedInverterName = 'Growatt 5000W / 5kVA SPF Off-Grid / Hybrid Inverter';
+      recommendedInverterName = 'Huawei 5 kW SUN2000 Smart Hybrid Inverter / Sosen 5.5 kW';
     } else if (rawInverterKW > 2.5) {
-      recommendedInverterKW = 3.2;
-      recommendedInverterName = 'Themes 3.2kVA / 3000W Pure Sine Wave 24V Inverter';
+      recommendedInverterKW = 3.6;
+      recommendedInverterName = 'Sosen 3.6 kW Off-Grid Solar Inverter';
     } else {
       recommendedInverterKW = 1.5;
-      recommendedInverterName = 'Themes 1.5kVA / 1200W Hybrid Inverter 12V';
+      recommendedInverterName = 'Must 1.5 kVA / 1200W Pure Sine Wave Hybrid Inverter';
     }
 
     // Battery storage calculation (Night energy required)
@@ -147,20 +153,22 @@ export const SolarSizerCalculator: React.FC<SolarSizerCalculatorProps> = ({
     // LiFePO4 90% Depth of Discharge & 95% battery efficiency
     const recommendedBatteryKWh = Number(Math.max(2.5, (requiredNightKWh / 0.9)).toFixed(1));
 
-    let recommendedBatteryModel = 'Themes 2.56kWh LiFePO4 Lithium Battery 24V';
-    if (recommendedBatteryKWh > 8) {
-      recommendedBatteryModel = '2x Felicity 5.12kWh LiFePO4 Lithium Bank (10.24kWh)';
-    } else if (recommendedBatteryKWh > 4) {
-      recommendedBatteryModel = 'Felicity 5.12kWh LiFePO4 Lithium Battery 48V';
-    } else if (recommendedBatteryKWh > 2.5) {
-      recommendedBatteryModel = 'Themes 2.56kWh LiFePO4 Lithium Battery 24V';
+    let recommendedBatteryModel = 'Dyness 2.5 kWh LiFePO4 Lithium Battery (DL2.5)';
+    if (recommendedBatteryKWh > 12) {
+      recommendedBatteryModel = 'Dyness 15 kW Commercial Energy Storage Battery';
+    } else if (recommendedBatteryKWh > 6) {
+      recommendedBatteryModel = '2x Dyness 5 kWh LiFePO4 Modular Battery Bank (10 kWh)';
+    } else if (recommendedBatteryKWh > 3) {
+      recommendedBatteryModel = 'Dyness 5 kWh LiFePO4 Lithium Battery (DL5.0C)';
+    } else {
+      recommendedBatteryModel = 'Dyness 2.5 kWh LiFePO4 Lithium Battery (DL2.5)';
     }
 
     // Matched kit identifier
-    let matchedKitId = 'kit-3kw';
-    if (recommendedInverterKW >= 10) matchedKitId = 'kit-10kw';
-    else if (recommendedInverterKW >= 5) matchedKitId = 'kit-5kw';
-    else if (recommendedInverterKW <= 1.5) matchedKitId = 'kit-1kw';
+    let matchedKitId = 'kit-3.2kva-executive';
+    if (recommendedInverterKW >= 10) matchedKitId = 'kit-10kw-commercial';
+    else if (recommendedInverterKW >= 5) matchedKitId = 'kit-5.5kw-villa';
+    else if (recommendedInverterKW <= 1.5) matchedKitId = 'kit-1.5kva-starter';
 
     // Pricing & ROI Estimation in KES
     const equipmentCost = (recommendedPanelCount * 14500) + (recommendedInverterKW * 18000) + (recommendedBatteryKWh * 26000);
@@ -178,7 +186,7 @@ export const SolarSizerCalculator: React.FC<SolarSizerCalculatorProps> = ({
       recommendedInverterName,
       recommendedPanelWatts,
       recommendedPanelCount,
-      recommendedPanelModel: `Jinko Tiger Pro 550W Mono (${recommendedPanelCount} panels)`,
+      recommendedPanelModel: `Jinko Solar 585W N-Type Monocrystalline (${recommendedPanelCount} panels)`,
       recommendedBatteryKWh,
       recommendedBatteryModel,
       estimatedEquipmentCostKES: equipmentCost,
@@ -191,30 +199,45 @@ export const SolarSizerCalculator: React.FC<SolarSizerCalculatorProps> = ({
   }, [calcMode, applianceState, monthlyBillKES, systemPreference, backupHoursNight]);
 
   const handleAddSizedSystemToCart = () => {
-    // Add the matching inverter, panels, and battery
-    const panelProduct = PRODUCTS.find((p) => p.id === 'jinko-550w-mono') || PRODUCTS[0];
+    // Add the matching inverter, panels, and battery from inventory
+    const panelProduct = PRODUCTS.find((p) => p.id === 'jinko-solar-panel-585w') || PRODUCTS.find((p) => p.name.toLowerCase().includes('panel')) || PRODUCTS[0];
     onAddToCart(panelProduct, sizingResult.recommendedPanelCount);
 
-    if (sizingResult.recommendedInverterKW >= 5.0) {
-      const inv = PRODUCTS.find((p) => p.id === 'growatt-5kw-spf-hybrid') || PRODUCTS[0];
-      onAddToCart(inv, 1);
+    let invProduct: Product | undefined;
+    if (sizingResult.recommendedInverterKW >= 10.0) {
+      invProduct = PRODUCTS.find((p) => p.id === 'huawei-inverter-10kw') || PRODUCTS.find((p) => p.id === 'sosen-inverter-12kw');
+    } else if (sizingResult.recommendedInverterKW >= 5.0) {
+      invProduct = PRODUCTS.find((p) => p.id === 'huawei-inverter-5kw') || PRODUCTS.find((p) => p.id === 'sosen-inverter-5.5kw');
+    } else if (sizingResult.recommendedInverterKW >= 3.0) {
+      invProduct = PRODUCTS.find((p) => p.id === 'sosen-inverter-3.6kw') || PRODUCTS.find((p) => p.id === 'must-hybrid-inverter-3kw');
     } else {
-      const inv = PRODUCTS.find((p) => p.id === 'themes-3kw-24v-inverter') || PRODUCTS[0];
-      onAddToCart(inv, 1);
+      invProduct = PRODUCTS.find((p) => p.id === 'must-hybrid-inverter-1.5kw');
+    }
+    if (invProduct) {
+      onAddToCart(invProduct, 1);
     }
 
-    const bat = PRODUCTS.find((p) => p.id === 'felicity-5.12kwh-lithium') || PRODUCTS[0];
-    const batQty = sizingResult.recommendedBatteryKWh > 6 ? 2 : 1;
-    onAddToCart(bat, batQty);
+    let batProduct: Product | undefined;
+    if (sizingResult.recommendedBatteryKWh >= 12.0) {
+      batProduct = PRODUCTS.find((p) => p.id === 'dyness-battery-15kw');
+    } else if (sizingResult.recommendedBatteryKWh >= 4.5) {
+      batProduct = PRODUCTS.find((p) => p.id === 'dyness-battery-5kwh');
+    } else {
+      batProduct = PRODUCTS.find((p) => p.id === 'dyness-battery-2.5kwh');
+    }
+    if (batProduct) {
+      const batQty = sizingResult.recommendedBatteryKWh > 6 && batProduct.id === 'dyness-battery-5kwh' ? 2 : 1;
+      onAddToCart(batProduct, batQty);
+    }
   };
 
   return (
     <section className="py-10 bg-slate-50 border-t border-slate-200" id="solar-sizer-section">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
+        
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-8">
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-100 border border-blue-300 text-blue-900 text-xs font-bold uppercase tracking-wider mb-2">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-blue-100 border border-blue-300 text-[#1246c7] text-xs font-bold uppercase tracking-wider mb-2">
             <Sliders className="w-3.5 h-3.5 text-red-600" />
             <span>Themes Electricals System Sizer & ROI Calculator</span>
           </div>
@@ -231,19 +254,21 @@ export const SolarSizerCalculator: React.FC<SolarSizerCalculatorProps> = ({
           <div className="bg-slate-200 p-1 rounded-xl flex gap-1 max-w-md w-full">
             <button
               onClick={() => setCalcMode('appliances')}
-              className={`flex-1 py-2 px-3 rounded-lg text-xs sm:text-sm font-bold transition-all ${calcMode === 'appliances'
-                  ? 'bg-blue-900 text-white shadow-sm'
+              className={`flex-1 py-2 px-3 rounded-lg text-xs sm:text-sm font-bold transition-all ${
+                calcMode === 'appliances'
+                  ? 'bg-[#1246c7] text-white shadow-sm'
                   : 'text-slate-700 hover:text-slate-900'
-                }`}
+              }`}
             >
               1. Sizing by Appliances
             </button>
             <button
               onClick={() => setCalcMode('bill')}
-              className={`flex-1 py-2 px-3 rounded-lg text-xs sm:text-sm font-bold transition-all ${calcMode === 'bill'
-                  ? 'bg-blue-900 text-white shadow-sm'
+              className={`flex-1 py-2 px-3 rounded-lg text-xs sm:text-sm font-bold transition-all ${
+                calcMode === 'bill'
+                  ? 'bg-[#1246c7] text-white shadow-sm'
                   : 'text-slate-700 hover:text-slate-900'
-                }`}
+              }`}
             >
               2. Sizing by KPLC Bill (KES)
             </button>
@@ -252,10 +277,10 @@ export const SolarSizerCalculator: React.FC<SolarSizerCalculatorProps> = ({
 
         {/* Main Grid: Inputs on Left, Real-Time Result Dashboard on Right */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-
+          
           {/* Inputs Column */}
           <div className="lg:col-span-7 space-y-5">
-
+            
             {calcMode === 'appliances' ? (
               <div className="bg-white rounded-2xl p-5 sm:p-6 border border-slate-200 shadow-sm">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 pb-3 border-b border-slate-100">
@@ -263,7 +288,7 @@ export const SolarSizerCalculator: React.FC<SolarSizerCalculatorProps> = ({
                     <h3 className="font-bold text-slate-900 text-base">Select Your Daily Household & Office Appliances</h3>
                     <p className="text-xs text-slate-500">Adjust quantity and running hours per day</p>
                   </div>
-
+                  
                   {/* Reset Actions */}
                   <div className="flex items-center gap-2">
                     <button
@@ -362,261 +387,272 @@ export const SolarSizerCalculator: React.FC<SolarSizerCalculatorProps> = ({
                     onClick={resetDefaults}
                     className="self-start sm:self-center flex items-center gap-1.5 text-xs text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 px-2.5 py-1 rounded-lg transition-all font-bold border border-red-200/60 shadow-2xs"
                     title="Reset to default KSh 12,000 monthly bill"
-                    id="reset-kplc-bill-btn"
-                  >
-                    <RotateCcw className={`w-3.5 h-3.5 ${isResetting ? 'animate-spin' : ''}`} />
-                    <span>Reset Defaults</span>
-                  </button>
-                </div>
+//                     id="reset-kplc-bill-btn"
+//                   >
+//                     <RotateCcw className={`w-3.5 h-3.5 ${isResetting ? 'animate-spin' : ''}`} />
+//                     <span>Reset Defaults</span>
+//                   </button>
+//                 </div>
 
-                {/* Feedback Toast Notification */}
-                {feedbackMessage && (
-                  <div className="px-3 py-1.5 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold rounded-lg flex items-center gap-2 animate-in fade-in duration-200">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
-                    <span>{feedbackMessage}</span>
-                  </div>
-                )}
+//                 {/* Feedback Toast Notification */}
+//                 {feedbackMessage && (
+//                   <div className="px-3 py-1.5 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold rounded-lg flex items-center gap-2 animate-in fade-in duration-200">
+//                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+//                     <span>{feedbackMessage}</span>
+//                   </div>
+//                 )}
 
-                {/* Preset Chips */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                  {[4000, 8000, 15000, 30000].map((preset) => (
-                    <button
-                      key={preset}
-                      onClick={() => setMonthlyBillKES(preset)}
-                      className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all ${monthlyBillKES === preset
-                          ? 'bg-blue-50 border-blue-600 text-blue-950 ring-1 ring-blue-600'
-                          : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
-                        }`}
-                    >
-                      {formatKES(preset)} / mo
-                    </button>
-                  ))}
-                </div>
+//                 {/* Preset Chips */}
+//                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+//                   {[4000, 8000, 15000, 30000].map((preset) => (
+//                     <button
+//                       key={preset}
+//                       onClick={() => setMonthlyBillKES(preset)}
+//                       className={`py-2 px-3 rounded-xl text-xs font-bold border transition-all ${
+//                         monthlyBillKES === preset
+//                           ? 'bg-blue-50 border-blue-600 text-blue-950 ring-1 ring-blue-600'
+//                           : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
+//                       }`}
+//                     >
+//                       {formatKES(preset)} / mo
+//                     </button>
+//                   ))}
+//                 </div>
 
-                {/* Slider and Custom Input */}
-                <div className="space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
-                  <div className="flex items-center justify-between">
-                    <label className="text-xs font-semibold text-slate-700">Enter or Slide Monthly Bill:</label>
-                    <span className="text-lg font-black text-red-600 font-mono">
-                      {formatKES(monthlyBillKES)}
-                    </span>
-                  </div>
-                  <input
-                    type="range"
-                    min="2000"
-                    max="80000"
-                    step="1000"
-                    value={monthlyBillKES}
-                    onChange={(e) => setMonthlyBillKES(parseInt(e.target.value))}
-                    className="w-full accent-red-600 h-2 bg-slate-200 rounded-lg cursor-pointer"
-                  />
-                  <div className="flex justify-between text-[11px] text-slate-400 font-medium">
-                    <span>KSh 2,000</span>
-                    <span>KSh 40,000</span>
-                    <span>KSh 80,000+</span>
-                  </div>
-                </div>
+//                 {/* Slider and Custom Input */}
+//                 <div className="space-y-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+//                   <div className="flex items-center justify-between">
+//                     <label className="text-xs font-semibold text-slate-700">Enter or Slide Monthly Bill:</label>
+//                     <span className="text-lg font-black text-red-600 font-mono">
+//                       {formatKES(monthlyBillKES)}
+//                     </span>
+//                   </div>
+//                   <input
+//                     type="range"
+//                     min="2000"
+//                     max="80000"
+//                     step="1000"
+//                     value={monthlyBillKES}
+//                     onChange={(e) => setMonthlyBillKES(parseInt(e.target.value))}
+//                     className="w-full accent-red-600 h-2 bg-slate-200 rounded-lg cursor-pointer"
+//                   />
+//                   <div className="flex justify-between text-[11px] text-slate-400 font-medium">
+//                     <span>KSh 2,000</span>
+//                     <span>KSh 40,000</span>
+//                     <span>KSh 80,000+</span>
+//                   </div>
+//                 </div>
 
-                {/* Night Backup Preference */}
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-800">
-                    Desired Battery Backup Autonomy During Night & Blackouts:
-                  </label>
-                  <div className="grid grid-cols-3 gap-2">
-                    {[
-                      { hours: 6, label: '6 Hours (Essential)' },
-                      { hours: 10, label: '10 Hours (Full Night)' },
-                      { hours: 24, label: '24 Hours (Full Off-Grid)' },
-                    ].map((opt) => (
-                      <button
-                        key={opt.hours}
-                        onClick={() => setBackupHoursNight(opt.hours)}
-                        className={`p-2.5 rounded-xl text-xs font-semibold border transition-all text-center ${backupHoursNight === opt.hours
-                            ? 'bg-blue-900 border-blue-900 text-white font-bold'
-                            : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
-                          }`}
-                      >
-                        {opt.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+//                 {/* Night Backup Preference */}
+//                 <div className="space-y-2">
+//                   <label className="text-xs font-bold text-slate-800">
+//                     Desired Battery Backup Autonomy During Night & Blackouts:
+//                   </label>
+//                   <div className="grid grid-cols-3 gap-2">
+//                     {[
+//                       { hours: 6, label: '6 Hours (Essential)' },
+//                       { hours: 10, label: '10 Hours (Full Night)' },
+//                       { hours: 24, label: '24 Hours (Full Off-Grid)' },
+//                     ].map((opt) => (
+//                       <button
+//                         key={opt.hours}
+//                         onClick={() => setBackupHoursNight(opt.hours)}
+//                         className={`p-2.5 rounded-xl text-xs font-semibold border transition-all text-center ${
+//                           backupHoursNight === opt.hours
+//                             ? 'bg-[#1246c7] border-[#1246c7] text-white font-bold shadow-xs'
+//                             : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-100'
+//                         }`}
+//                       >
+//                         {opt.label}
+//                       </button>
+//                     ))}
+//                   </div>
+//                 </div>
 
-              </div>
-            )}
+//               </div>
+//             )}
 
-            {/* System Type Preference */}
-            <div className="bg-white rounded-xl p-4 border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
-              <div>
-                <span className="font-bold text-slate-900 block">System Architecture:</span>
-                <span className="text-slate-500">Hybrid Inverter with Smart LiFePO4 Storage (Recommended for Kenya)</span>
-              </div>
-              <div className="flex gap-1.5">
-                {(['hybrid', 'offgrid', 'gridtie'] as const).map((pref) => (
-                  <button
-                    key={pref}
-                    onClick={() => setSystemPreference(pref)}
-                    className={`px-3 py-1.5 rounded-lg font-bold text-xs uppercase transition-colors ${systemPreference === pref
-                        ? 'bg-red-600 text-white'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                      }`}
-                  >
-                    {pref === 'hybrid' ? 'Hybrid Solar' : pref === 'offgrid' ? 'Off-Grid' : 'Grid-Tie'}
-                  </button>
-                ))}
-              </div>
-            </div>
+//             {/* System Type Preference */}
+//             <div className="bg-white rounded-xl p-4 border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+//               <div>
+//                 <span className="font-bold text-slate-900 block">System Architecture:</span>
+//                 <span className="text-slate-500">Hybrid Inverter with Smart LiFePO4 Storage (Recommended for Kenya)</span>
+//               </div>
+//               <div className="flex gap-1.5">
+//                 {(['hybrid', 'offgrid', 'gridtie'] as const).map((pref) => (
+//                   <button
+//                     key={pref}
+//                     onClick={() => setSystemPreference(pref)}
+//                     className={`px-3 py-1.5 rounded-lg font-bold text-xs uppercase transition-colors ${
+//                       systemPreference === pref
+//                         ? 'bg-red-600 text-white'
+//                         : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+//                     }`}
+//                   >
+//                     {pref === 'hybrid' ? 'Hybrid Solar' : pref === 'offgrid' ? 'Off-Grid' : 'Grid-Tie'}
+//                   </button>
+//                 ))}
+//               </div>
+//             </div>
 
-          </div>
+//           </div>
 
-          {/* Sizing Results Dashboard (Right Column) */}
-          <div className="lg:col-span-5 space-y-4">
+//           {/* Sizing Results Dashboard (Right Column) */}
+//           <div className="lg:col-span-5 space-y-4">
+            
+//             <div className="bg-gradient-to-br from-[#0a1e48] via-[#103d98] to-[#0c276a] text-white rounded-2xl p-6 border border-blue-400/30 shadow-xl space-y-5">
+              
+//               <div className="flex items-center justify-between pb-3 border-b border-blue-400/20">
+//                 <div>
+//                   <div className="flex items-center gap-2">
+//                     <span className="text-[10px] uppercase font-bold tracking-widest text-red-400">
+//                       Themes Engineered Solution
+//                     </span>
+//                     <button
+//                       onClick={resetDefaults}
+//                       className="p-1 text-slate-300 hover:text-white rounded hover:bg-white/10 transition-colors"
+//                       title="Refresh & Reset Overview to defaults"
+//                       id="overview-refresh-btn"
+//                     >
+//                       <RotateCcw className={`w-3 h-3 ${isResetting ? 'animate-spin text-red-400' : ''}`} />
+//                     </button>
+//                   </div>
+//                   <h3 className="text-lg font-black text-white">Recommended Solar Kit</h3>
+//                 </div>
+//                 <div className="text-right">
+//                   <span className="text-[11px] text-blue-200 block">Daily Energy Need</span>
+//                   <span className="text-amber-300 font-black text-base">{sizingResult.dailyConsumptionKWh} kWh/day</span>
+//                 </div>
+//               </div>
 
-            <div className="bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 text-white rounded-2xl p-6 border border-slate-800 shadow-xl space-y-5">
+//               {/* Equipment Specifications Grid */}
+//               <div className="space-y-3 text-xs">
+                
+//                 {/* Inverter */}
+//                 <div className="bg-[#06122d]/85 p-3 rounded-xl border border-blue-400/20 flex items-start gap-3 backdrop-blur-xs">
+//                   <div className="p-2 rounded-lg bg-red-600/25 text-red-400 shrink-0">
+//                     <Zap className="w-4 h-4" />
+//                   </div>
+//                   <div>
+//                     <span className="text-blue-200/80 block text-[11px]">Recommended Inverter:</span>
+//                     <span className="font-bold text-white text-sm">{sizingResult.recommendedInverterName}</span>
+//                     <span className="text-[11px] text-blue-300 block mt-0.5 font-mono">
+//                       Rating: {sizingResult.recommendedInverterKW}kW • Pure Sine Wave MPPT
+//                     </span>
+//                   </div>
+//                 </div>
 
-              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] uppercase font-bold tracking-widest text-red-400">
-                      Themes Engineered Solution
-                    </span>
-                    <button
-                      onClick={resetDefaults}
-                      className="p-1 text-slate-400 hover:text-white rounded hover:bg-slate-800 transition-colors"
-                      title="Refresh & Reset Overview to defaults"
-                      id="overview-refresh-btn"
-                    >
-                      <RotateCcw className={`w-3 h-3 ${isResetting ? 'animate-spin text-red-400' : ''}`} />
-                    </button>
-                  </div>
-                  <h3 className="text-lg font-black text-white">Recommended Solar Kit</h3>
-                </div>
-                <div className="text-right">
-                  <span className="text-[11px] text-slate-400 block">Daily Energy Need</span>
-                  <span className="text-red-400 font-black text-base">{sizingResult.dailyConsumptionKWh} kWh/day</span>
-                </div>
-              </div>
+//                 {/* Solar Panels */}
+//                 <div className="bg-[#06122d]/85 p-3 rounded-xl border border-blue-400/20 flex items-start gap-3 backdrop-blur-xs">
+//                   <div className="p-2 rounded-lg bg-blue-500/25 text-blue-300 shrink-0">
+//                     <Sun className="w-4 h-4" />
+//                   </div>
+//                   <div>
+//                     <span className="text-blue-200/80 block text-[11px]">Solar PV Array (Tier-1 Monocrystalline):</span>
+//                     <span className="font-bold text-white text-sm">
+//                       {sizingResult.recommendedPanelCount}x Jinko 550W N-Type TOPCon Panels
+//                     </span>
+//                     <span className="text-[11px] text-blue-300 block mt-0.5 font-mono">
+//                       Total Array Power: {formatNumber(sizingResult.recommendedPanelWatts)} Wp
+//                     </span>
+//                   </div>
+//                 </div>
 
-              {/* Equipment Specifications Grid */}
-              <div className="space-y-3 text-xs">
+//                 {/* Battery Storage */}
+//                 <div className="bg-[#06122d]/85 p-3 rounded-xl border border-blue-400/20 flex items-start gap-3 backdrop-blur-xs">
+//                   <div className="p-2 rounded-lg bg-emerald-600/25 text-emerald-400 shrink-0">
+//                     <BatteryCharging className="w-4 h-4" />
+//                   </div>
+//                   <div>
+//                     <span className="text-blue-200/80 block text-[11px]">Energy Storage (LiFePO4 Lithium):</span>
+//                     <span className="font-bold text-white text-sm">{sizingResult.recommendedBatteryModel}</span>
+//                     <span className="text-[11px] text-emerald-300 block mt-0.5 font-mono">
+//                       Usable Capacity: {sizingResult.recommendedBatteryKWh} kWh (6000+ Cycles)
+//                     </span>
+//                   </div>
+//                 </div>
 
-                {/* Inverter */}
-                <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 flex items-start gap-3">
-                  <div className="p-2 rounded-lg bg-red-600/20 text-red-400 shrink-0">
-                    <Zap className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <span className="text-slate-400 block text-[11px]">Recommended Inverter:</span>
-                    <span className="font-bold text-slate-100 text-sm">{sizingResult.recommendedInverterName}</span>
-                    <span className="text-[11px] text-blue-300 block mt-0.5 font-mono">
-                      Rating: {sizingResult.recommendedInverterKW}kW • Pure Sine Wave MPPT
-                    </span>
-                  </div>
-                </div>
+//               </div>
 
-                {/* Solar Panels */}
-                <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 flex items-start gap-3">
-                  <div className="p-2 rounded-lg bg-blue-600/20 text-blue-400 shrink-0">
-                    <Sun className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <span className="text-slate-400 block text-[11px]">Solar PV Array (Tier-1 Monocrystalline):</span>
-                    <span className="font-bold text-slate-100 text-sm">
-                      {sizingResult.recommendedPanelCount}x Jinko 550W N-Type TOPCon Panels
-                    </span>
-                    <span className="text-[11px] text-blue-300 block mt-0.5 font-mono">
-                      Total Array Power: {formatNumber(sizingResult.recommendedPanelWatts)} Wp
-                    </span>
-                  </div>
-                </div>
+//               {/* Financial & Cost Breakdown */}
+//               <div className="bg-[#06122d] p-4 rounded-xl border border-blue-400/20 space-y-2 text-xs">
+//                 <div className="flex justify-between text-slate-300">
+//                   <span>Hardware & Solar PV Equipment:</span>
+//                   <span className="font-mono font-semibold text-white">{formatKES(sizingResult.estimatedEquipmentCostKES)}</span>
+//                 </div>
+//                 <div className="flex justify-between text-slate-300">
+//                   <span>Combiner Box, Protection Breakers & Cables:</span>
+//                   <span className="font-mono font-semibold text-white">{formatKES(sizingResult.estimatedInstallationCostKES)}</span>
+//                 </div>
+//                 <div className="pt-2 border-t border-blue-400/20 flex justify-between items-center">
+//                   <span className="font-bold text-white">Estimated Total Investment:</span>
+//                   <span className="text-lg font-black text-amber-300 font-mono">
+//                     {formatKES(sizingResult.estimatedTotalKES)}
+//                   </span>
+//                 </div>
+//               </div>
 
-                {/* Battery Storage */}
-                <div className="bg-slate-900/90 p-3 rounded-xl border border-slate-800 flex items-start gap-3">
-                  <div className="p-2 rounded-lg bg-emerald-600/20 text-emerald-400 shrink-0">
-                    <BatteryCharging className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <span className="text-slate-400 block text-[11px]">Energy Storage (LiFePO4 Lithium):</span>
-                    <span className="font-bold text-slate-100 text-sm">{sizingResult.recommendedBatteryModel}</span>
-                    <span className="text-[11px] text-emerald-300 block mt-0.5 font-mono">
-                      Usable Capacity: {sizingResult.recommendedBatteryKWh} kWh (6000+ Cycles)
-                    </span>
-                  </div>
-                </div>
+//               {/* ROI & Payback Banner */}
+//               <div className="grid grid-cols-2 gap-2 text-center text-xs">
+//                 <div className="bg-emerald-950/70 border border-emerald-500/40 p-2.5 rounded-xl">
+//                   <span className="text-emerald-300 text-[11px] block">Est. Monthly Savings</span>
+//                   <span className="text-base font-black text-emerald-400">
+//                     ~{formatKES(sizingResult.monthlyBillSavingsKES)}/mo
+//                   </span>
+//                 </div>
+//                 <div className="bg-[#0b2b73]/80 border border-blue-400/50 p-2.5 rounded-xl">
+//                   <span className="text-blue-200 text-[11px] block">Estimated Payback</span>
+//                   <span className="text-base font-black text-amber-300">
+//                     {sizingResult.paybackPeriodYears} Years
+//                   </span>
+//                 </div>
+//               </div>
 
-              </div>
+//               {/* Action Buttons */}
+//               <div className="space-y-2 pt-2">
+//                 <button
+//                   onClick={handleAddSizedSystemToCart}
+//                   className="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-extrabold rounded-xl text-sm flex items-center justify-center gap-2 shadow-lg shadow-red-600/30 transition-all"
+//                   id="add-sized-system-cart-btn"
+//                 >
+//                   <ShoppingCart className="w-4 h-4" />
+//                   <span>Load Sized System to Cart</span>
+//                 </button>
 
-              {/* Financial & Cost Breakdown */}
-              <div className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2 text-xs">
-                <div className="flex justify-between text-slate-300">
-                  <span>Hardware & Solar PV Equipment:</span>
-                  <span className="font-mono font-semibold">{formatKES(sizingResult.estimatedEquipmentCostKES)}</span>
-                </div>
-                <div className="flex justify-between text-slate-300">
-                  <span>Combiner Box, Protection Breakers & Cables:</span>
-                  <span className="font-mono font-semibold">{formatKES(sizingResult.estimatedInstallationCostKES)}</span>
-                </div>
-                <div className="pt-2 border-t border-slate-800 flex justify-between items-center">
-                  <span className="font-bold text-slate-100">Estimated Total Investment:</span>
-                  <span className="text-lg font-black text-red-400 font-mono">
-                    {formatKES(sizingResult.estimatedTotalKES)}
-                  </span>
-                </div>
-              </div>
+//                 <div className="grid grid-cols-2 gap-2">
+//                   <button
+//                     onClick={() => onOpenQuoteModalWithSizing(sizingResult)}
+//                     className="py-2.5 bg-white/10 hover:bg-white/15 text-white font-semibold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors border border-white/20"
+//                   >
+//                     <FileText className="w-3.5 h-3.5 text-slate-300" />
+//                     <span>Get Proforma Quote</span>
+//                   </button>
 
-              {/* ROI & Payback Banner */}
-              <div className="grid grid-cols-2 gap-2 text-center text-xs">
-                <div className="bg-emerald-950/60 border border-emerald-800/50 p-2.5 rounded-xl">
-                  <span className="text-emerald-300 text-[11px] block">Est. Monthly Savings</span>
-                  <span className="text-base font-black text-emerald-400">
-                    ~{formatKES(sizingResult.monthlyBillSavingsKES)}/mo
-                  </span>
-                </div>
-                <div className="bg-blue-950/60 border border-blue-800/50 p-2.5 rounded-xl">
-                  <span className="text-blue-300 text-[11px] block">Estimated Payback</span>
-                  <span className="text-base font-black text-blue-400">
-                    {sizingResult.paybackPeriodYears} Years
-                  </span>
-                </div>
-              </div>
+//                   <button
+//                     onClick={() => onOpenAIAdvisorWithContext(sizingResult)}
+//                     className="py-2.5 bg-[#1246c7] hover:bg-[#0e39a3] text-white font-semibold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors border border-blue-400/50 shadow-xs"
+//                   >
+//                     <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+//                     <span>Ask AI Engineer</span>
+//                   </button>
+//                 </div>
+//               </div>
 
-              {/* Action Buttons */}
-              <div className="space-y-2 pt-2">
-                <button
-                  onClick={handleAddSizedSystemToCart}
-                  className="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-extrabold rounded-xl text-sm flex items-center justify-center gap-2 shadow-lg shadow-red-600/30 transition-all"
-                  id="add-sized-system-cart-btn"
-                >
-                  <ShoppingCart className="w-4 h-4" />
-                  <span>Load Sized System to Cart</span>
-                </button>
+//             </div>
 
-                <div>
-                  <button
-                    onClick={() => onOpenQuoteModalWithSizing(sizingResult)}
-                    className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors border border-slate-700"
-                  >
-                    <FileText className="w-3.5 h-3.5 text-slate-400" />
-                    <span>Get Proforma Quote</span>
-                  </button>
-                </div>
-              </div>
+//             {/* Note info badge */}
+//             <div className="p-3 rounded-xl bg-blue-50 border border-blue-200 text-[#0a235c] text-xs flex items-start gap-2">
+//               <Info className="w-4 h-4 text-[#1246c7] shrink-0 mt-0.5" />
+//               <span>
+//                 All Themes Electricals systems feature genuine Tier-1 warranties (25-year panel linear output, 5-10 year inverters) & FREE Nairobi CBD delivery.
+//               </span>
+//             </div>
 
-            </div>
+//           </div>
 
-            {/* Note info badge */}
-            <div className="p-3 rounded-xl bg-blue-50 border border-blue-200 text-blue-900 text-xs flex items-start gap-2">
-              <Info className="w-4 h-4 text-blue-700 shrink-0 mt-0.5" />
-              <span>
-                All Themes Electricals systems feature genuine Tier-1 warranties (25-year panel linear output, 5-10 year inverters) & FREE Nairobi CBD delivery.
-              </span>
-            </div>
+//         </div>
 
-          </div>
-
-        </div>
-
-      </div>
-    </section>
-  );
-};
+//       </div>
+//     </section>
+//   );
+// };
