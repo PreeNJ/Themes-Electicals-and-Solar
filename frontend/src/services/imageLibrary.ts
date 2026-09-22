@@ -48,3 +48,18 @@ export const CURATED_FREE_IMAGES = {
     default: 'https://images.unsplash.com/photo-1613665813446-82a78c468a1d?auto=format&fit=crop&w=800&q=80'
   }
 };
+
+export function getCategoryFallback(category: string): string {
+  switch (category) {
+    case 'solar_panels':
+      return CURATED_FREE_IMAGES.solarPanels.default;
+    case 'inverters':
+      return CURATED_FREE_IMAGES.inverters.default;
+    case 'batteries':
+      return CURATED_FREE_IMAGES.batteries.default;
+    case 'solar_systems':
+      return CURATED_FREE_IMAGES.solarKits.default;
+    default:
+      return CURATED_FREE_IMAGES.solarPanels.default;
+  }
+}
