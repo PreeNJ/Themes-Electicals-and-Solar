@@ -429,7 +429,7 @@ export const Catalog: React.FC<CatalogProps> = ({
                 </button>
               </div>
             ) : (
-              <div className="min-w-0 grid grid-cols-[repeat(2,minmax(0,1fr))] gap-3 sm:gap-5">
+              <div className="min-w-0 grid grid-cols-[repeat(2,minmax(0,1fr))] sm:grid-cols-[repeat(3,minmax(0,1fr))] lg:grid-cols-[repeat(4,minmax(0,1fr))] gap-3 sm:gap-5">
                 {filteredProducts.map((product) => (
                   <ProductCard
                     key={product.id}
