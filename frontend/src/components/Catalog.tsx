@@ -44,7 +44,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const isOutOfStock = product.stockCount <= 0;
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col justify-between hover:shadow-lg hover:border-blue-300 transition-all group shadow-2xs">
+    <div className="min-w-0 bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col justify-between hover:shadow-lg hover:border-blue-300 transition-all group shadow-2xs">
       <div>
         <div className="relative h-48 bg-slate-100 overflow-hidden">
           <img
@@ -134,11 +134,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
           <button
             onClick={() => onAddToCart(product, 1)}
             disabled={isOutOfStock}
-            className={`flex-1 py-2.5 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors shadow-xs ${
-              isOutOfStock
-                ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
-                : 'bg-red-600 hover:bg-red-700 text-white'
-            }`}
+            className={`flex-1 py-2.5 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 transition-colors shadow-xs ${isOutOfStock
+              ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
+              : 'bg-red-600 hover:bg-red-700 text-white'
+              }`}
           >
             <ShoppingCart className="w-3.5 h-3.5" />
             <span>{isOutOfStock ? 'Out of Stock' : 'Add to Cart'}</span>
@@ -146,11 +145,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
           <button
             onClick={() => onToggleCompare(product)}
-            className={`p-2.5 rounded-xl border text-xs font-semibold transition-colors ${
-              isCompared
-                ? 'bg-[#1246c7] border-[#1246c7] text-white shadow-xs'
-                : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-blue-50 hover:text-[#1246c7]'
-            }`}
+            className={`p-2.5 rounded-xl border text-xs font-semibold transition-colors ${isCompared
+              ? 'bg-[#1246c7] border-[#1246c7] text-white shadow-xs'
+              : 'bg-slate-50 border-slate-200 text-slate-600 hover:bg-blue-50 hover:text-[#1246c7]'
+              }`}
             title={isCompared ? 'Remove from comparison' : 'Compare product'}
           >
             <Sliders className="w-3.5 h-3.5" />
@@ -244,7 +242,7 @@ export const Catalog: React.FC<CatalogProps> = ({
   return (
     <section className="py-8 sm:py-12 bg-slate-50/50" id="products-catalog-section">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 pb-4 border-b border-slate-200 gap-4">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-5 gap-4">
           <div>
             <div className="flex items-center gap-2 text-xs font-bold text-red-600 uppercase tracking-wider mb-1">
               <span>Themes Electricals Inventory</span>
@@ -274,18 +272,16 @@ export const Catalog: React.FC<CatalogProps> = ({
             <button
               key={cat.id}
               onClick={() => onSelectCategory(cat.id)}
-              className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all flex items-center gap-2 shadow-2xs ${
-                selectedCategory === cat.id
-                  ? 'bg-red-600 text-white shadow-md shadow-red-600/20'
-                  : 'bg-white text-slate-700 hover:bg-blue-50 hover:text-[#1246c7] border border-slate-200'
-              }`}
+              className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all flex items-center gap-2 shadow-2xs ${selectedCategory === cat.id
+                ? 'bg-red-600 text-white shadow-md shadow-red-600/20'
+                : 'bg-white text-slate-700 hover:bg-blue-50 hover:text-[#1246c7] border border-slate-200'
+                }`}
             >
               <span>{cat.name}</span>
               {cat.badge && (
                 <span
-                  className={`text-[10px] px-1.5 py-0.2 rounded font-bold ${
-                    selectedCategory === cat.id ? 'bg-white/20 text-white' : 'bg-red-100 text-red-700'
-                  }`}
+                  className={`text-[10px] px-1.5 py-0.2 rounded font-bold ${selectedCategory === cat.id ? 'bg-white/20 text-white' : 'bg-red-100 text-red-700'
+                    }`}
                 >
                   {cat.badge}
                 </span>
@@ -433,7 +429,7 @@ export const Catalog: React.FC<CatalogProps> = ({
                 </button>
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              <div className="min-w-0 grid grid-cols-[repeat(2,minmax(0,1fr))] gap-3 sm:gap-5">
                 {filteredProducts.map((product) => (
                   <ProductCard
                     key={product.id}

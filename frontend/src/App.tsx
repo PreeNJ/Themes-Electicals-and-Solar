@@ -39,7 +39,7 @@ export default function App() {
   const [isAIOpen, setIsAIOpen] = useState<boolean>(false);
   const [isComparisonOpen, setIsComparisonOpen] = useState<boolean>(false);
   const [viewingProduct, setViewingProduct] = useState<Product | null>(null);
-  
+
   // Specific Quote Context State
   const [quoteKit, setQuoteKit] = useState<SolarKit | null>(null);
   const [quoteSizingResult, setQuoteSizingResult] = useState<SizingResult | null>(null);
@@ -245,7 +245,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans antialiased selection:bg-red-600 selection:text-white">
-      
+
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-6 left-6 z-50 bg-slate-950 text-white px-4 py-3 rounded-xl shadow-2xl border border-slate-800 flex items-center gap-3 text-xs font-semibold animate-in slide-in-from-bottom-5">
@@ -286,13 +286,6 @@ export default function App() {
               onOpenAIAdvisor={() => setIsAIOpen(true)}
             />
 
-            {/* Turnkey Kits Showcase Strip */}
-            <SolarKitsSection
-              onAddToCart={handleAddToCart}
-              onOpenQuoteModal={(kit) => handleOpenQuoteGeneral(kit)}
-              onOpenSizer={() => navigateToTab('sizer')}
-            />
-
             {/* Product Catalog with Real-time Stock */}
             <Catalog
               selectedCategory={selectedCategory}
@@ -307,6 +300,13 @@ export default function App() {
               comparedProducts={comparedProducts}
               onToggleCompare={handleToggleCompare}
               allProducts={products}
+            />
+
+            {/* Turnkey Kits Showcase Strip */}
+            <SolarKitsSection
+              onAddToCart={handleAddToCart}
+              onOpenQuoteModal={(kit) => handleOpenQuoteGeneral(kit)}
+              onOpenSizer={() => navigateToTab('sizer')}
             />
 
             {/* Solar Sizer Teaser */}
