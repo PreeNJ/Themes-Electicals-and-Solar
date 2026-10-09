@@ -15,7 +15,7 @@ export const COMMERCIAL_PRODUCTS: Product[] = [
     reviewCount: 27,
     inStock: true,
     stockCount: 85,
-    image: 'https://macire.co.ke/wp-content/uploads/2025/03/Legend-light-1000w-01.jpg',
+    image: '/images/Themes UFO 200W Industrial LED High Bay Light (28,000 Lumens).jpeg',
     badge: 'Industrial Grade',
     shortDesc: 'Ultra-bright 140 lm/W Philips Lumileds LED high bay for warehouses, factories, church auditoriums, and gymnasiums.',
     description: 'Forged die-cast aluminum heat sink with MeanWell constant current driver. IP65 waterproof rating with 120-degree optical glass lens, providing 50,000+ hours of glare-free commercial illumination.',
