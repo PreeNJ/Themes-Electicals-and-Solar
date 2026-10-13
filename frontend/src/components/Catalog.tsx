@@ -46,7 +46,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
   return (
     <div className="min-w-0 bg-white rounded-2xl border border-slate-200 overflow-hidden flex flex-col justify-between hover:shadow-lg hover:border-blue-300 transition-all group shadow-2xs">
       <div>
-        <div className="relative h-48 bg-slate-100 overflow-hidden">
+        <button
+          type="button"
+          onClick={() => onViewProduct(product)}
+          aria-label={`View specifications for ${product.name}`}
+          className="relative block h-48 w-full overflow-hidden bg-slate-100 p-0 text-left cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
+        >
           <img
             src={product.image}
             alt={product.name}
@@ -61,7 +66,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           <span className="absolute bottom-2.5 left-2.5 bg-slate-900/90 text-white text-[10px] font-bold px-2 py-0.5 rounded border border-slate-700 backdrop-blur-2xs">
             {product.brand}
           </span>
-        </div>
+        </button>
 
         <div className="p-4 space-y-2.5">
           <div className="flex items-center justify-between text-xs">
