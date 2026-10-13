@@ -80,7 +80,7 @@ export const SOLAR_KITS: SolarKit[] = [
     idealFor: 'Bedsitters, 1-2 Bedroom Apartments, Retail Shops, Cyber Cafes',
     priceKES: 88000,
     originalPriceKES: 105000,
-    image: 'https://macire.co.ke/wp-content/uploads/2025/08/AMISOL26-Lithium-Kit.png',
+    image: '/images/solar-kit-1-5kva-watermarked.svg',
     badge: 'Most Affordable',
     components: {
       inverter: 'Must / Themes 1.5kVA / 1200W Pure Sine Wave Hybrid Inverter with MPPT',
@@ -104,7 +104,7 @@ export const SOLAR_KITS: SolarKit[] = [
     idealFor: '3-4 Bedroom Family Homes, Clinics, Executive Offices, Restaurants',
     priceKES: 165000,
     originalPriceKES: 195000,
-    image: 'https://macire.co.ke/wp-content/uploads/2026/06/4.2kVA-Svc-Lithium-Smart-Home-Kit.jpg',
+    image: '/images/solar-kit-3-2kva-watermarked.svg',
     badge: 'Best Value for Homes',
     components: {
       inverter: 'Must / Sosen 3.6kW Pure Sine Wave Hybrid with MPPT & Wi-Fi',
@@ -130,7 +130,7 @@ export const SOLAR_KITS: SolarKit[] = [
     idealFor: 'Mansions, Villas, Petrol Stations, Large Clinics, Supermarkets',
     priceKES: 265000,
     originalPriceKES: 310000,
-    image: 'https://solarshop.co.ke/wp-content/uploads/2024/03/8KW-Deye-Hybrid-Solar-Inverters-5.webp',
+    image: '/images/solar-kit-5-5kw-watermarked.svg',
     badge: 'Total Independence',
     components: {
       inverter: 'Deye 5kW 48V / Sosen 5.5kW Hybrid Inverter with Touchscreen & Wi-Fi',
@@ -156,7 +156,7 @@ export const SOLAR_KITS: SolarKit[] = [
     idealFor: 'Factories, Schools, Hospitals, Petrol Stations, Estates, Commercial Plazas',
     priceKES: 475000,
     originalPriceKES: 550000,
-    image: 'https://macire.co.ke/wp-content/uploads/2026/09/1SE-20KW-SVC-3-phase-Website-Product-1.png',
+    image: '/images/solar-kit-10kw-watermarked.svg',
     badge: 'Industrial Scale',
     components: {
       inverter: 'Deye 10kW 3-Phase / Huawei 10kW Smart Hybrid Inverter with Generator Auto-Start',

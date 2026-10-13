@@ -28,7 +28,7 @@ export const SolarKitsSection: React.FC<SolarKitsSectionProps> = ({
       reviewCount: 36,
       inStock: true,
       stockCount: 15,
-      image: kit.image,
+      image: kit.image ?? '',
       badge: kit.badge,
       shortDesc: `Complete solar package (${kit.powerRating}) with Inverter, Tier-1 Panels, Lithium Battery, Combiner Box, and Rails.`,
       description: `Full turnkey solar kit including ${kit.components.inverter}, ${kit.components.panels}, ${kit.components.battery}, and ${kit.components.accessories}. Backed by 15 years experience.`,
@@ -87,12 +87,23 @@ export const SolarKitsSection: React.FC<SolarKitsSectionProps> = ({
               <div>
                 {/* Header image & badge */}
                 <div className="relative h-44 w-full bg-sky-950 overflow-hidden">
-                  <img
-                    src={kit.image}
-                    alt={kit.title}
-                    className="w-full h-full object-cover opacity-85 group-hover:scale-105 transition-transform duration-500"
-                    referrerPolicy="no-referrer"
-                  />
+                  {kit.image ? (
+                    <img
+                      src={kit.image}
+                      alt={kit.title}
+                      className="w-full h-full object-cover opacity-85 group-hover:scale-105 transition-transform duration-500"
+                      referrerPolicy="no-referrer"
+                    />
+                  ) : (
+                    <div
+                      className="flex h-full flex-col items-center justify-center gap-2 text-sky-300/70"
+                      role="img"
+                      aria-label={`No image available for ${kit.title}`}
+                    >
+                      <Package className="h-9 w-9" aria-hidden="true" />
+                      <span className="text-xs font-semibold">Image unavailable</span>
+                    </div>
+                  )}
                   <div className="absolute top-3 left-3 bg-red-600 text-white text-[10px] font-black uppercase px-2.5 py-0.5 rounded-md shadow-md">
                     {kit.badge}
                   </div>

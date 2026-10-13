@@ -221,12 +221,22 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                     const isAtMaxStock = item.quantity >= item.product.stockCount;
                     return (
                       <div key={item.product.id} className="pt-3 first:pt-0 flex gap-3 items-center group">
-                        <img
-                          src={item.product.image}
-                          alt={item.product.name}
-                          className="w-14 h-14 object-cover rounded-lg border border-slate-200 shrink-0 bg-slate-100"
-                          referrerPolicy="no-referrer"
-                        />
+                        {item.product.image ? (
+                          <img
+                            src={item.product.image}
+                            alt={item.product.name}
+                            className="w-14 h-14 object-cover rounded-lg border border-slate-200 shrink-0 bg-slate-100"
+                            referrerPolicy="no-referrer"
+                          />
+                        ) : (
+                          <div
+                            className="w-14 h-14 rounded-lg border border-slate-200 shrink-0 bg-slate-100 flex items-center justify-center text-slate-400"
+                            role="img"
+                            aria-label={`No image available for ${item.product.name}`}
+                          >
+                            <ShoppingBag className="w-6 h-6" aria-hidden="true" />
+                          </div>
+                        )}
 
                         <div className="flex-1 min-w-0">
                           <h4 className="font-bold text-xs text-slate-900 line-clamp-1">

@@ -41,7 +41,7 @@ export interface SolarKit {
   idealFor: string;
   priceKES: number;
   originalPriceKES: number;
-  image: string;
+  image?: string;
   badge: string;
   components: {
     inverter: string;
