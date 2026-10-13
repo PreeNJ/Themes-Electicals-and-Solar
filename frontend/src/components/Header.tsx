@@ -76,7 +76,7 @@ export const Header: React.FC<HeaderProps> = ({
               id="header-phone-link"
             >
               <PhoneCall className="w-3.5 h-3.5 text-blue-200" />
-              <span className="font-bold text-white tracking-wide">+254713317582</span>
+              <span className="font-bold text-white tracking-wide">{STORE_INFO.phoneDisplay}</span>
             </a>
             <a 
               href={STORE_INFO.socialLinks.email} 
